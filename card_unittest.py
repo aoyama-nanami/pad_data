@@ -32,6 +32,13 @@ class TestCardData(unittest.TestCase):
         self.assertEqual(card.hp_at_level(103), 4185)
         self.assertEqual(card.hp_at_level(110), 4442)
 
+    def test_stat_calculation_3(self):
+        # 炎の番人
+        card = self._db.card(147)
+        self.assertEqual(card.hp_at_level(), 1031)
+        self.assertEqual(card.atk_at_level(), 331)
+        self.assertEqual(card.rcv_at_level(), 83)
+
     def test_awakening(self):
         self.assertSequenceEqual(
             self._db.card(1).awakenings, [])
