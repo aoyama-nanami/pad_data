@@ -71,11 +71,30 @@ class Awakening(enum.Enum):
     EIGHTY_HP_ENHANCED = 57
     FIFTY_HP_ENHANCED = 58
 
+    L_SHIELD = 59
     L_ATTACK = 60
     ENHANCED_10_COMBO = 61
     COMBO_DROP = 62
     SKILL_VOICE = 63
     DUNGEON_BONUS = 64
+
+    def damage_multiplier(self):
+        if self.name.endswith('_KILLER'):
+            return 3
+        return _AWAKENING_DAMAGE_MAP.get(self, 1)
+
+_AWAKENING_DAMAGE_MAP = {
+    Awakening.TWO_WAY: 1.5,
+    Awakening.MULTI_BOOST: 1.5,
+    Awakening.L_ATTACK: 1.5,
+
+    Awakening.ENHANCED_COMBO: 2,
+    Awakening.SUPER_BONUS_ATTACK: 2,
+
+    Awakening.VOID_DAMAGE_PIERCER: 2.5,
+
+    Awakening.ENHANCED_10_COMBO: 5}
+
 
 @enum.unique
 class Element(enum.Enum):
@@ -157,7 +176,11 @@ class Card:
 
     @property
     def element(self):
-        return Element(self.attr_id), Element(self.sub_attr_id)
+        return Element(self.attr_id)
+
+    @property
+    def sub_element(self):
+        return Element(self.sub_attr_id)
 
     @property
     def type(self):
