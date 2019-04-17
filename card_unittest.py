@@ -9,6 +9,7 @@ import_enum_members(Awakening, globals())
 import_enum_members(Element, globals())
 import_enum_members(Type, globals())
 
+# pylint: disable=undefined-variable
 class TestCardData(unittest.TestCase):
     def setUp(self):
         self._db = Database()
@@ -33,72 +34,73 @@ class TestCardData(unittest.TestCase):
 
     def test_awakening(self):
         self.assertSequenceEqual(
-                self._db.card(1).awakenings, [])
+            self._db.card(1).awakenings, [])
 
         self.assertSequenceEqual(
-                self._db.card(651).awakenings,
-                [ENHANCED_HP, ENHANCED_RCV, SKILL_BOOST])
+            self._db.card(651).awakenings,
+            [ENHANCED_HP, ENHANCED_RCV, SKILL_BOOST])
 
         self.assertSequenceEqual(
-                self._db.card(2895).awakenings,
-                [TWO_WAY, SKILL_BOOST, AUTO_RECOVER])
-        self.assertSequenceEqual(
-                self._db.card(2895).super_awakenings, [])
+            self._db.card(2895).awakenings,
+            [TWO_WAY, SKILL_BOOST, AUTO_RECOVER])
 
         self.assertSequenceEqual(
-                self._db.card(4897).awakenings,
-                [AWOKEN_ASSIST, RESIST_DARK, RESIST_JAMMERS,
-                 RESIST_POISON, EXTEND_TIME])
+            self._db.card(2895).super_awakenings, [])
 
         self.assertSequenceEqual(
-                self._db.card(3764).awakenings,
-                [TWO_WAY, SKILL_BOOST, ENHANCED_WATER_ORB,
-                 RESIST_SKILL_BIND, ENHANCED_WATER_ORB, ENHANCED_HEART_ORB,
-                 BONUS_ATTACK, ENHANCED_COMBO, ENHANCED_COMBO])
+            self._db.card(4897).awakenings,
+            [AWOKEN_ASSIST, RESIST_DARK, RESIST_JAMMERS,
+             RESIST_POISON, EXTEND_TIME])
 
         self.assertSequenceEqual(
-                self._db.card(4419).awakenings,
-                [EXTEND_TIME, SKILL_BOOST, EIGHTY_HP_ENHANCED,
-                 SUPER_BONUS_ATTACK, SUPER_BONUS_ATTACK, MULTI_BOOST])
+            self._db.card(3764).awakenings,
+            [TWO_WAY, SKILL_BOOST, ENHANCED_WATER_ORB,
+             RESIST_SKILL_BIND, ENHANCED_WATER_ORB, ENHANCED_HEART_ORB,
+             BONUS_ATTACK, ENHANCED_COMBO, ENHANCED_COMBO])
 
         self.assertSequenceEqual(
-                self._db.card(5101).awakenings,
-                [AWOKEN_ASSIST, RESIST_CLOUD, ENHANCED_TEAM_HP,
-                 ENHANCED_TEAM_RCV, ENHANCED_HP])
+            self._db.card(4419).awakenings,
+            [EXTEND_TIME, SKILL_BOOST, EIGHTY_HP_ENHANCED,
+             SUPER_BONUS_ATTACK, SUPER_BONUS_ATTACK, MULTI_BOOST])
 
         self.assertSequenceEqual(
-                self._db.card(4780).awakenings,
-                [RESIST_BIND_PLUS, L_ATTACK, SKILL_BOOST, GUARD_BREAK,
-                 REDUCE_FIRE_DMG, REDUCE_WATER_DMG, REDUCE_WOOD_DMG,
-                 REDUCE_LIGHT_DMG, REDUCE_DARK_DMG])
+            self._db.card(5101).awakenings,
+            [AWOKEN_ASSIST, RESIST_CLOUD, ENHANCED_TEAM_HP,
+             ENHANCED_TEAM_RCV, ENHANCED_HP])
 
         self.assertSequenceEqual(
-                self._db.card(3870).awakenings,
-                [AUTO_RECOVER, AUTO_RECOVER, RECOVER_BIND,
-                 RESIST_BIND, RESIST_BIND, VOID_DAMAGE_PIERCER])
+            self._db.card(4780).awakenings,
+            [RESIST_BIND_PLUS, L_ATTACK, SKILL_BOOST, GUARD_BREAK,
+             REDUCE_FIRE_DMG, REDUCE_WATER_DMG, REDUCE_WOOD_DMG,
+             REDUCE_LIGHT_DMG, REDUCE_DARK_DMG])
 
         self.assertSequenceEqual(
-                self._db.card(3268).awakenings,
-                [DRAGON_KILLER, GOD_KILLER, DEMON_KILLER, MACHINE_KILLER,
-                 BALANCE_KILLER, ATTACK_KILLER, PHYSICAL_KILLER, HEALER_KILLER])
+            self._db.card(3870).awakenings,
+            [AUTO_RECOVER, AUTO_RECOVER, RECOVER_BIND,
+             RESIST_BIND, RESIST_BIND, VOID_DAMAGE_PIERCER])
 
         self.assertSequenceEqual(
-                self._db.card(3094).awakenings,
-                [ENHANCED_DARK_ORB, ENHANCED_DARK_ORB, ENHANCED_DARK_ORB,
-                 ENHANCED_DARK_ORB, ENHANCED_DARK_ORB, EVOLVE_MATERIAL_KILLER,
-                 AWAKEN_MATERIAL_KILLER, ENHANCE_MATERIAL_KILLER,
-                 VENDOR_MATERIAL_KILLER])
+            self._db.card(3268).awakenings,
+            [DRAGON_KILLER, GOD_KILLER, DEMON_KILLER, MACHINE_KILLER,
+             BALANCE_KILLER, ATTACK_KILLER, PHYSICAL_KILLER, HEALER_KILLER])
 
         self.assertSequenceEqual(
-                self._db.card(4650).awakenings,
-                [RESIST_BIND, RESIST_BIND, EXTEND_TIME_PLUS, SKILL_BOOST_PLUS,
-                 RESIST_SKILL_BIND, ENHANCED_DARK_ATTR, ENHANCED_DARK_ATTR,
-                 ENHANCED_DARK_ATTR, COMBO_DROP])
+            self._db.card(3094).awakenings,
+            [ENHANCED_DARK_ORB, ENHANCED_DARK_ORB, ENHANCED_DARK_ORB,
+             ENHANCED_DARK_ORB, ENHANCED_DARK_ORB, EVOLVE_MATERIAL_KILLER,
+             AWAKEN_MATERIAL_KILLER, ENHANCE_MATERIAL_KILLER,
+             VENDOR_MATERIAL_KILLER])
 
         self.assertSequenceEqual(
-                self._db.card(4799).awakenings,
-                [RESIST_BIND_PLUS, SKILL_BOOST, SKILL_BOOST, FIFTY_HP_ENHANCED,
-                 FIFTY_HP_ENHANCED, FIFTY_HP_ENHANCED, BONUS_ATTACK, SKILL_VOICE])
+            self._db.card(4650).awakenings,
+            [RESIST_BIND, RESIST_BIND, EXTEND_TIME_PLUS, SKILL_BOOST_PLUS,
+             RESIST_SKILL_BIND, ENHANCED_DARK_ATTR, ENHANCED_DARK_ATTR,
+             ENHANCED_DARK_ATTR, COMBO_DROP])
+
+        self.assertSequenceEqual(
+            self._db.card(4799).awakenings,
+            [RESIST_BIND_PLUS, SKILL_BOOST, SKILL_BOOST, FIFTY_HP_ENHANCED,
+             FIFTY_HP_ENHANCED, FIFTY_HP_ENHANCED, BONUS_ATTACK, SKILL_VOICE])
 
     def test_type(self):
         self.assertSequenceEqual(self._db.card(4831).type,

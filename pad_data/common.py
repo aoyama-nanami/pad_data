@@ -120,12 +120,12 @@ class Card:
         limit_mult = self.limit_mult
 
         if 1 <= lv <= max_lv:
-            return round(min_v + (max_v - min_v) * ((lv - 1.0) / (max_lv - 1.0)) ** scale)
+            return round(
+                min_v + (max_v - min_v) * ((lv - 1) / (max_lv - 1)) ** scale)
 
         # limit break should be in range [100, 110]
         if limit_mult > 0 and 100 <= lv <= 110:
-            return round(max_v * (1 + limit_mult * (lv - 99) / 1100.0))
-            pass
+            return round(max_v * (1 + limit_mult * (lv - 99) / 1100))
 
         raise ValueError('level out of range')
 
@@ -165,4 +165,3 @@ class Skill:
 
     def __repr__(self):
         return self._json_data.__repr__()
-
