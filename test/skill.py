@@ -3,7 +3,7 @@
 import unittest
 from pad_data.common import Element, Orb
 from pad_data.database import Database
-import pad_data.effect as effect
+from pad_data import effect
 
 # random selected golden data
 class TestSkillData(unittest.TestCase):
