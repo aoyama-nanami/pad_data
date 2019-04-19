@@ -26,9 +26,9 @@ class Map:
         def convert(x):
             if isinstance(x, list):
                 return list(map(convert, x))
-            elif isinstance(x, functools.partial):
+            if isinstance(x, functools.partial):
                 return x(g)
-            elif callable(x):
+            if callable(x):
                 return x(next(g))
             return x
 
