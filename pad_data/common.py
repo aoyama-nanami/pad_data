@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 import enum
+from typing import List, Any
 
 @enum.unique
 class Awakening(enum.Enum):
@@ -106,6 +108,19 @@ class Element(enum.Enum):
     DARK = 4
 
 @enum.unique
+class Orb(enum.Enum):
+    FIRE = 0
+    WATER = 1
+    WOOD = 2
+    LIGHT = 3
+    DARK = 4
+    HEART = 5
+    JAMMER = 6
+    POISON = 7
+    MORTAL_POISON = 8
+    BOMB = 9
+
+@enum.unique
 class Type(enum.Enum):
     NO_TYPE = -1
     EVOLVE_MATERIAL = 0
@@ -120,6 +135,13 @@ class Type(enum.Enum):
     AWAKEN_MATERIAL = 12
     ENHANCE_MATERIAL = 14
     VENDOR_MATERIAL = 15
+
+@dataclass
+class Skill:
+    name: str
+    description: str
+    effects: List[Any]
+
 
 class Card:
     def __init__(self, json_data):
@@ -185,15 +207,3 @@ class Card:
     @property
     def type(self):
         return tuple(Type(getattr(self, f'type_{i}_id')) for i in range(1, 4))
-
-
-
-class Skill:
-    def __init__(self, json_data):
-        self._json_data = json_data
-
-    def __getattr__(self, name):
-        return self._json_data[name]
-
-    def __repr__(self):
-        return self._json_data.__repr__()
