@@ -2,7 +2,6 @@
 
 import collections
 import dataclasses
-import wcwidth
 from typing import ClassVar, Mapping, Set
 
 from pad_data import card, common, database, util
@@ -14,17 +13,6 @@ util.import_enum_members(common.Type, globals())
 Type = common.Type
 Orb = common.Orb
 Awakening = common.Awakening
-
-def print_card(c, atk_eval=card.Card.atk_at_level,
-               rcv_eval=card.Card.rcv_at_level):
-    print(util.element_to_color(c.element),
-          c.name,
-          util.element_to_color(NO_ORB),
-          ' ' * (50 - wcwidth.wcswidth(c.name)),
-          f'{c.hp_at_level():6}',
-          f'{atk_eval(c):8}',
-          f'{rcv_eval(c):5}',
-          sep='')
 
 # pylint: disable=undefined-variable
 @dataclasses.dataclass
@@ -118,16 +106,16 @@ def main():
     db = database.Database()
     cards = db.get_all_released_cards()
 
-    config = AtkEvaluator(
+    atk_eval = AtkEvaluator(
         awakenings=[TWO_WAY, ENHANCED_COMBO, L_ATTACK],
         target_enemy=db.card(631),
         latent=True,
         )
     # cards = filter(lambda c: c.element in (FIRE, LIGHT), cards)
-    cards = sorted(cards, key=config, reverse=True)
+    cards = sorted(cards, key=atk_eval, reverse=True)
     cards = list(cards)
     for i in range(30):
-        print_card(cards[i], atk_eval=config)
+        cards[i].dump(atk_eval=atk_eval)
 
 if __name__ == '__main__':
     main()

@@ -1,7 +1,8 @@
 import dataclasses
 from typing import List, Any
+import wcwidth
 
-from pad_data import common
+from pad_data import common, util
 
 @dataclasses.dataclass
 class Skill:
@@ -76,3 +77,21 @@ class Card:
     def type(self):
         return tuple(common.Type(
             getattr(self, f'type_{i}_id')) for i in range(1, 4))
+
+    def dump(self, atk_eval=atk_at_level, rcv_eval=rcv_at_level, print_skill=True):
+        print(util.element_to_color(self.element),
+              self.name,
+              util.element_to_color(common.Orb.NO_ORB),
+              ' ' * (50 - wcwidth.wcswidth(self.name)),
+              f'{self.hp_at_level():6}',
+              f'{atk_eval(self):8}',
+              f'{rcv_eval(self):5}',
+              sep='',
+              end='  ')
+
+        if print_skill:
+            print(f'{self.skill.turn_max:2}/{self.skill.turn_min:2}',
+                  self.skill.description)
+        else:
+            print()
+
