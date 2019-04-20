@@ -17,7 +17,10 @@ class Database:
             s = self._skills[skill_id]
             name = s['name']
             description = s['clean_description']
-            c.skill = Skill(name, description, self._expand_skill(skill_id))
+            turn_max = s['turn_max']
+            turn_min = s['turn_min']
+            c.skill = Skill(name, description, self._expand_skill(skill_id),
+                            turn_max, turn_min)
 
     def card(self, card_id):
         return self._cards[card_id]

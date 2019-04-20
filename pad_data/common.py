@@ -132,7 +132,8 @@ class Skill:
     name: str
     description: str
     effects: List[Any]
-
+    turn_max: int
+    turn_min: int
 
 class Card:
     def __init__(self, json_data):
