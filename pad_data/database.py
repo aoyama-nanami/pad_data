@@ -1,6 +1,8 @@
+import dataclasses
 import functools
 import json
-from pad_data import card, skill_type
+
+from pad_data import card, effect, skill_type
 
 class Database:
     def __init__(self, raw_cards_json='data/processed/jp_raw_cards.json',
@@ -19,9 +21,10 @@ class Database:
             description = s['clean_description']
             turn_max = s['turn_max']
             turn_min = s['turn_min']
+            effects = self._expand_skill(skill_id)
+            _effect_post_process(effects)
             c.skill = card.Skill(
-                name, description, self._expand_skill(skill_id),
-                turn_max, turn_min)
+                name, description, effects, turn_max, turn_min)
 
     def card(self, card_id):
         return self._cards[card_id]
@@ -40,3 +43,27 @@ class Database:
         return list(filter(
             lambda c: c.card_id <= 10000 and c.released_status,
             self._cards.values()))
+
+def _effect_post_process(effects):
+    # merge repeated attacks into one instance
+    for i in range(len(effects)):
+        if isinstance(effects[i], effect.BaseDamageSkill):
+            j = i + 1
+            while j < len(effects) and effects[i] == effects[j]:
+                j += 1
+            if j - i == 1:
+                continue
+            merged_effect = dataclasses.replace(effects[i], repeat=j - i,
+                                                unused=0)
+            effects[i:j] = [merged_effect]
+            break
+
+    # DoubleOrbChange -> OrbChange * 2
+    for i in range(len(effects)):
+        if isinstance(effects[i], effect.DoubleOrbChange):
+            e = effects[i]
+            effects[i:i + 1] = [
+                effect.OrbChange([e.from1], [e.to1]),
+                effect.OrbChange([e.from2], [e.to2]),
+            ]
+            break

@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 import unittest
-from pad_data.common import Orb
+from pad_data.common import Orb, Type
 from pad_data import database
 from pad_data import effect
 
@@ -73,7 +73,8 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             5107,
             effect.Recovery(5, 0, 0, 0, 5),
-            effect.DoubleOrbChange(Orb.LIGHT, Orb.WATER, Orb.DARK, Orb.FIRE))
+            effect.OrbChange([Orb.LIGHT], [Orb.WATER]),
+            effect.OrbChange([Orb.DARK], [Orb.FIRE]))
 
         # 最強装備・魔砲士
         self.assert_skill_equal(
@@ -143,6 +144,13 @@ class TestSkillData(unittest.TestCase):
             effect.Cleave(3),
             effect.DamageBuff(3, [Orb.WOOD], 115))
 
+        # 英雄王・ギルガメッシュ
+        self.assert_skill_equal(
+            5010,
+            effect.DamageBuff(1, [Type.GOD], 500),
+            effect.FixedValueDamage(
+                element=Orb.NO_ORB, value=150000, target=effect.Target.ONE,
+                ignore_def=True, repeat=5))
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,6 +26,7 @@ class BaseDamageSkill:
     percentage: List[int] = field(default_factory=lambda: [0, 0])
     value: int = 0
     ignore_def: bool = False
+    repeat: int = 1
     def __post_init__(self):
         if isinstance(self.percentage, int):
             self.percentage = [self.percentage, self.percentage]
