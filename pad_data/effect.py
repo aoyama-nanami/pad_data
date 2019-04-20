@@ -5,13 +5,10 @@ from dataclasses import dataclass, field, InitVar
 import enum
 from typing import List, Union
 
-from .common import Awakening, Orb, Element, Type
+from .common import Awakening, Orb, Type
 
 def orb_list(bit_mask):
     return [Orb(i) for i in range(32) if (1 << i) & bit_mask]
-
-def element_list(bit_mask):
-    return [Element(i) for i in range(32) if (1 << i) & bit_mask]
 
 class Target(enum.Enum):
     ALL = 0
@@ -25,7 +22,7 @@ class RandomSkill:
 
 @dataclass
 class BaseDamageSkill:
-    element: Element
+    element: Orb
     target: Target
     leech: int = 0
     hp_remain: int = 100
@@ -48,7 +45,7 @@ class AtkBasedDamage(BaseDamageSkill):
 
 @dataclass
 class TeamAtkBasedDamage(BaseDamageSkill):
-    base_elem: List[Element] = field(default_factory=list)
+    base_elem: List[Orb] = field(default_factory=list)
 
 @dataclass
 class TeamHpBasedDamage(BaseDamageSkill):
@@ -59,7 +56,7 @@ class FixedValueDamage(BaseDamageSkill):
     unused: InitVar[int] = 0
     def __post_init__(self, unused):
         super().__post_init__()
-        assert not (self.element != Element.NO_ELEMENT and self.ignore_def)
+        assert not (self.element != Orb.NO_ORB and self.ignore_def)
         assert unused == 0
 
 @dataclass
@@ -189,7 +186,7 @@ class DamageReduction(BaseBuff):
 
 @dataclass
 class ElementDamageReduction(BaseBuff):
-    element: Element
+    element: Orb
     percentage: int
 
 @dataclass
@@ -278,11 +275,11 @@ class LeaderSwap:
 
 @dataclass
 class SelfElementChange(BaseBuff):
-    element: Element
+    element: Orb
 
 @dataclass
 class EnemyElementChange:
-    element: Element
+    element: Orb
     unused: InitVar[int]
 
     def __post_init__(self, unused):
@@ -311,7 +308,7 @@ class Cleave(BaseBuff):
 @dataclass
 class Counter(BaseBuff):
     percentage: int
-    element: Element
+    element: Orb
 
 @dataclass
 class ComboHelper:

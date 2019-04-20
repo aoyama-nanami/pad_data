@@ -97,18 +97,9 @@ _AWAKENING_DAMAGE_MAP = {
 
     Awakening.ENHANCED_10_COMBO: 5}
 
-
-@enum.unique
-class Element(enum.Enum):
-    NO_ELEMENT = -1
-    FIRE = 0
-    WATER = 1
-    WOOD = 2
-    LIGHT = 3
-    DARK = 4
-
 @enum.unique
 class Orb(enum.Enum):
+    NO_ORB = -1
     FIRE = 0
     WATER = 1
     WOOD = 2
@@ -198,11 +189,11 @@ class Card:
 
     @property
     def element(self):
-        return Element(self.attr_id)
+        return Orb(self.attr_id)
 
     @property
     def sub_element(self):
-        return Element(self.sub_attr_id)
+        return Orb(self.sub_attr_id)
 
     @property
     def type(self):

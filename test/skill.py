@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 import unittest
-from pad_data.common import Element, Orb
+from pad_data.common import Orb
 from pad_data.database import Database
 from pad_data import effect
 
@@ -24,7 +24,7 @@ class TestSkillData(unittest.TestCase):
         # 生徒会長・ルシファー
         self.assert_skill_equal(
             2014,
-            effect.AtkBasedDamage(element=Element.DARK,
+            effect.AtkBasedDamage(element=Orb.DARK,
                                   target=effect.Target.ONE,
                                   hp_remain=0,
                                   percentage=20000),
@@ -38,7 +38,7 @@ class TestSkillData(unittest.TestCase):
         # ライザー
         self.assert_skill_equal(
             4705,
-            effect.AtkBasedDamage(element=Element.WOOD,
+            effect.AtkBasedDamage(element=Orb.WOOD,
                                   target=effect.Target.ONE,
                                   hp_remain=50,
                                   percentage=10000),
@@ -51,7 +51,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             1039,
             effect.AtkBasedDamage(
-                element=Element.FIRE, percentage=0, target=effect.Target.ALL))
+                element=Orb.FIRE, percentage=0, target=effect.Target.ALL))
 
         # 炎の番人
         self.assert_skill_equal(
@@ -96,7 +96,7 @@ class TestSkillData(unittest.TestCase):
             11,
             effect.DamageBuff(2, [Orb.WOOD], 150),
             effect.AtkBasedDamage(
-                element=Element.WOOD, percentage=2000, target=effect.Target.ALL))
+                element=Orb.WOOD, percentage=2000, target=effect.Target.ALL))
 
         # 炎鎚のキリコ アナザー カード
         self.assert_skill_equal(
@@ -135,7 +135,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             14,
             effect.AtkBasedDamage(
-                element=Element.LIGHT, percentage=1000, target=effect.Target.ALL))
+                element=Orb.LIGHT, percentage=1000, target=effect.Target.ALL))
 
         # 響奏の愛猫神・バステト
         self.assert_skill_equal(

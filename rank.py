@@ -6,17 +6,17 @@ import typing
 import wcwidth
 
 from pad_data.database import Database
-from pad_data.common import Awakening, Card, Element, Type
+from pad_data.common import Awakening, Card, Orb, Type
 from pad_data.util import import_enum_members, element_to_color
 
 import_enum_members(Awakening, globals())
-import_enum_members(Element, globals())
+import_enum_members(Orb, globals())
 import_enum_members(Type, globals())
 
 def print_card(card, atk_eval=Card.atk_at_level, rcv_eval=Card.rcv_at_level):
     print(element_to_color(card.element),
           card.name,
-          element_to_color(NO_ELEMENT),
+          element_to_color(NO_ORB),
           ' ' * (50 - wcwidth.wcswidth(card.name)),
           f'{card.hp_at_level():6}',
           f'{atk_eval(card):8}',
@@ -45,7 +45,7 @@ class AtkEvaluator:
 
     awakenings: typing.Set[Awakening] = dataclasses.field(default_factory=set)
     multi: bool = False
-    elements: typing.Mapping[Element, float] = \
+    elements: typing.Mapping[Orb, float] = \
         dataclasses.field(default_factory=dict)
     types: typing.Mapping[Type, float] = \
         dataclasses.field(default_factory=dict)
