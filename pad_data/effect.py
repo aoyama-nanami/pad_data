@@ -44,6 +44,7 @@ class AtkNuke(SacrificeMixin, Nuke):
 @dataclass
 class AtkNukeType2(AtkNuke):
     unused: InitVar[int] = 0
+    # pylint: disable=arguments-differ
     def __post_init__(self, unused):
         super().__post_init__()
         # percentage of skill type 2 may be one or two int...
@@ -61,6 +62,7 @@ class TeamHpNuke(Nuke):
 @dataclass
 class FixedValueNuke(AtkNuke):
     unused: InitVar[int] = None
+    # pylint: disable=arguments-differ
     def __post_init__(self, unused):
         super().__post_init__()
         assert unused == 0
@@ -68,6 +70,7 @@ class FixedValueNuke(AtkNuke):
 @dataclass
 class RemainingHpNuke(Nuke):
     unused: InitVar[int] = None
+    # pylint: disable=arguments-differ
     def __post_init__(self, unused):
         super().__post_init__()
         assert unused == 300

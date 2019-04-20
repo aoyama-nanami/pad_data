@@ -3,6 +3,7 @@ import functools
 import itertools
 
 from pad_data.common import Orb, Type
+# pylint: disable=wildcard-import,unused-wildcard-import
 from pad_data.effect import *
 
 # special skill type for combined skill effect

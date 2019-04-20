@@ -58,10 +58,10 @@ class Database:
 
 def _effect_post_process(effects):
     # merge repeated attacks into one instance
-    for i in range(len(effects)):
-        if isinstance(effects[i], effect.AtkNuke):
+    for i, e in enumerate(effects):
+        if isinstance(e, effect.AtkNuke):
             j = i + 1
-            while j < len(effects) and effects[i] == effects[j]:
+            while j < len(effects) and e == effects[j]:
                 j += 1
             if j - i == 1:
                 continue
@@ -70,9 +70,8 @@ def _effect_post_process(effects):
             break
 
     # DoubleOrbChange -> OrbChange * 2
-    for i in range(len(effects)):
-        if isinstance(effects[i], effect.DoubleOrbChange):
-            e = effects[i]
+    for i, e in enumerate(effects):
+        if isinstance(e, effect.DoubleOrbChange):
             effects[i:i + 1] = [
                 effect.OrbChange([e.from1], [e.to1]),
                 effect.OrbChange([e.from2], [e.to2]),

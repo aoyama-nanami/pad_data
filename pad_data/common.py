@@ -79,6 +79,9 @@ class Awakening(enum.Enum):
     DUNGEON_BONUS = 64
 
     def damage_multiplier(self):
+        # pylint: disable=no-member
+        # pylint can't detect the type of enum name/value
+        # https://github.com/PyCQA/pylint/issues/533
         if self.name.endswith('_KILLER'):
             return 3
         return _AWAKENING_DAMAGE_MAP.get(self, 1)
