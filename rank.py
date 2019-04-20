@@ -6,7 +6,8 @@ import typing
 import wcwidth
 
 from pad_data.database import Database
-from pad_data.common import Awakening, Card, Orb, Type
+from pad_data.card import Card
+from pad_data.common import Awakening, Orb, Type
 from pad_data.util import import_enum_members, element_to_color
 
 import_enum_members(Awakening, globals())

@@ -1,6 +1,6 @@
 import functools
 import json
-from .common import Card, Skill
+from .card import Card, Skill
 from .skill_type import parse_skill_effect, MULTI_EFFECT_ID
 
 class Database:
