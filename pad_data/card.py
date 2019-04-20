@@ -1,5 +1,5 @@
 import dataclasses
-from typing import List, Any
+from typing import Any, List, Mapping
 import wcwidth
 
 from pad_data import common, util
@@ -11,10 +11,12 @@ class Skill:
     effects: List[Any]
     turn_max: int
     turn_min: int
+    json_data: List[Mapping[str, Any]]
 
 class Card:
     def __init__(self, json_data):
         self._json_data = json_data
+        self.skill = None
 
     def __getattr__(self, name):
         return self._json_data[name]

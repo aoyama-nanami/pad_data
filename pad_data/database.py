@@ -15,16 +15,17 @@ class Database:
             self._skills = dict((s['skill_id'], s) for s in json.load(f))
 
         for c in self._cards.values():
-            skill_id = c.active_skill_id
-            s = self._skills[skill_id]
-            name = s['name']
-            description = s['clean_description']
-            turn_max = s['turn_max']
-            turn_min = s['turn_min']
-            effects = self._expand_skill(skill_id)
+            raw_effects = self._expand_skill(c.active_skill_id)
+            name = raw_effects[0]['name']
+            description = raw_effects[0]['clean_description']
+            turn_max = raw_effects[0]['turn_max']
+            turn_min = raw_effects[0]['turn_min']
+            effects = [skill_type.parse(s['skill_type'], s['other_fields'])
+                       for s in raw_effects
+                       if s['skill_type'] != skill_type.MULTI_EFFECT_ID]
             _effect_post_process(effects)
             c.skill = card.Skill(
-                name, description, effects, turn_max, turn_min)
+                name, description, effects, turn_max, turn_min, raw_effects)
 
     def card(self, card_id):
         return self._cards[card_id]
@@ -33,11 +34,11 @@ class Database:
         s = self._skills[skill_id]
 
         if s['skill_type'] != skill_type.MULTI_EFFECT_ID:
-            return [skill_type.parse(s['skill_type'], s['other_fields'])]
+            return [s]
 
         return functools.reduce(list.__iadd__,
                                 map(self._expand_skill, s['other_fields']),
-                                [])
+                                [s])
 
     def get_all_released_cards(self):
         return list(filter(
