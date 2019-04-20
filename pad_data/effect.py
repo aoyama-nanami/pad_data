@@ -57,13 +57,13 @@ class TeamHpNuke(Nuke):
 # an extra zero in type 86 and 87
 @dataclass
 class FixedValueNuke(Nuke):
-    unused: InitVar[int] = -1
+    unused: InitVar[int] = None
     def __post_init__(self, unused):
         super().__post_init__()
         assert unused == 0
 
 @dataclass
-class RemainHpBasedDamage(Nuke):
+class RemainingHpNuke(Nuke):
     unused: InitVar[int] = None
     def __post_init__(self, unused):
         super().__post_init__()

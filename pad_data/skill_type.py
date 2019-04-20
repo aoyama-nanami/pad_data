@@ -90,7 +90,7 @@ _EFFECT_MAP = {
     91: Map(OrbEnhance, orbs=[Orb, Orb], unused=int),
     92: Map(DamageBuff, duration=int, cond=[Type, Type], percentage=int),
     93: Map(LeaderSwap),
-    110: Map(RemainHpBasedDamage, target=Target, element=Orb,
+    110: Map(RemainingHpNuke, target=Target, element=Orb,
              percentage=[int, int], unused=int),
     115: Map(AtkNuke, target=Target.ONE, element=Orb, percentage=int,
              leech=int),

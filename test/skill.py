@@ -25,9 +25,9 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             2014,
             effect.AtkNuke(element=Orb.DARK,
-                        target=effect.Target.ONE,
-                        hp_remain=0,
-                        percentage=20000),
+                           target=effect.Target.ONE,
+                           hp_remain=0,
+                           percentage=20000),
             effect.RandomOrbSpawn(6, [Orb.HEART], [Orb.DARK, Orb.HEART]))
 
         # ガンダー
@@ -39,9 +39,9 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             4705,
             effect.AtkNuke(element=Orb.WOOD,
-                        target=effect.Target.ONE,
-                        hp_remain=50,
-                        percentage=10000),
+                           target=effect.Target.ONE,
+                           hp_remain=50,
+                           percentage=10000),
             effect.OrbChange(from_=[Orb.FIRE, Orb.DARK, Orb.JAMMER, Orb.POISON,
                                     Orb.MORTAL_POISON],
                              to=[Orb.WOOD]))
