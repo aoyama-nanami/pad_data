@@ -20,9 +20,20 @@ class Database:
             description = raw_effects[0]['clean_description']
             turn_max = raw_effects[0]['turn_max']
             turn_min = raw_effects[0]['turn_min']
-            effects = [skill_type.parse(s['skill_type'], s['other_fields'])
-                       for s in raw_effects
-                       if s['skill_type'] != skill_type.MULTI_EFFECT_ID]
+            effects = []
+            for s in raw_effects:
+                if s['skill_type'] == skill_type.MULTI_EFFECT_ID:
+                    continue
+                try:
+                    e = skill_type.parse(s['skill_type'], s['other_fields'])
+                    effects.append(e)
+                except Exception:
+                    print(
+                        c.card_id,
+                        description,
+                        s,
+                        sep=' ')
+                    raise
             _effect_post_process(effects)
             c.skill = card.Skill(
                 name, description, effects, turn_max, turn_min, raw_effects)
