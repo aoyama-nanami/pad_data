@@ -90,9 +90,11 @@ _AWAKENING_DAMAGE_MAP = {
     Awakening.TWO_WAY: 1.5,
     Awakening.MULTI_BOOST: 1.5,
     Awakening.L_ATTACK: 1.5,
+    Awakening.EIGHTY_HP_ENHANCED: 1.5,
 
     Awakening.ENHANCED_COMBO: 2,
     Awakening.SUPER_BONUS_ATTACK: 2,
+    Awakening.FIFTY_HP_ENHANCED: 2,
 
     Awakening.VOID_DAMAGE_PIERCER: 2.5,
 
