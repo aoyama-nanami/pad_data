@@ -80,7 +80,8 @@ class Card:
         return tuple(common.Type(
             getattr(self, f'type_{i}_id')) for i in range(1, 4))
 
-    def dump(self, atk_eval=atk_at_level, rcv_eval=rcv_at_level, print_skill=True):
+    def dump(self, atk_eval=atk_at_level, rcv_eval=rcv_at_level,
+             print_skill=True):
         print(util.element_to_color(self.element),
               self.name,
               util.element_to_color(common.Orb.NO_ORB),
