@@ -16,23 +16,18 @@ class Database:
 
         for c in self._cards.values():
             raw_effects = self._expand_skill(c.active_skill_id)
-            name = raw_effects[0]['name']
-            description = raw_effects[0]['clean_description']
-            turn_max = raw_effects[0]['turn_max']
-            turn_min = raw_effects[0]['turn_min']
+            s = self._skills[c.active_skill_id]
+            name = s['name']
+            description = s['clean_description']
+            turn_max = s['turn_max']
+            turn_min = s['turn_min']
             effects = []
             for s in raw_effects:
-                if s['skill_type'] == skill_type.MULTI_EFFECT_ID:
-                    continue
                 try:
                     e = skill_type.parse(s['skill_type'], s['other_fields'])
                     effects.append(e)
                 except Exception:
-                    print(
-                        c.card_id,
-                        description,
-                        s,
-                        sep=' ')
+                    print(c.card_id, description, s, sep=' ')
                     raise
             _effect_post_process(effects)
             c.skill = card.Skill(
@@ -49,7 +44,7 @@ class Database:
 
         return functools.reduce(list.__iadd__,
                                 map(self._expand_skill, s['other_fields']),
-                                [s])
+                                [])
 
     def get_all_released_cards(self):
         return list(filter(
