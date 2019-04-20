@@ -24,10 +24,10 @@ class TestSkillData(unittest.TestCase):
         # 生徒会長・ルシファー
         self.assert_skill_equal(
             2014,
-            effect.AtkBasedDamage(element=Orb.DARK,
-                                  target=effect.Target.ONE,
-                                  hp_remain=0,
-                                  percentage=20000),
+            effect.AtkNuke(element=Orb.DARK,
+                        target=effect.Target.ONE,
+                        hp_remain=0,
+                        percentage=20000),
             effect.RandomOrbSpawn(6, [Orb.HEART], [Orb.DARK, Orb.HEART]))
 
         # ガンダー
@@ -38,10 +38,10 @@ class TestSkillData(unittest.TestCase):
         # ライザー
         self.assert_skill_equal(
             4705,
-            effect.AtkBasedDamage(element=Orb.WOOD,
-                                  target=effect.Target.ONE,
-                                  hp_remain=50,
-                                  percentage=10000),
+            effect.AtkNuke(element=Orb.WOOD,
+                        target=effect.Target.ONE,
+                        hp_remain=50,
+                        percentage=10000),
             effect.OrbChange(from_=[Orb.FIRE, Orb.DARK, Orb.JAMMER, Orb.POISON,
                                     Orb.MORTAL_POISON],
                              to=[Orb.WOOD]))
@@ -50,7 +50,7 @@ class TestSkillData(unittest.TestCase):
         # no skill means id=0 and other_fields=[0,0]
         self.assert_skill_equal(
             1039,
-            effect.AtkBasedDamage(
+            effect.AtkNuke(
                 element=Orb.FIRE, percentage=0, target=effect.Target.ALL))
 
         # 炎の番人
@@ -96,7 +96,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             11,
             effect.DamageBuff(2, [Orb.WOOD], 150),
-            effect.AtkBasedDamage(
+            effect.AtkNuke(
                 element=Orb.WOOD, percentage=2000, target=effect.Target.ALL))
 
         # 炎鎚のキリコ アナザー カード
@@ -135,7 +135,7 @@ class TestSkillData(unittest.TestCase):
         # プテラス
         self.assert_skill_equal(
             14,
-            effect.AtkBasedDamage(
+            effect.AtkNuke(
                 element=Orb.LIGHT, percentage=1000, target=effect.Target.ALL))
 
         # 響奏の愛猫神・バステト
@@ -148,7 +148,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             5010,
             effect.DamageBuff(1, [Type.GOD], 500),
-            effect.FixedValueDamage(
+            effect.AtkNuke(
                 element=Orb.NO_ORB, value=150000, target=effect.Target.ONE,
                 ignore_def=True, repeat=5))
 

@@ -96,4 +96,3 @@ class Card:
                   self.skill.description)
         else:
             print()
-

@@ -48,14 +48,13 @@ class Database:
 def _effect_post_process(effects):
     # merge repeated attacks into one instance
     for i in range(len(effects)):
-        if isinstance(effects[i], effect.BaseDamageSkill):
+        if isinstance(effects[i], effect.AtkNuke):
             j = i + 1
             while j < len(effects) and effects[i] == effects[j]:
                 j += 1
             if j - i == 1:
                 continue
-            merged_effect = dataclasses.replace(effects[i], repeat=j - i,
-                                                unused=0)
+            merged_effect = dataclasses.replace(effects[i], repeat=j - i)
             effects[i:j] = [merged_effect]
             break
 

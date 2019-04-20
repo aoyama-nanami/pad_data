@@ -18,7 +18,7 @@ class RandomSkill:
         pass
 
 @dataclass
-class BaseDamageSkill:
+class Nuke:
     element: Orb
     target: Target
     leech: int = 0
@@ -32,9 +32,14 @@ class BaseDamageSkill:
             self.percentage = [self.percentage, self.percentage]
         assert self.percentage[0] <= self.percentage[1]
         assert self.percentage == [0, 0] or self.value == 0
+        assert not (self.element != Orb.NO_ORB and self.ignore_def)
 
 @dataclass
-class AtkBasedDamage(BaseDamageSkill):
+class AtkNuke(Nuke):
+    pass
+
+@dataclass
+class AtkNukeType2(AtkNuke):
     unused: InitVar[int] = 0
     def __post_init__(self, unused):
         super().__post_init__()
@@ -42,23 +47,23 @@ class AtkBasedDamage(BaseDamageSkill):
         assert unused == 0 or unused == self.percentage[0]
 
 @dataclass
-class TeamAtkBasedDamage(BaseDamageSkill):
+class TeamElementAtkNuke(Nuke):
     base_elem: List[Orb] = field(default_factory=list)
 
 @dataclass
-class TeamHpBasedDamage(BaseDamageSkill):
+class TeamHpNuke(Nuke):
     pass
 
+# an extra zero in type 86 and 87
 @dataclass
-class FixedValueDamage(BaseDamageSkill):
-    unused: InitVar[int] = 0
+class FixedValueNuke(Nuke):
+    unused: InitVar[int] = -1
     def __post_init__(self, unused):
         super().__post_init__()
-        assert not (self.element != Orb.NO_ORB and self.ignore_def)
         assert unused == 0
 
 @dataclass
-class RemainHpBasedDamage(BaseDamageSkill):
+class RemainHpBasedDamage(Nuke):
     unused: InitVar[int] = None
     def __post_init__(self, unused):
         super().__post_init__()
