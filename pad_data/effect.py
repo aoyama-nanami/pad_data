@@ -18,11 +18,14 @@ class RandomSkill:
         pass
 
 @dataclass
+class SacrificeMixin:
+    hp_remain: int = 100
+
+@dataclass
 class Nuke:
     element: Orb
     target: Target
     leech: int = 0
-    hp_remain: int = 100
     percentage: List[int] = field(default_factory=lambda: [0, 0])
     value: int = 0
     ignore_def: bool = False
@@ -35,7 +38,7 @@ class Nuke:
         assert not (self.element != Orb.NO_ORB and self.ignore_def)
 
 @dataclass
-class AtkNuke(Nuke):
+class AtkNuke(SacrificeMixin, Nuke):
     pass
 
 @dataclass
@@ -56,7 +59,7 @@ class TeamHpNuke(Nuke):
 
 # an extra zero in type 86 and 87
 @dataclass
-class FixedValueNuke(Nuke):
+class FixedValueNuke(AtkNuke):
     unused: InitVar[int] = None
     def __post_init__(self, unused):
         super().__post_init__()
@@ -293,7 +296,7 @@ class ComboIncrease(BaseBuff):
     combo: int
 
 @dataclass
-class Unlock:
+class Unlock(SacrificeMixin):
     pass
 
 @dataclass
