@@ -2,8 +2,8 @@ import copy
 import functools
 import itertools
 
-from .common import Orb, Type
-from .effect import *
+from pad_data.common import Orb, Type
+from pad_data.effect import *
 
 # special skill type for combined skill effect
 MULTI_EFFECT_ID = 116
@@ -60,8 +60,8 @@ _EFFECT_MAP = {
     20: Map(DoubleOrbChange, from1=Orb, to1=Orb, from2=Orb, to2=Orb),
     21: Map(ElementDamageReduction, duration=int, element=Orb,
             percentage=int),
-    35: Map(AtkBasedDamage, element=Orb.NO_ORB, percentage=int,
-            leech=int, target=Target.ONE),
+    35: Map(AtkBasedDamage, element=Orb.NO_ORB, percentage=int, leech=int,
+            target=Target.ONE),
     37: Map(AtkBasedDamage, element=Orb, percentage=int, target=Target.ONE),
     42: Map(FixedValueDamage, target=Orb, element=Orb, value=int),
     50: Map(DamageBuff, duration=int, cond=[Orb], percentage=int),
@@ -132,5 +132,5 @@ _EFFECT_MAP = {
     191: Map(VoidDamagePiercer, duration=int),
 }
 
-def parse_skill_effect(skill_type, args):
+def parse(skill_type, args):
     return _EFFECT_MAP[skill_type](*args)

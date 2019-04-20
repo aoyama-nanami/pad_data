@@ -1,9 +1,9 @@
-from dataclasses import dataclass
+import dataclasses
 from typing import List, Any
 
-from .common import Awakening, Orb, Type
+from pad_data import common
 
-@dataclass
+@dataclasses.dataclass
 class Skill:
     name: str
     description: str
@@ -58,20 +58,21 @@ class Card:
 
     @property
     def awakenings(self):
-        return list(map(Awakening, self._json_data['awakenings']))
+        return list(map(common.Awakening, self._json_data['awakenings']))
 
     @property
     def super_awakenings(self):
-        return list(map(Awakening, self._json_data['super_awakenings']))
+        return list(map(common.Awakening, self._json_data['super_awakenings']))
 
     @property
     def element(self):
-        return Orb(self.attr_id)
+        return common.Orb(self.attr_id)
 
     @property
     def sub_element(self):
-        return Orb(self.sub_attr_id)
+        return common.Orb(self.sub_attr_id)
 
     @property
     def type(self):
-        return tuple(Type(getattr(self, f'type_{i}_id')) for i in range(1, 4))
+        return tuple(common.Type(
+            getattr(self, f'type_{i}_id')) for i in range(1, 4))

@@ -2,13 +2,13 @@
 
 import unittest
 from pad_data.common import Orb
-from pad_data.database import Database
+from pad_data import database
 from pad_data import effect
 
 # random selected golden data
 class TestSkillData(unittest.TestCase):
     def setUp(self):
-        self._db = Database()
+        self._db = database.Database()
 
     def assert_skill_equal(self, card_id, *effects):
         self.assertSequenceEqual(

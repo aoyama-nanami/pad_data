@@ -2,56 +2,51 @@
 
 import collections
 import dataclasses
-import typing
 import wcwidth
+from typing import ClassVar, Mapping, Set
 
-from pad_data.database import Database
-from pad_data.card import Card
-from pad_data.common import Awakening, Orb, Type
-from pad_data.util import import_enum_members, element_to_color
+from pad_data import card, common, database, util
 
-import_enum_members(Awakening, globals())
-import_enum_members(Orb, globals())
-import_enum_members(Type, globals())
+util.import_enum_members(common.Awakening, globals())
+util.import_enum_members(common.Orb, globals())
+util.import_enum_members(common.Type, globals())
 
-def print_card(card, atk_eval=Card.atk_at_level, rcv_eval=Card.rcv_at_level):
-    print(element_to_color(card.element),
-          card.name,
-          element_to_color(NO_ORB),
-          ' ' * (50 - wcwidth.wcswidth(card.name)),
-          f'{card.hp_at_level():6}',
-          f'{atk_eval(card):8}',
-          f'{rcv_eval(card):5}',
+Type = common.Type
+Orb = common.Orb
+Awakening = common.Awakening
+
+def print_card(c, atk_eval=card.Card.atk_at_level,
+               rcv_eval=card.Card.rcv_at_level):
+    print(util.element_to_color(c.element),
+          c.name,
+          util.element_to_color(NO_ORB),
+          ' ' * (50 - wcwidth.wcswidth(c.name)),
+          f'{c.hp_at_level():6}',
+          f'{atk_eval(c):8}',
+          f'{rcv_eval(c):5}',
           sep='')
 
 # pylint: disable=undefined-variable
 @dataclasses.dataclass
 class AtkEvaluator:
-    LATENT_GOD_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, DEMON, MACHINE))
-    LATENT_DRAGON_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, HEALER))
-    LATENT_DEMON_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, GOD, ATTACK))
-    LATENT_MACHINE_KILLER: typing.ClassVar[typing.Set[Type]] = \
+    LATENT_GOD_KILLER: ClassVar[Set[Type]] = set((BALANCE, DEMON, MACHINE))
+    LATENT_DRAGON_KILLER: ClassVar[Set[Type]] = set((BALANCE, HEALER))
+    LATENT_DEMON_KILLER: ClassVar[Set[Type]] = set((BALANCE, GOD, ATTACK))
+    LATENT_MACHINE_KILLER: ClassVar[Set[Type]] = \
         set((BALANCE, PHYSICAL, DRAGON))
-    LATENT_BALANCE_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, MACHINE))
-    LATENT_ATTACK_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, HEALER))
-    LATENT_PHYSICAL_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, ATTACK))
-    LATENT_HEALER_KILLER: typing.ClassVar[typing.Set[Type]] = \
-        set((BALANCE, DRAGON, PHYSICAL))
+    LATENT_BALANCE_KILLER: ClassVar[Set[Type]] = set((BALANCE, MACHINE))
+    LATENT_ATTACK_KILLER: ClassVar[Set[Type]] = set((BALANCE, HEALER))
+    LATENT_PHYSICAL_KILLER: ClassVar[Set[Type]] = set((BALANCE, ATTACK))
+    LATENT_HEALER_KILLER: ClassVar[Set[Type]] = set((BALANCE, DRAGON, PHYSICAL))
 
-    awakenings: typing.Set[Awakening] = dataclasses.field(default_factory=set)
+    awakenings: Set[Awakening] = dataclasses.field(default_factory=set)
     multi: bool = False
-    elements: typing.Mapping[Orb, float] = \
+    elements: Mapping[Orb, float] = \
         dataclasses.field(default_factory=dict)
-    types: typing.Mapping[Type, float] = \
+    types: Mapping[Type, float] = \
         dataclasses.field(default_factory=dict)
 
-    target_enemy: dataclasses.InitVar[Card] = None
+    target_enemy: dataclasses.InitVar[card.Card] = None
     latent: dataclasses.InitVar[bool] = False
 
     def __post_init__(self, target_enemy, latent):
@@ -100,27 +95,27 @@ class AtkEvaluator:
                     self.types[t] *= 1.5 ** 3
 
 
-    def __call__(self, card):
-        atk = card.atk_at_level() + 495
-        atk += card.awakenings.count(ENHANCED_ATK) * 100
+    def __call__(self, c):
+        atk = c.atk_at_level() + 495
+        atk += c.awakenings.count(ENHANCED_ATK) * 100
 
         for a in self.awakenings:
-            atk *= a.damage_multiplier() ** card.awakenings.count(a)
+            atk *= a.damage_multiplier() ** c.awakenings.count(a)
 
         if not self.multi:
-            a = max(self.awakenings & set(card.super_awakenings),
+            a = max(self.awakenings & set(c.super_awakenings),
                     default=Awakening.ENHANCED_HP, # somthing without damage
                     key=Awakening.damage_multiplier)
             atk *= a.damage_multiplier()
 
-        atk *= self.elements[card.element]
-        atk *= max(self.types[t] for t in card.type)
+        atk *= self.elements[c.element]
+        atk *= max(self.types[t] for t in c.type)
 
         return round(atk)
 
 # pylint: disable=undefined-variable
 def main():
-    db = Database()
+    db = database.Database()
     cards = db.get_all_released_cards()
 
     config = AtkEvaluator(

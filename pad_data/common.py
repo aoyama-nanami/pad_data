@@ -1,7 +1,7 @@
-from enum import Enum, unique
+import enum
 
-@unique
-class Awakening(Enum):
+@enum.unique
+class Awakening(enum.Enum):
     ENHANCED_HP = 1
     ENHANCED_ATK = 2
     ENHANCED_RCV = 3
@@ -95,8 +95,8 @@ _AWAKENING_DAMAGE_MAP = {
 
     Awakening.ENHANCED_10_COMBO: 5}
 
-@unique
-class Orb(Enum):
+@enum.unique
+class Orb(enum.Enum):
     NO_ORB = -1
     FIRE = 0
     WATER = 1
@@ -109,8 +109,8 @@ class Orb(Enum):
     MORTAL_POISON = 8
     BOMB = 9
 
-@unique
-class Type(Enum):
+@enum.unique
+class Type(enum.Enum):
     NO_TYPE = -1
     EVOLVE_MATERIAL = 0
     BALANCE = 1

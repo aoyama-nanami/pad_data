@@ -1,18 +1,16 @@
 #! /usr/bin/env python3
 
 import unittest
-from pad_data.common import Awakening, Orb, Type
-from pad_data.database import Database
-from pad_data.util import import_enum_members
+from pad_data import common, database, util
 
-import_enum_members(Awakening, globals())
-import_enum_members(Orb, globals())
-import_enum_members(Type, globals())
+util.import_enum_members(common.Awakening, globals())
+util.import_enum_members(common.Orb, globals())
+util.import_enum_members(common.Type, globals())
 
 # pylint: disable=undefined-variable
 class TestCardData(unittest.TestCase):
     def setUp(self):
-        self._db = Database()
+        self._db = database.Database()
 
     def test_stat_calculation_1(self):
         # 蒼刻の魔導姫・アルス＝パウリナ
