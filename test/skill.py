@@ -47,11 +47,8 @@ class TestSkillData(unittest.TestCase):
                              to=[Orb.WOOD]))
 
         # ラモット
-        # no skill means id=0 and other_fields=[0,0]
-        self.assert_skill_equal(
-            1039,
-            effect.AtkNuke(
-                element=Orb.FIRE, percentage=0, target=effect.Target.ALL))
+        # no skill
+        self.assert_skill_equal(1039)
 
         # 炎の番人
         self.assert_skill_equal(

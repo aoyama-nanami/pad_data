@@ -16,6 +16,9 @@ class Database:
 
         for c in self._cards.values():
             raw_effects = self._expand_skill(c.active_skill_id)
+            if c.active_skill_id == 0:
+                c.skill = card.Skill('', '', [], 0, 0, raw_effects)
+                continue
             s = self._skills[c.active_skill_id]
             name = s['name']
             description = s['clean_description']
