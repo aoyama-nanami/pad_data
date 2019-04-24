@@ -86,9 +86,9 @@ class Card:
               self.name,
               util.element_to_color(common.Orb.NO_ORB),
               ' ' * (50 - wcwidth.wcswidth(self.name)),
-              f'{self.hp_at_level():6}',
+              f'{self.hp_at_level():8}',
               f'{atk_eval(self):8}',
-              f'{rcv_eval(self):5}',
+              f'{rcv_eval(self):8}',
               sep='',
               end='  ')
 
