@@ -39,8 +39,8 @@ class Awakening(enum.Enum):
     ENHANCED_HEART_ORB = 29 # 回復ドロップ強化
     MULTI_BOOST = 30
 
-    GOD_KILLER = 31
-    DRAGON_KILLER = 32
+    DRAGON_KILLER = 31
+    GOD_KILLER = 32
     DEMON_KILLER = 33
     MACHINE_KILLER = 34
     BALANCE_KILLER = 35

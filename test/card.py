@@ -86,7 +86,7 @@ class TestCardData(unittest.TestCase):
 
         self.assertSequenceEqual(
             self._db.card(3268).awakenings,
-            [DRAGON_KILLER, GOD_KILLER, DEMON_KILLER, MACHINE_KILLER,
+            [GOD_KILLER, DRAGON_KILLER, DEMON_KILLER, MACHINE_KILLER,
              BALANCE_KILLER, ATTACK_KILLER, PHYSICAL_KILLER, HEALER_KILLER])
 
         self.assertSequenceEqual(
