@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module'
 import './atk-eval-config.js'
 import { assetsToIconCss } from './common.js'
 
@@ -7,23 +7,13 @@ class AtkEvalConfig extends LitElement {
     return {
       awakenings: { type: Array },
       elements: { type: Array },
-    };
+    }
   }
 
   static get styles() {
     return [
       assetsToIconCss(),
       css`
-        #awakenings > input {
-          display: none;
-        }
-        #awakenings > label {
-          display: inline;
-        }
-        #awakenings > input:not(:checked) + label {
-          filter: grayscale(100%);
-        }
-
         #elements > input {
           width: 3em;
           text-align: right;
@@ -42,8 +32,7 @@ class AtkEvalConfig extends LitElement {
   }
 
   handleChange() {
-    this.awakenings = Array.from(this.shadowRoot
-      .querySelectorAll('#awakenings > input:checked'))
+    this.awakenings = Array.from(this.shadowRoot.querySelectorAll('#awakenings input:checked'))
       .map(e => parseInt(e.id.slice(1)))
     this.elements = [0, 1, 2, 3, 4]
       .map(i => this.shadowRoot.querySelector('#o' + i).value)
@@ -67,11 +56,13 @@ class AtkEvalConfig extends LitElement {
 
   awakeningCheckBox_(i) {
     return html`
+      <span class="icon-checkbox">
         <input type="checkbox" id="a${i}" @change="${this.handleChange}"
-               .checked=${this.awakenings.some(x => x == i)}>
+               .checked=${this.awakenings.includes(i)}>
         <label for="a${i}">
           <div class="awakening-${i} awakening"></div>
         </label>
+      </span>
     `
   }
 
@@ -90,8 +81,8 @@ class AtkEvalConfig extends LitElement {
       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, /* killers */
       43, 48, 50, 57, 58, 60, 61,
     ]
-    console.log('render')
     return html`
+      <link rel="stylesheet" type="text/css" href="style.css">
       <fieldset>
         <legend>damage parameters</legend>
         <div id="awakenings">
@@ -104,5 +95,5 @@ class AtkEvalConfig extends LitElement {
     `
   }
 }
-customElements.define('atk-eval-config', AtkEvalConfig);
+customElements.define('atk-eval-config', AtkEvalConfig)
 

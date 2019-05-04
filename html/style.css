@@ -1,0 +1,16 @@
+body {
+  font-family:'メイリオ',Meiryo,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',sans-serif;
+}
+
+.icon-checkbox > input {
+  display: none;
+}
+
+.icon-checkbox > label {
+  display: inline;
+}
+
+.icon-checkbox > input:not(:checked) + label {
+  filter: grayscale(100%);
+}
+
