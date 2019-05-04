@@ -1,12 +1,15 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module'
 import './atk-eval-config.js'
 import { assetsToIconCss } from './common.js'
+import { Awakening } from './awakening.js'
+import { Type, TypeReverse } from './type.js'
 
 class AtkEvalConfig extends LitElement {
   static get properties() {
     return {
       awakenings: { type: Array },
       elements: { type: Array },
+      target: { type: String },
     }
   }
 
@@ -17,6 +20,9 @@ class AtkEvalConfig extends LitElement {
         #elements > input {
           width: 3em;
           text-align: right;
+        }
+        .card-body > div {
+          margin-top: 3px;
         }
       `
     ]
@@ -34,17 +40,53 @@ class AtkEvalConfig extends LitElement {
       .map(i => this.shadowRoot.querySelector('#o' + i).value)
       .map(x => parseFloat(x, 10))
       .map(x => isNaN(x) ? 1 : x)
+    this.target = this.shadowRoot.querySelector('#target').value
+    document.querySelector('app-main').sort()
   }
 
   reset() {
     this.awakenings = [27, 43, 57]
     this.elements = [1, 1, 1, 1, 1]
+    this.target = ""
   }
 
   generateConfig() {
-    let multi = this.awakenings.some(x => x == 30)
+    let awakenings = new Set(this.awakenings)
+    let multi = awakenings.has(Awakening.MULTI_BOOST)
+    let elements = Array.from(this.elements)
+
+    let target = this.targetCard
+    if (target) {
+      [target.type_1_id, target.type_2_id, target.type_3_id]
+        .filter(x => x >= 0)
+        .map(x => TypeReverse[x] + '_KILLER')
+        .map(x => Awakening[x])
+        .forEach(x => awakenings.add(x))
+
+      switch (target.attr_id) {
+        case 0:
+          elements[1] *= 2
+          elements[2] *= 0.5
+          break;
+        case 1:
+          elements[2] *= 2
+          elements[0] *= 0.5
+          break;
+        case 2:
+          elements[0] *= 2
+          elements[1] *= 0.5
+          break;
+        case 3:
+          elements[4] *= 2
+          break;
+        case 4:
+          elements[3] *= 2
+          break;
+      }
+    }
+
     return {
-      awakenings: this.awakenings,
+      awakenings: awakenings,
       multi: multi,
       elements: this.elements,
     }
@@ -71,6 +113,18 @@ class AtkEvalConfig extends LitElement {
     `
   }
 
+  get targetCard() {
+    let n = parseInt(this.target)
+    if (isNaN(n)) return undefined
+    return document.querySelector('app-main').card(n)
+  }
+
+  displayTargetName_() {
+    let card = this.targetCard
+    if (!card) return ''
+    return html`${card.name}`
+  }
+
   render() {
     const awakenings = [
       27, 30, /* two way, multi boost */
@@ -86,6 +140,13 @@ class AtkEvalConfig extends LitElement {
         </div>
         <div id="elements">
           ${[0, 1, 2, 3, 4].map(i => this.orbField_(i))}
+        </div>
+        <div>
+          Target:
+          <input type="text" id="target" .value="${this.target}"
+                 @change="${this.handleChange}"
+                 size="5" maxlength="5">
+          ${this.displayTargetName_()}
         </div>
       </div>
     `

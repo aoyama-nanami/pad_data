@@ -42,8 +42,8 @@ const ORB_CSS_ = Array(5).fill(0).map((_, i) =>
     .orb-${unsafeCSS(i)} {
       background-image: url(images/orb${unsafeCSS(i)}.png);
       background-size: contain;
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
       display: inline-block;
     }
   `)
@@ -97,8 +97,8 @@ function assetsToIconCss() {
     AWAKENING_CSS_,
     css`
       .orb--1, .awakening--1 {
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         display: inline-block;
       }
     `
