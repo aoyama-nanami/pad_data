@@ -39,17 +39,12 @@ function atkEval(card, config) {
 
 const ORB_CSS_ = Array(5).fill(0).map((_, i) =>
   css`
-    .orb-${unsafeCSS(i)}-small {
-      background-image: url(images/block2.png);
-      background-size: 83px 84.3px;
-      background-position: ${unsafeCSS(-(104 * (i % 4) + 2) / 6)}px
-        ${unsafeCSS(-(105 * Math.floor(i / 4) + 1) / 6)}px;
-    }
     .orb-${unsafeCSS(i)} {
-      background-image: url(images/block2.png);
-      background-size: 166px 168.6px;
-      background-position: ${unsafeCSS(-(104 * (i % 4) + 2) / 3)}px
-        ${unsafeCSS(-(105 * Math.floor(i / 4) + 1) / 3)}px;
+      background-image: url(images/orb${unsafeCSS(i)}.png);
+      background-size: contain;
+      width: 30px;
+      height: 30px;
+      display: inline-block;
     }
   `)
 
@@ -89,7 +84,10 @@ const AWAKENING_CSS_ = Array(65).fill(0).map((_, i) =>
   css`.awakening-${unsafeCSS(i)} {
     background-image: url(images/eggs.png);
     background-position: ${unsafeCSS(offsetX_(i))}px
-      ${unsafeCSS(offsetY_(i))}px
+      ${unsafeCSS(offsetY_(i))}px;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
   }`)
 
 
@@ -98,21 +96,12 @@ function assetsToIconCss() {
     ORB_CSS_,
     AWAKENING_CSS_,
     css`
-      .orb-small {
-        width: 16px;
-        height: 16px;
+      .orb--1, .awakening--1 {
+        width: 30px;
+        height: 30px;
         display: inline-block;
       }
-      .orb {
-        width: 32px;
-        height: 32px;
-        display: inline-block;
-      }
-      .awakening {
-        width: 32px;
-        height: 32px;
-        display: inline-block;
-      }`,
+    `
   ]
 }
 

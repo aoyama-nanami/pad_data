@@ -71,7 +71,7 @@ class Element extends LitElement {
         <input type="checkbox" id="o${i}" @change="${this.handleChange}"
                .checked=${this.elements[i]}>
         <label for="o${i}">
-          <div class="orb-${i}-small orb-small"></div>
+          <div class="orb-${i}"></div>
         </label>
       </span>
     `
@@ -138,15 +138,13 @@ class CardFilter extends LitElement {
   }
 
   render() {
-    console.log(this.filters)
     return html`
-      <fieldset>
-        <legend>search filter</legend>
-        <div>
-          ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
-          <button @click=${this.newFilter_}>+</button>
-        </div>
-      </fieldset>
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <div class="card-title">search filter</div>
+      <div class="card-body">
+        ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
+        <button @click=${this.newFilter_}>+</button>
+      </div>
     `
   }
 }

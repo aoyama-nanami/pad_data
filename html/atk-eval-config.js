@@ -18,10 +18,6 @@ class AtkEvalConfig extends LitElement {
           width: 3em;
           text-align: right;
         }
-        legend {
-          padding-left: 0.5em;
-          padding-right: 0.5em;
-        }
       `
     ]
   }
@@ -60,7 +56,7 @@ class AtkEvalConfig extends LitElement {
         <input type="checkbox" id="a${i}" @change="${this.handleChange}"
                .checked=${this.awakenings.includes(i)}>
         <label for="a${i}">
-          <div class="awakening-${i} awakening"></div>
+          <div class="awakening-${i}"></div>
         </label>
       </span>
     `
@@ -68,7 +64,7 @@ class AtkEvalConfig extends LitElement {
 
   orbField_(i) {
     return html`
-      <div class="orb-${i} orb"></div>
+      <div class="orb-${i}"></div>
       <input type="text" placeholder="1" id="o${i}"
              .value="${this.elements[i] == 1 ? '' : this.elements[i]}"
              @change="${this.handleChange}">
@@ -83,15 +79,15 @@ class AtkEvalConfig extends LitElement {
     ]
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
-      <fieldset>
-        <legend>damage parameters</legend>
+      <div class="card-title">damage parameters</div>
+      <div class="card-body">
         <div id="awakenings">
           ${awakenings.map(i => this.awakeningCheckBox_(i))}
         </div>
         <div id="elements">
           ${[0, 1, 2, 3, 4].map(i => this.orbField_(i))}
         </div>
-      </fieldset>
+      </div>
     `
   }
 }

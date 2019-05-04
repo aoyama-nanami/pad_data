@@ -54,7 +54,7 @@ class AppMain extends LitElement {
     let a = this.data
       .filter(c => filter.apply(c))
       .sort((c1, c2) => atkEval(c2, config) - atkEval(c1, config))
-      .slice(0, 40)
+      .slice(0, 30)
 
     let filter_result = this.qs_('filter-result')
     filter_result.data = a
@@ -62,21 +62,21 @@ class AppMain extends LitElement {
   }
 
   resetAtkConfig() {
-    console.log(this.qs_('atk-eval-config').awakenings)
     this.qs_('atk-eval-config').reset()
-    console.log(this.qs_('atk-eval-config').awakenings)
   }
 
   render() {
     return html`
-      <button @click="${this.handleClick}" ?disabled="${this.data.length == 0}">sort!</button>
-      <button @click="${this.resetAtkConfig}" ?disabled="${this.data.length == 0}">reset</button>
+      <link rel="stylesheet" type="text/css" href="style.css">
       <div class="grid-two-col">
-        <atk-eval-config></atk-eval-config>
-        <card-filter></card-filter>
+        <div class="card" style="grid-column-end: span 2">
+          <button @click="${this.handleClick}" ?disabled="${this.data.length == 0}">sort!</button>
+          <button @click="${this.resetAtkConfig}" ?disabled="${this.data.length == 0}">reset</button>
+        </div>
+        <atk-eval-config class="card"></atk-eval-config>
+        <card-filter class="card"></card-filter>
+        <filter-result id="result" class="card" style="grid-column-end: span 2"></filter-result>
       </div>
-      <br>
-      <filter-result id="result"></filter-result>
     `
   }
 }
