@@ -25,14 +25,21 @@ const FILTERS_ = [
   },
 ]
 
-class VoidDamagePiercer extends LitElement {
+class FilterBase extends LitElement {
+  updated() {
+    super.updated()
+    document.querySelector('app-main').sort()
+  }
+}
+
+class VoidDamagePiercer extends FilterBase {
   apply(c) {
     return c.awakenings.includes(Awakening.VOID_DAMAGE_PIERCER)
   }
 }
 customElements.define('filter-void-damage-piercer', VoidDamagePiercer)
 
-class Element extends LitElement {
+class Element extends FilterBase {
   static get properties() {
     return {
       elements: { type: Array },

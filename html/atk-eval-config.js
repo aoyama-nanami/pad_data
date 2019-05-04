@@ -41,7 +41,6 @@ class AtkEvalConfig extends LitElement {
       .map(x => parseFloat(x, 10))
       .map(x => isNaN(x) ? 1 : x)
     this.target = this.shadowRoot.querySelector('#target').value
-    document.querySelector('app-main').sort()
   }
 
   reset() {
@@ -123,6 +122,10 @@ class AtkEvalConfig extends LitElement {
     let card = this.targetCard
     if (!card) return ''
     return html`${card.name}`
+  }
+
+  updated() {
+    document.querySelector('app-main').sort()
   }
 
   render() {

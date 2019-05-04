@@ -79,11 +79,12 @@ class AppMain extends LitElement {
   }
 
   render() {
+    if (!this.ready)
+      return html`loading...`
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
       <div class="grid-two-col">
         <div class="card" style="grid-column-end: span 2">
-          <button @click="${this.handleClick}" ?disabled="${!this.ready}">sort!</button>
           <button @click="${this.resetAtkConfig}" ?disabled="${!this.ready}">reset</button>
         </div>
         <atk-eval-config class="card"></atk-eval-config>
