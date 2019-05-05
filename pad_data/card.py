@@ -1,3 +1,4 @@
+import copy
 import dataclasses
 from typing import Any, List, Mapping
 import wcwidth
@@ -49,6 +50,21 @@ class Card:
             return round(max_v * (1 + limit_mult * (lv - 99) / 1100))
 
         raise ValueError('level out of range')
+
+    @property
+    def merged_json(self):
+        obj = copy.deepcopy(self._json_data)
+        obj['type'] = [self.type_1_id, self.type_2_id, self.type_3_id]
+        obj['skill'] = {
+            'name': self.skill.name,
+            'description': self.skill.description,
+            'turn_max': self.skill.turn_max,
+            'turn_min': self.skill.turn_min,
+        }
+        obj['skill']['effects'] = (
+            list(map(lambda e: [type(e).__name__, e.__dict__],
+                     self.skill.effects)))
+        return obj
 
     def atk_at_level(self, level=None):
         return self._stat_at_level('atk', level)

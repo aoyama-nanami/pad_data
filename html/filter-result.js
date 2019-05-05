@@ -15,7 +15,7 @@ class FilterResult extends LitElement {
       css`
         .grid {
           display: grid;
-          grid-template-columns: repeat(7, max-content) auto;
+          grid-template-columns: repeat(9, max-content) auto;
           line-height: 24px;
         }
         .grid-row {
@@ -32,7 +32,8 @@ class FilterResult extends LitElement {
         }
         .numeric-cell {
           text-align: right;
-          padding-left: 8px;
+          padding-left: 5px;
+          padding-right: 5px;
         }
         a {
           color: #DDD;
@@ -79,6 +80,8 @@ class FilterResult extends LitElement {
           ${card.super_awakenings.map(
             i => html`<div class="awakening-${i}"></div> `)}
         </div>
+        <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
+        <div class="grid-cell">${card.skill.description}</div>
         <div class="grid-cell">
         </div>
       </div>

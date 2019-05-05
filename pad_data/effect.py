@@ -7,7 +7,7 @@ from .common import Awakening, Orb, Type
 def orb_list(bit_mask):
     return [Orb(i) for i in range(32) if (1 << i) & bit_mask]
 
-class Target(enum.Enum):
+class Target(enum.IntEnum):
     ALL = 0
     ONE = 1
 

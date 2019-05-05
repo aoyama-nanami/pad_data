@@ -28,14 +28,11 @@ class AppMain extends LitElement {
   }
 
   loadDatabase() {
-    fetch('data/jp_cards.json')
+    fetch('data/jp_cards_merged.json')
       .then(r => r.json())
       .then(obj => {
         let a = []
-        obj.forEach(x => {
-          if (x.card.released_status && x.card.card_id < 10000)
-            a[x.card.card_id] = x.card
-        })
+        obj.forEach(c => a[c.card_id] = c)
         this.data = a
         this.updateComplete.then(() => this.sort())
       })
