@@ -9,7 +9,13 @@ const FILTERS_ = [
   },
   {
     desc: '無效貫通',
-    render: () => html`<filter-void-damage-piercer class="filter"></filter-void-damage-piercer>`
+    render: () => html`
+      <filter-awakening
+        class="filter"
+        arg="[${Awakening.VOID_DAMAGE_PIERCER}, 1]"
+        superAwakening
+        count="1">
+      </filter-awakening>`
   },
   {
     desc: '主屬',
@@ -23,6 +29,28 @@ const FILTERS_ = [
     desc: '主或副屬',
     render: () => html`<filter-element class="filter" main sub></filter-element>`
   },
+  {
+    desc: '操作時間延長',
+    render: () => html`
+      <filter-awakening
+        class="filter"
+        arg="[${Awakening.EXTEND_TIME}, 1, ${Awakening.EXTEND_TIME_PLUS}, 2]"
+        count="1"
+        superAwakening
+        canEdit>
+      </filter-awakening>`
+  },
+  {
+    desc: 'Skill Boost',
+    render: () => html`
+      <filter-awakening
+        class="filter"
+        arg="[${Awakening.SKILL_BOOST}, 1, ${Awakening.SKILL_BOOST_PLUS}, 2]"
+        count="1"
+        superAwakening
+        canEdit>
+      </filter-awakening>`
+  },
 ]
 
 class FilterBase extends LitElement {
@@ -32,14 +60,67 @@ class FilterBase extends LitElement {
   }
 }
 
-class VoidDamagePiercer extends FilterBase {
+class FilterAwakening extends FilterBase {
+  static get properties() {
+    return {
+      arg: { type: Array },
+      count: { type: Number },
+      canEdit: { type: Boolean },
+      superAwakening: { type: Boolean },
+    }
+  }
+
+  static get styles() {
+    return css`
+      #count {
+        width: 40px;
+      }
+      .hidden {
+        display: none;
+      }
+    `
+  }
+
+  countAwakening(a) {
+    if (a == this.arg[0])
+      return this.arg[1]
+    if (a == this.arg[2])
+      return this.arg[3]
+    return 0
+  }
+
+  handleChange() {
+    this.count = parseInt(this.shadowRoot.querySelector('#count').value)
+    this.superAwakening = this.shadowRoot.querySelector('#sa').checked
+  }
+
+  render() {
+    return html`
+      <span class="${this.canEdit ? '' : 'hidden'}">
+        &ge;
+        <input
+          type="number" min="1" step="1" .value="${this.count}"
+          maxlength="2" id="count" @change="${this.handleChange}"
+          >
+        <input type="checkbox" .value="${this.superAwakening}" id="sa"
+               .checked=${this.superAwakening}
+               @change="${this.handleChange}>
+        <label for="sa">包含超覺醒</label>
+      </span>
+    `
+  }
+
   apply(c) {
-    return c.awakenings.includes(Awakening.VOID_DAMAGE_PIERCER)
+    let val = 0
+    val += c.awakenings.reduce((x, a) => x + this.countAwakening(a), 0)
+    if (this.superAwakening)
+      val += c.super_awakenings.reduce((x, a) => x + this.countAwakening(a), 0)
+    return val >= this.count
   }
 }
-customElements.define('filter-void-damage-piercer', VoidDamagePiercer)
+customElements.define('filter-awakening', FilterAwakening)
 
-class Element extends FilterBase {
+class FilterElement extends FilterBase {
   static get properties() {
     return {
       elements: { type: Array },
@@ -91,7 +172,7 @@ class Element extends FilterBase {
     `
   }
 }
-customElements.define('filter-element', Element)
+customElements.define('filter-element', FilterElement)
 
 class CardFilter extends LitElement {
   static get properties() {

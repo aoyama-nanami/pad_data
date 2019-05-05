@@ -37,7 +37,7 @@ class AppMain extends LitElement {
             a[x.card.card_id] = x.card
         })
         this.data = a
-        this.sort()
+        this.updateComplete.then(() => this.sort())
       })
   }
 
@@ -85,7 +85,7 @@ class AppMain extends LitElement {
       <link rel="stylesheet" type="text/css" href="style.css">
       <div class="grid-two-col">
         <div class="card" style="grid-column-end: span 2">
-          <button @click="${this.resetAtkConfig}" ?disabled="${!this.ready}">reset</button>
+          <button @click="${this.resetAtkConfig}">reset</button>
         </div>
         <atk-eval-config class="card"></atk-eval-config>
         <card-filter class="card"></card-filter>
