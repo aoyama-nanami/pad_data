@@ -54,16 +54,26 @@ const AWAKENING_CSS_ = Array(65).fill(0).map((_, i) =>
     width: 24px;
     height: 24px;
     display: inline-block;
-    vertical-align: baseline;
+    vertical-align: middle;
   }`)
 
+const TYPE_CSS_ = Array(16).fill(1).map((_, i) =>
+  css`.type-${unsafeCSS(i)} {
+    background-image: url(images/t${unsafeCSS(i)}.png);
+    background-size: contain;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+  }`)
 
 function assetsToIconCss() {
   return [
     ORB_CSS_,
     AWAKENING_CSS_,
+    TYPE_CSS_,
     css`
-      .orb--1, .awakening--1 {
+      .orb--1, .awakening--1, .type--1 {
         width: 20px;
         height: 20px;
         display: inline-block;

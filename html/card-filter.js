@@ -96,6 +96,9 @@ class FilterAwakening extends FilterBase {
 
   render() {
     return html`
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet">
       <span class="${this.canEdit ? '' : 'hidden'}">
         &ge;
         <input
@@ -103,11 +106,12 @@ class FilterAwakening extends FilterBase {
           maxlength="2" id="count" @change="${this.handleChange}"
           >
       </span>
-      <span>
+      <span class="toggle-checkbox">
+        超覺醒
         <input type="checkbox" .value="${this.superAwakening}" id="sa"
-               .checked=${this.superAwakening}
-               @change="${this.handleChange}>
-        <label for="sa">包含超覺醒</label>
+               .checked="${this.superAwakening}"
+               @change="${this.handleChange}">
+        <label for="sa" class="material-icons"></label>
       </span>
     `
   }

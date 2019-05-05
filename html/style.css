@@ -20,6 +20,21 @@ body {
   filter: grayscale(100%);
 }
 
+.toggle-checkbox > input {
+  display: none;
+}
+
+.toggle-checkbox > input:checked ~ label::after {
+  content: "toggle_on";
+  color: rgb(84, 135, 229);
+  vertical-align: middle;
+}
+
+.toggle-checkbox > input:not(:checked) ~ label::after {
+  content: "toggle_off";
+  vertical-align: middle;
+}
+
 :host(.card), .card {
   background-color: #333333;
   margin: 6px 6px 6px 6px;
