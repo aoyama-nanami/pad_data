@@ -108,8 +108,7 @@ class FilterAwakening extends FilterBase {
       </span>
       <span class="toggle-checkbox">
         超覺醒
-        <input type="checkbox" .value="${this.superAwakening}" id="sa"
-               .checked="${this.superAwakening}"
+        <input type="checkbox" .checked="${this.superAwakening}" id="sa"
                @change="${this.handleChange}">
         <label for="sa" class="material-icons"></label>
       </span>
@@ -143,10 +142,12 @@ class FilterElement extends FilterBase {
 
   constructor() {
     super()
-    this.elements = [0, 0, 0, 0, 0]
+    this.elements = [false, false, false, false, false]
   }
 
   apply(c) {
+    if (this.elements.every(x => !x))
+      return true
     if (this.main && this.elements[c.attr_id])
       return true
     if (this.sub && this.elements[c.sub_attr_id])
@@ -156,7 +157,7 @@ class FilterElement extends FilterBase {
 
   handleChange() {
     this.elements = Array.from(this.shadowRoot.querySelectorAll('input'))
-      .map(e => e.checked ? 1 : 0)
+      .map(e => e.checked)
   }
 
   orbCheckbox_(i) {

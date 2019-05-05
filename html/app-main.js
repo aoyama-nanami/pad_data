@@ -14,9 +14,10 @@ class AppMain extends LitElement {
         display: grid;
         grid-template-columns: 50% 50%;
         grid-column-gap: 0.5rem;
-        width: 100%;
-        min-width: 1800px;
+        width: 1400px;
         overflow: hidden;
+        margin-left: auto;
+        margin-right: auto;
       }
     `
   }

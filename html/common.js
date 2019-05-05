@@ -34,6 +34,9 @@ function atkEval(card, config) {
 
   atk *= config.elements[card.attr_id]
 
+  if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id)
+    atk *= 1.1
+
   return Math.round(atk)
 }
 

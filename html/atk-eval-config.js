@@ -10,6 +10,7 @@ class AtkEvalConfig extends LitElement {
       awakenings: { type: Array },
       elements: { type: Array },
       target: { type: String },
+      includeSubElemDamage: { type: Boolean },
     }
   }
 
@@ -41,12 +42,14 @@ class AtkEvalConfig extends LitElement {
       .map(x => parseFloat(x, 10))
       .map(x => isNaN(x) ? 1 : x)
     this.target = this.shadowRoot.querySelector('#target').value
+    this.includeSubElemDamage = this.shadowRoot.querySelector('#sub-elem').checked
   }
 
   reset() {
     this.awakenings = [27, 43, 57]
     this.elements = [1, 1, 1, 1, 1]
     this.target = ""
+    this.includeSubElemDamage = true
   }
 
   generateConfig() {
@@ -88,6 +91,7 @@ class AtkEvalConfig extends LitElement {
       awakenings: awakenings,
       multi: multi,
       elements: this.elements,
+      includeSubElemDamage: this.includeSubElemDamage,
     }
   }
 
@@ -153,12 +157,20 @@ class AtkEvalConfig extends LitElement {
           ${[0, 1, 2, 3, 4].map(i => this.orbField_(i))}
         </div>
         <div>
-          Target:
+          目標敵人:
           <input type="text" id="target" .value="${this.target}"
                  @change="${this.handleChange}"
                  size="12" maxlength="5"
                  placeholder="input pet ID">
           ${this.displayTargetName_()}
+        </div>
+        <div>
+          <span class="toggle-checkbox">
+            <input type="checkbox" .checked="${this.includeSubElemDamage}"
+                   id="sub-elem" @change="${this.handleChange}">
+            <label for="sub-elem" class="material-icons"></label>
+            主副屬相同時加算副屬傷害
+          </span>
         </div>
       </div>
     `
