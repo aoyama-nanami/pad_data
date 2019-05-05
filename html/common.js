@@ -38,15 +38,14 @@ function atkEval(card, config) {
 }
 
 const ORB_CSS_ = Array(5).fill(0).map((_, i) =>
-  css`
-    .orb-${unsafeCSS(i)} {
-      background-image: url(images/orb${unsafeCSS(i)}.png);
-      background-size: contain;
-      width: 24px;
-      height: 24px;
-      display: inline-block;
-    }
-  `)
+  css`.orb-${unsafeCSS(i)} {
+    background-image: url(images/orb${unsafeCSS(i)}.png);
+    background-size: contain;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+  }`)
 
 const AWAKENING_CSS_ = Array(65).fill(0).map((_, i) =>
   css`.awakening-${unsafeCSS(i)} {
@@ -55,6 +54,7 @@ const AWAKENING_CSS_ = Array(65).fill(0).map((_, i) =>
     width: 24px;
     height: 24px;
     display: inline-block;
+    vertical-align: baseline;
   }`)
 
 

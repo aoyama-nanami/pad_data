@@ -102,6 +102,8 @@ class FilterAwakening extends FilterBase {
           type="number" min="1" step="1" .value="${this.count}"
           maxlength="2" id="count" @change="${this.handleChange}"
           >
+      </span>
+      <span>
         <input type="checkbox" .value="${this.superAwakening}" id="sa"
                .checked=${this.superAwakening}
                @change="${this.handleChange}>
@@ -216,7 +218,10 @@ class CardFilter extends LitElement {
 
   renderFilterRow_(x, i) {
     return html`
-      <button @click="${()=>this.deleteFilter_(i)}">-</button>
+      <span @click="${()=>this.deleteFilter_(i)}" class="material-icons"
+              title="remove">
+        remove
+      </span>
       <select .value="${x}" @change="${this.updateFilter_}" data-index="${i}">
         ${FILTERS_.map((y, j) => html`<option value="${j}">${y.desc}</option>`)}
       </select>
@@ -233,10 +238,15 @@ class CardFilter extends LitElement {
   render() {
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
-      <div class="card-title">search filter</div>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet">
+      <div class="card-title">Filter</div>
       <div class="card-body">
+        <span @click="${this.newFilter_}" class="material-icons"
+                title="add filter">
+          add_circle
+        </span><br>
         ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
-        <button @click=${this.newFilter_}>+</button>
       </div>
     `
   }

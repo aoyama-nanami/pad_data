@@ -9,8 +9,11 @@ body {
   display: none;
 }
 
-.icon-checkbox > label {
-  display: inline;
+.icon-checkbox, .icon-checkbox > label {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
 }
 
 .icon-checkbox > input:not(:checked) + label {
@@ -25,9 +28,25 @@ body {
 .card-title {
   background-color: #666666;
   padding: 6px 6px 6px 6px;
+  font-weight: bold;
+  line-height: 24px;
+  color: rgb(226, 226, 226);
 }
 
 .card-body {
   background-color: #333333;
   padding: 6px 6px 6px 6px;
+}
+
+span.material-icons {
+  color: rgb(154, 154, 154);
+  font-weight: normal;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+input[type=text], input[type=number], select, option {
+  background-color: rgb(33, 33, 33);
+  color: rgb(226, 226, 226);
+  border: none;
 }

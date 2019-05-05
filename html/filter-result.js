@@ -16,16 +16,19 @@ class FilterResult extends LitElement {
         .grid {
           display: grid;
           grid-template-columns: repeat(7, max-content) auto;
-          grid-auto-rows: 36px;
+          line-height: 24px;
         }
         .grid-row {
           display: contents;
         }
         .grid-row:hover .grid-cell {
-          background-color: #222222;
+          background-color: rgba(161, 194, 250, 0.2);
         }
         .grid-cell {
           padding: 3px 3px 3px 3px;
+          height: 24px;
+          display: inline-block;
+          vertical-align: baseline;
         }
         .numeric-cell {
           text-align: right;
@@ -46,9 +49,7 @@ class FilterResult extends LitElement {
     if (this.data) {
       return html`
         <link rel="stylesheet" type="text/css" href="style.css">
-        <div class="card-body">
-          <div class="grid">${this.data.map(x => this._renderRow(x))}</div>
-        </div>
+        <div class="grid">${this.data.map(x => this._renderRow(x))}</div>
       `
     }
     else
@@ -71,12 +72,12 @@ class FilterResult extends LitElement {
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           ${card.awakenings.map(
-            i => html`<div class="awakening-${i}"></div>`)}
+            i => html`<div class="awakening-${i}"></div> `)}
           <div class="awakening--1"></div>
         </div>
         <div class="grid-cell">
           ${card.super_awakenings.map(
-            i => html`<div class="awakening-${i}"></div>`)}
+            i => html`<div class="awakening-${i}"></div> `)}
         </div>
         <div class="grid-cell">
         </div>

@@ -22,7 +22,7 @@ class AtkEvalConfig extends LitElement {
           text-align: right;
         }
         .card-body > div {
-          margin-top: 3px;
+          padding: 3px 3px 3px 3px;
         }
       `
     ]
@@ -136,7 +136,15 @@ class AtkEvalConfig extends LitElement {
     ]
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
-      <div class="card-title">damage parameters</div>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet">
+      <div class="card-title">
+        Damage Parameters
+        <span id="reset" @click="${this.reset}" class="material-icons"
+                title="reset">
+          cached
+        </span>
+      </div>
       <div class="card-body">
         <div id="awakenings">
           ${awakenings.map(i => this.awakeningCheckBox_(i))}
@@ -148,7 +156,8 @@ class AtkEvalConfig extends LitElement {
           Target:
           <input type="text" id="target" .value="${this.target}"
                  @change="${this.handleChange}"
-                 size="5" maxlength="5">
+                 size="12" maxlength="5"
+                 placeholder="input pet ID">
           ${this.displayTargetName_()}
         </div>
       </div>

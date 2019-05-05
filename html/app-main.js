@@ -70,10 +70,6 @@ class AppMain extends LitElement {
     filter_result.config = config
   }
 
-  resetAtkConfig() {
-    this.qs_('atk-eval-config').reset()
-  }
-
   get ready() {
     return this.data.length > 0
   }
@@ -84,9 +80,6 @@ class AppMain extends LitElement {
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
       <div class="grid-two-col">
-        <div class="card" style="grid-column-end: span 2">
-          <button @click="${this.resetAtkConfig}">reset</button>
-        </div>
         <atk-eval-config class="card"></atk-eval-config>
         <card-filter class="card"></card-filter>
         <filter-result id="result" class="card" style="grid-column-end: span 2"></filter-result>
