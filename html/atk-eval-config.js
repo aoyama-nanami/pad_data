@@ -62,13 +62,19 @@ class AtkEvalConfig extends LitElement {
   handleChange() {
     this.awakenings = Array.from(this.shadowRoot.querySelectorAll('#awakenings input:checked'))
       .map(e => parseInt(e.id.slice(1)))
-    this.target = this.shadowRoot.querySelector('#target').value
-    this.latentKillerCount =
-      parseInt(this.shadowRoot.querySelector('#latent-killer-count').value)
+    let newTarget = this.shadowRoot.querySelector('#target').value
+    if (this.target != newTarget) {
+      this.target = newTarget
+      this.passiveResistIndex = -1
+      this.latentKillerCount = 0
+    } else {
+      this.passiveResistIndex =
+        parseInt(this.shadowRoot.querySelector('input[name="passive-id"]:checked').value)
+      this.latentKillerCount =
+        parseInt(this.shadowRoot.querySelector('#latent-killer-count').value)
+    }
     this.includeSubElemDamage =
       this.shadowRoot.querySelector('#sub-elem').checked
-    this.passiveResistIndex =
-      parseInt(this.shadowRoot.querySelector('input[name="passive-id"]:checked').value)
   }
 
   reset() {
