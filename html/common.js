@@ -36,12 +36,9 @@ function atkEval(card, config) {
   if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id)
     atk *= 1.1
 
-  let type_multiplier = 1
-  card.type.forEach(x => {
-    if (x > 0)
-      type_multiplier = Math.max(type_multiplier, config.types[x])
+  config.types.forEach(a => {
+    if (card.type.some(x => a[0].includes(x))) atk *= a[1]
   })
-  atk *= type_multiplier
 
   return Math.round(atk)
 }

@@ -15,10 +15,18 @@ class Skill:
     turn_min: int
     json_data: List[Mapping[str, Any]]
 
+@dataclasses.dataclass
+class EnemyPassiveResist:
+    name: str
+    skill_type: int  # 72: element resist, 118: type resist
+    skill_name: str
+    param: List[int]
+
 class Card:
     def __init__(self, json_data):
         self._json_data = json_data
         self.skill = None
+        self.enemy_passive_resist = []
 
     def __getattr__(self, name):
         return self._json_data[name]
@@ -53,9 +61,10 @@ class Card:
         raise ValueError('level out of range')
 
     _FIELD_WHITELIST = set([
-        'attr_id', 'awakenings', 'card_id', 'inheritable', 'limit_mult',
-        'max_atk', 'max_hp', 'max_level', 'max_rcv', 'min_atk', 'min_hp',
-        'min_rcv', 'name', 'skill', 'sub_attr_id', 'super_awakenings', 'type',
+        'attr_id', 'awakenings', 'card_id', 'enemy_passive_resist',
+        'inheritable', 'limit_mult', 'max_atk', 'max_hp', 'max_level',
+        'max_rcv', 'min_atk', 'min_hp', 'min_rcv', 'name', 'skill',
+        'sub_attr_id', 'super_awakenings', 'type',
     ])
     @property
     def merged_json(self):
@@ -70,6 +79,8 @@ class Card:
         obj['skill']['effects'] = (
             list(map(lambda e: [type(e).__name__, e.__dict__],
                      self.skill.effects)))
+        obj['enemy_passive_resist'] = (
+            list(e.__dict__ for e in self.enemy_passive_resist))
         return dict((k, v) for k, v in obj.items()
                      if k in Card._FIELD_WHITELIST)
 

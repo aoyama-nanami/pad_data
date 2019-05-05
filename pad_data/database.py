@@ -6,13 +6,17 @@ from pad_data import card, effect, skill_type
 
 class Database:
     def __init__(self, raw_cards_json='data/processed/jp_raw_cards.json',
-                 skills_json='data/processed/jp_skills.json'):
+                 skills_json='data/processed/jp_skills.json',
+                 enemy_skills_json='data/processed/jp_enemy_skills.json'):
         with open(raw_cards_json, 'r') as f:
             self._cards = dict(
                 (c['card_id'], card.Card(c)) for c in json.load(f))
 
         with open(skills_json, 'r') as f:
             self._skills = dict((s['skill_id'], s) for s in json.load(f))
+
+        with open(enemy_skills_json, 'r') as f:
+            enemy_skills = dict((s['enemy_skill_id'], s) for s in json.load(f))
 
         for c in self._cards.values():
             raw_effects = self._expand_skill(c.active_skill_id)
@@ -37,6 +41,24 @@ class Database:
             c.skill = card.Skill(
                 name, clean_description, description, effects, turn_max,
                 turn_min, raw_effects)
+
+        for c in self._cards.values():
+            card_id = c.card_id % 100000
+            skills = [enemy_skills[ref['enemy_skill_id']]
+                      for ref in c.enemy_skill_refs]
+            # TODO: implement enemy skill type
+            skills = [s for s in skills if s['type'] in (72, 118)]
+            if len(skills) == 0: continue
+            assert len(skills) == 1
+            skill = skills[0]
+            passive = card.EnemyPassiveResist(
+                c.name,
+                skill['type'],
+                skill['name'],
+                [skill['params'][1], skill['params'][2]],
+            )
+            self._cards[card_id].enemy_passive_resist.append(
+                passive)
 
     def card(self, card_id):
         return self._cards[card_id]
