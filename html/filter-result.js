@@ -15,7 +15,7 @@ class FilterResult extends LitElement {
       css`
         .grid {
           display: grid;
-          grid-template-columns: repeat(8, max-content) auto;
+          grid-template-columns: 90px 270px 50px 80px 50px 270px 30px 30px auto;
           line-height: 24px;
         }
         .grid-row {
@@ -62,6 +62,8 @@ class FilterResult extends LitElement {
     if (this.data) {
       return html`
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
         <div class="grid">${this.data.map(x => this._renderRow(x))}</div>
       `
     }
@@ -71,40 +73,41 @@ class FilterResult extends LitElement {
 
   _renderRow(card) {
     return html`
-      <div class="grid-row">
+      <a class="grid-row" href="http://pad.skyozora.com/pets/${card.card_id}"
+         target="_blank">
         <div class="grid-cell">
           <div style="height: 27px">
-            <div class="orb-${card.attr_id}"></div><div class="orb-${card.sub_attr_id}"></div>
+            <div class="orb-${card.attr_id}"></div>
+            <div class="orb-${card.sub_attr_id}"></div>
           </div>
           <div style="height: 24px">
-            ${card.type.map(i => html`<div class="type-${i}"></div>`)}
+            ${card.type.map(i => html`<div class="type-${i}"></div> `)}
           </div>
         </div>
-        <a href="http://pad.skyozora.com/pets/${card.card_id}"
-          class="grid-cell"
-           target="_blank">
+        <div class="grid-cell">
           ${card.name}
-        </a>
+        </div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
         <div class="grid-cell numeric-cell">${atkEval(card, this.config)}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           <div style="height: 27px">
             ${card.awakenings.map(
-              i => html`<div class="awakening-${i}"></div>`)}
+              i => html`<div class="awakening-${i}"></div> `)}
           </div>
           <div style="height: 24px">
             ${card.super_awakenings.map(
-              i => html`<div class="awakening-${i}"></div>`)}
+              i => html`<div class="awakening-${i}"></div> `)}
           </div>
         </div>
         <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
+        <div class="grid-cell material-icons">
+          ${card.inheritable ? 'check' : ''}
+        </div>
         <div class="grid-cell">
           <pre class="skill-desc">${card.skill.description}</pre>
         </div>
-        <div class="grid-cell">
-        </div>
-      </div>
+      </a>
     `
   }
 }

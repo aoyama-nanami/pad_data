@@ -14,7 +14,7 @@ class AppMain extends LitElement {
         display: grid;
         grid-template-columns: 50% 50%;
         grid-column-gap: 0.5rem;
-        width: 1400px;
+        width: 1600px;
         overflow: hidden;
         margin-left: auto;
         margin-right: auto;
