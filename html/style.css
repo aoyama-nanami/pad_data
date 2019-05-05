@@ -65,3 +65,9 @@ input[type=text], input[type=number], select, option {
   color: rgb(226, 226, 226);
   border: none;
 }
+
+a {
+  font-family: inherit;
+  color: inherit;
+  text-decoration: inherit;
+}

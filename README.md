@@ -1,6 +1,8 @@
-Web Version (experimental)
+Web UI (experimental)
 ======
-[link](https://aoyama-nanami.github.io/pad_data/html/)
+Requires Chrome 65+, Firefox 63+.
+
+<https://aoyama-nanami.github.io/pad_data/html/>
 
 Code Review
 ======

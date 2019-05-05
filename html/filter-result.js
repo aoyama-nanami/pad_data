@@ -40,13 +40,6 @@ class FilterResult extends LitElement {
           padding-left: 5px;
           padding-right: 5px;
         }
-        a {
-          color: #DDD;
-          text-decoration: none;
-        }
-        a:hover {
-          text-decoration: underline;
-        }
         .skill-desc {
           font-family: inherit;
           font-size: inherit;

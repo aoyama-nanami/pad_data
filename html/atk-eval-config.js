@@ -4,6 +4,17 @@ import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
 import { Type, TypeReverse } from './type.js'
 
+const LATENT = new Map([
+  [Type.GOD, new Set([Type.BALANCE, Type.DEMON, Type.MACHINE])],
+  [Type.DRAGON, new Set([Type.BALANCE, Type.HEALER])],
+  [Type.DEMON, new Set([Type.BALANCE, Type.GOD, Type.ATTACK])],
+  [Type.MACHINE, new Set([Type.BALANCE, Type.PHYSICAL, Type.DRAGON])],
+  [Type.BALANCE, new Set([Type.BALANCE, Type.MACHINE])],
+  [Type.ATTACK, new Set([Type.BALANCE, Type.HEALER])],
+  [Type.PHYSICAL, new Set([Type.BALANCE, Type.ATTACK])],
+  [Type.HEALER, new Set([Type.BALANCE, Type.DRAGON, Type.PHYSICAL])],
+])
+
 class AtkEvalConfig extends LitElement {
   static get properties() {
     return {
@@ -11,6 +22,7 @@ class AtkEvalConfig extends LitElement {
       elements: { type: Array },
       target: { type: String },
       includeSubElemDamage: { type: Boolean },
+      latentKillerCount: {type: Number },
     }
   }
 
@@ -24,6 +36,9 @@ class AtkEvalConfig extends LitElement {
         }
         .card-body > div {
           padding: 3px 3px 3px 3px;
+        }
+        #latent-killer-count {
+          width: 40px;
         }
       `
     ]
@@ -42,6 +57,7 @@ class AtkEvalConfig extends LitElement {
       .map(x => parseFloat(x, 10))
       .map(x => isNaN(x) ? 1 : x)
     this.target = this.shadowRoot.querySelector('#target').value
+    this.latentKillerCount = parseInt(this.shadowRoot.querySelector('#latent-killer-count').value)
     this.includeSubElemDamage = this.shadowRoot.querySelector('#sub-elem').checked
   }
 
@@ -49,6 +65,7 @@ class AtkEvalConfig extends LitElement {
     this.awakenings = [27, 43, 57]
     this.elements = [1, 1, 1, 1, 1]
     this.target = ""
+    this.latentKillerCount = 0
     this.includeSubElemDamage = true
   }
 
@@ -56,6 +73,8 @@ class AtkEvalConfig extends LitElement {
     let awakenings = new Set(this.awakenings)
     let multi = awakenings.has(Awakening.MULTI_BOOST)
     let elements = Array.from(this.elements)
+    let types = {}
+    Object.keys(Type).forEach(k => types[Type[k]] = 1)
 
     let target = this.targetCard
     if (target) {
@@ -84,14 +103,27 @@ class AtkEvalConfig extends LitElement {
         case 4:
           elements[3] *= 2
           break;
+
+      }
+      if (this.latentKillerCount > 0) {
+        let m = Math.pow(1.5, this.latentKillerCount)
+        target.type.forEach(x => {
+          if (x >= 1 && x <= 8) {
+            LATENT.get(x).forEach(y => types[y] = m)
+          } else if (x == 0 || x == 12 || x == 14 || x == 15) {
+            Object.keys(types).forEach(k => types[k] = m)
+          }
+        })
       }
     }
+    console.log(types)
 
     return {
       awakenings: awakenings,
       multi: multi,
       elements: this.elements,
       includeSubElemDamage: this.includeSubElemDamage,
+      types: types,
     }
   }
 
@@ -125,7 +157,11 @@ class AtkEvalConfig extends LitElement {
   displayTargetName_() {
     let card = this.targetCard
     if (!card) return ''
-    return html`${card.name}`
+    return html`
+      <a href="http://pad.skyozora.com/pets/${card.card_id}"
+         class="target-name-info">
+        ${card.name}
+      </a>`
   }
 
   updated() {
@@ -163,6 +199,13 @@ class AtkEvalConfig extends LitElement {
                  size="12" maxlength="5"
                  placeholder="input pet ID">
           ${this.displayTargetName_()}
+          <br>
+          <span style="${!this.targetCard ? 'display: none' : ''}">
+            潛覺殺手
+            <input type="number" .value="${this.latentKillerCount}"
+                   @change="${this.handleChange}"
+                   min="0" max="3" step="1" id="latent-killer-count">
+          </span>
         </div>
         <div>
           <span class="toggle-checkbox">

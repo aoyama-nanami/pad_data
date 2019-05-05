@@ -1,5 +1,4 @@
 const Type = {
-    NO_TYPE: -1,
     EVOLVE_MATERIAL: 0,
     BALANCE: 1,
     PHYSICAL: 2,
