@@ -56,7 +56,7 @@ class AtkEvalConfig extends LitElement {
 
     let target = this.targetCard
     if (target) {
-      [target.type_1_id, target.type_2_id, target.type_3_id]
+      target.type
         .filter(x => x >= 0)
         .map(x => TypeReverse[x] + '_KILLER')
         .map(x => Awakening[x])

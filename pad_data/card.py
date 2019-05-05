@@ -8,6 +8,7 @@ from pad_data import common, util
 @dataclasses.dataclass
 class Skill:
     name: str
+    clean_description: str
     description: str
     effects: List[Any]
     turn_max: int
@@ -51,6 +52,11 @@ class Card:
 
         raise ValueError('level out of range')
 
+    _FIELD_WHITELIST = set([
+        'attr_id', 'awakenings', 'card_id', 'inheritable', 'limit_mult',
+        'max_atk', 'max_hp', 'max_level', 'max_rcv', 'min_atk', 'min_hp',
+        'min_rcv', 'name', 'skill', 'sub_attr_id', 'super_awakenings', 'type',
+    ])
     @property
     def merged_json(self):
         obj = copy.deepcopy(self._json_data)
@@ -64,7 +70,8 @@ class Card:
         obj['skill']['effects'] = (
             list(map(lambda e: [type(e).__name__, e.__dict__],
                      self.skill.effects)))
-        return obj
+        return dict((k, v) for k, v in obj.items()
+                     if k in Card._FIELD_WHITELIST)
 
     def atk_at_level(self, level=None):
         return self._stat_at_level('atk', level)
@@ -110,6 +117,6 @@ class Card:
 
         if print_skill:
             print(f'{self.skill.turn_max:2}/{self.skill.turn_min:2}',
-                  self.skill.description)
+                  self.skill.clean_description)
         else:
             print()

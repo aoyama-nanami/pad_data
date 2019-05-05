@@ -34,7 +34,7 @@ class AppMain extends LitElement {
         let a = []
         obj.forEach(c => a[c.card_id] = c)
         this.data = a
-        this.updateComplete.then(() => this.sort())
+        this.sort()
       })
   }
 
@@ -72,11 +72,12 @@ class AppMain extends LitElement {
   }
 
   render() {
-    if (!this.ready)
-      return html`loading...`
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
-      <div class="grid-two-col">
+      <div style="${this.ready ? 'display: none' : ''}">
+        loading...
+      </div>
+      <div class="grid-two-col" style="${!this.ready ? 'display: none' : ''}">
         <atk-eval-config class="card"></atk-eval-config>
         <card-filter class="card"></card-filter>
         <filter-result id="result" class="card" style="grid-column-end: span 2"></filter-result>

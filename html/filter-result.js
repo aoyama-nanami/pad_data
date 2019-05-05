@@ -27,7 +27,7 @@ class FilterResult extends LitElement {
         }
 
         .grid-cell {
-          padding: 3px 3px 3px 3px;
+          padding: 3px 3px 0 3px;
           height: 54px;
           display: inline-block;
           vertical-align: baseline;
@@ -46,6 +46,13 @@ class FilterResult extends LitElement {
         }
         a:hover {
           text-decoration: underline;
+        }
+        .skill-desc {
+          font-family: inherit;
+          font-size: inherit;
+          display: inline;
+          vertical-align: middle;
+          padding-top: 3px;
         }
       `
     ]
@@ -92,7 +99,9 @@ class FilterResult extends LitElement {
           </div>
         </div>
         <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
-        <div class="grid-cell">${card.skill.description}</div>
+        <div class="grid-cell">
+          <pre class="skill-desc">${card.skill.description}</pre>
+        </div>
         <div class="grid-cell">
         </div>
       </div>
