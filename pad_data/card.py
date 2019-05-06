@@ -17,6 +17,7 @@ class Skill:
 
 @dataclasses.dataclass
 class EnemyPassiveResist:
+    enemy_skill_id: int
     name: str
     skill_type: int  # 72: element resist, 118: type resist
     skill_name: str

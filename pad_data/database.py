@@ -51,14 +51,18 @@ class Database:
             if len(skills) == 0: continue
             assert len(skills) == 1
             skill = skills[0]
+            skill_id = skill['enemy_skill_id']
             passive = card.EnemyPassiveResist(
+                skill_id,
                 c.name,
                 skill['type'],
                 skill['name'],
-                [skill['params'][1], skill['params'][2]],
+                skill['params'][1:3],
             )
-            self._cards[card_id].enemy_passive_resist.append(
-                passive)
+            if all(s.enemy_skill_id != skill_id for s in
+                   self._cards[card_id].enemy_passive_resist):
+                self._cards[card_id].enemy_passive_resist.append(
+                    passive)
 
     def card(self, card_id):
         return self._cards[card_id]
