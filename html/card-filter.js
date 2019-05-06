@@ -197,11 +197,11 @@ class CardFilter extends LitElement {
   constructor() {
     super()
     this.filters = []
+    this.filter_elements_ = []
   }
 
   apply(card) {
-    return Array.from(this.shadowRoot.querySelectorAll('.filter'))
-      .every(e => e.apply(card))
+    return this.filter_elements_.every(e => e.apply(card))
   }
 
   newFilter_() {
@@ -237,6 +237,8 @@ class CardFilter extends LitElement {
 
   updated() {
     super.updated()
+    this.filter_elements_ = Array.from(
+      this.shadowRoot.querySelectorAll('.filter'))
     document.querySelector('app-main').sort()
   }
 

@@ -18,7 +18,7 @@ function atkEval(card, config) {
       atk += 100
   })
 
-  let config_awakenings = new Set(config.awakenings)
+  let config_awakenings = config.awakenings
   card.awakenings.forEach(a => {
     if (config_awakenings.has(a))
       atk *= awakeningDamageMultiplier(a)

@@ -43,10 +43,6 @@ class AppMain extends LitElement {
     return this.shadowRoot.querySelector(x)
   }
 
-  qsa_(x) {
-    return this.shadowRoot.querySelectorAll(x)
-  }
-
   card(id) {
     return this.data[id]
   }
@@ -60,8 +56,10 @@ class AppMain extends LitElement {
     let filter = this.qs_('card-filter')
     let a = this.data
       .filter(c => filter.apply(c))
-      .sort((c1, c2) => atkEval(c2, config) - atkEval(c1, config))
+      .map(c => [c, atkEval(c, config)])
+      .sort((a1, a2) => a2[1] - a1[1])
       .slice(0, 30)
+      .map(a => a[0])
 
     let filter_result = this.qs_('filter-result')
     filter_result.data = a
