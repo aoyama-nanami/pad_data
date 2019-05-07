@@ -15,7 +15,6 @@ const FILTERS_ = [
       <filter-awakening
         class="filter"
         arg="[[${Awakening.VOID_DAMAGE_PIERCER}, 1]]"
-        superAwakening
         count="1">
       </filter-awakening>`
   },
@@ -38,7 +37,6 @@ const FILTERS_ = [
         class="filter"
         arg="[[${Awakening.EXTEND_TIME}, 1], [${Awakening.EXTEND_TIME_PLUS}, 2]]"
         count="1"
-        superAwakening
         canEdit>
       </filter-awakening>`
   },
@@ -49,7 +47,6 @@ const FILTERS_ = [
         class="filter"
         arg="[[${Awakening.SKILL_BOOST}, 1], [${Awakening.SKILL_BOOST_PLUS}, 2]]"
         count="1"
-        superAwakening
         canEdit>
       </filter-awakening>`
   },
@@ -76,7 +73,6 @@ class FilterAwakening extends FilterBase {
       arg: { type: Array },
       count: { type: Number },
       canEdit: { type: Boolean },
-      superAwakening: { type: Boolean },
     }
   }
 
@@ -108,14 +104,19 @@ class FilterAwakening extends FilterBase {
           type="number" min="1" step="1" .value="${bind(this, 'count')}"
           maxlength="2" id="count">
       </span>
-      ${toggleCheckbox('超覺醒', bind(this, 'superAwakening'), false)}
     `
+  }
+
+  get multi() {
+    let e = document.querySelector('app-main')
+      .shadowRoot.querySelector('atk-eval-config')
+    return e.awakenings[Awakening.MULTI_BOOST]
   }
 
   apply(c) {
     let val = 0
     val += c.awakenings.reduce((x, a) => x + this.countAwakening(a), 0)
-    if (this.superAwakening)
+    if (!this.multi)
       val += c.super_awakenings.reduce((x, a) => x + this.countAwakening(a), 0)
     return val >= this.count
   }
