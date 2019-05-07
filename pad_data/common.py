@@ -129,3 +129,13 @@ class Type(enum.IntEnum):
     AWAKEN_MATERIAL = 12
     ENHANCE_MATERIAL = 14
     VENDOR_MATERIAL = 15
+
+@enum.unique
+class EnemySkill(enum.IntEnum):
+    # TODO: implement full list
+    VOID_SHIELD = 71
+    SKILL_SET = 83  # set of multiple skills id in args
+
+    # passive skill
+    ELEMENT_RESIST = 72
+    TYPE_RESIST = 118

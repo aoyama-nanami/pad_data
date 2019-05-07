@@ -182,9 +182,9 @@ class AtkEvalConfig extends LitElement {
 
   displayPassiveResist_(x, i) {
     let type = x['skill_type']
-    let args = bitFlagToArray(x['param'][0])
-    let ratio = x['param'][1]
     if (type == 72 || type == 118) {
+      let args = bitFlagToArray(x['param'][0])
+      let ratio = x['param'][1]
       return toggleCheckbox(
         html`
           ${x['skill_name']} -
@@ -196,6 +196,14 @@ class AtkEvalConfig extends LitElement {
         `,
         bind(this, 'passiveResistIndexes', i),
         false
+      )
+    } else if (type == 71) {
+      let turn = x['param'][0]
+      let threshold = x['param'][2]
+      return toggleCheckbox(
+        `${x['skill_name']} - ${turn}回合, ${threshold}以上傷害無效化`,
+        bind(this, 'passiveResistIndexes', i),
+        true
       )
     }
   }

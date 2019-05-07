@@ -2,7 +2,9 @@ import dataclasses
 import functools
 import json
 
-from pad_data import card, effect, skill_type
+from pad_data import card, common, effect, skill_type, util
+
+util.import_enum_members(common.EnemySkill, globals())
 
 class Database:
     def __init__(self, raw_cards_json='data/processed/jp_raw_cards.json',
@@ -44,25 +46,30 @@ class Database:
 
         for c in self._cards.values():
             card_id = c.card_id % 100000
-            skills = [enemy_skills[ref['enemy_skill_id']]
-                      for ref in c.enemy_skill_refs]
-            # TODO: implement enemy skill type
-            skills = [s for s in skills if s['type'] in (72, 118)]
-            if len(skills) == 0: continue
-            assert len(skills) == 1
-            skill = skills[0]
-            skill_id = skill['enemy_skill_id']
-            passive = card.EnemyPassiveResist(
-                skill_id,
-                c.name,
-                skill['type'],
-                skill['name'],
-                skill['params'][1:3],
-            )
-            if all(s.enemy_skill_id != skill_id for s in
-                   self._cards[card_id].enemy_passive_resist):
-                self._cards[card_id].enemy_passive_resist.append(
-                    passive)
+            skills = []
+            for ref in c.enemy_skill_refs:
+                s = enemy_skills[ref['enemy_skill_id']]
+                skills.append(s)
+                if s['type'] == SKILL_SET:
+                    for skill_id in filter(lambda x: x, s['params'][1:]):
+                        skills.append(enemy_skills[skill_id])
+
+            skills = [s for s in skills 
+                      if s['type'] in
+                      [VOID_SHIELD, ELEMENT_RESIST, TYPE_RESIST]]
+            for skill in skills:
+                skill_id = skill['enemy_skill_id']
+                combined_skill_data = card.EnemyPassiveResist(
+                    skill_id,
+                    c.name,
+                    skill['type'],
+                    skill['name'],
+                    skill['params'][1:],
+                )
+                if all(s.enemy_skill_id != skill_id for s in
+                       self._cards[card_id].enemy_passive_resist):
+                    self._cards[card_id].enemy_passive_resist.append(
+                        combined_skill_data)
 
     def card(self, card_id):
         return self._cards[card_id]
