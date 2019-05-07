@@ -15,6 +15,8 @@ export const bind = directive((context, ...props) => (part) => {
         let v;
         switch (target.type) {
           case 'text':
+            v = target.value
+            break
           case 'number':
             v = parseInt(target.value)
             break
