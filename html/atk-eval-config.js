@@ -4,6 +4,7 @@ import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
 import { Type, TypeReverse } from './type.js'
 import { bind } from './util/bind.js'
+import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
 
 const LATENT = new Map([
   [Type.GOD, new Set([Type.BALANCE, Type.DEMON, Type.MACHINE])],
@@ -33,7 +34,7 @@ class AtkEvalConfig extends LitElement {
       target: { type: String },
       includeSubElemDamage: { type: Boolean },
       latentKillerCount: { type: Number },
-      passiveResistIndex: { type: Number },
+      passiveResistIndexes: { type: Array },
     }
   }
 
@@ -60,34 +61,30 @@ class AtkEvalConfig extends LitElement {
     this.reset()
   }
 
-  handleChange() {
-    this.awakenings = Array.from(this.shadowRoot.querySelectorAll('#awakenings input:checked'))
-      .map(e => parseInt(e.id.slice(1)))
-    let newTarget = this.shadowRoot.querySelector('#target').value
-    if (this.target != newTarget) {
-      this.target = newTarget
-      this.passiveResistIndex = -1
-      this.latentKillerCount = 0
-    } else {
-      this.passiveResistIndex =
-        parseInt(this.shadowRoot.querySelector('input[name="passive-id"]:checked').value)
-      this.latentKillerCount =
-        parseInt(this.shadowRoot.querySelector('#latent-killer-count').value)
-    }
-    this.includeSubElemDamage =
-      this.shadowRoot.querySelector('#sub-elem').checked
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties)
+    this.shadowRoot.querySelector('#target').addEventListener(
+      'change', ev => {
+        this.passiveResistIndexes = []
+        this.latentKillerCount = 0
+      })
   }
 
   reset() {
-    this.awakenings = [27, 43, 57]
+    this.awakenings = [];
+    [27, 43, 57, 58, 60].forEach(i => {this.awakenings[i] = true})
     this.target = ""
     this.latentKillerCount = 0
     this.includeSubElemDamage = true
-    this.passiveResistIndex = -1
+    this.passiveResistIndexes = []
   }
 
   generateConfig() {
-    let awakenings = new Set(this.awakenings)
+    let awakenings =
+      new Set(this.awakenings
+        .map((_, i) => i)
+        .filter(i => this.awakenings[i])
+      )
     let multi = awakenings.has(Awakening.MULTI_BOOST)
     let elements = [1, 1, 1, 1, 1]
     let types = []
@@ -133,8 +130,10 @@ class AtkEvalConfig extends LitElement {
         })
         types.push([latentTypes, latentBonusDamage])
       }
-      if (this.passiveResistIndex >= 0) {
-        let skill = this.targetCard['enemy_passive_resist'][this.passiveResistIndex]
+      this.passiveResistIndexes.forEach((enabled, i) => {
+        if (!enabled)
+          return
+        let skill = this.targetCard['enemy_passive_resist'][i]
         let type = skill['skill_type']
         let args = bitFlagToArray(skill['param'][0])
         let ratio = skill['param'][1]
@@ -144,7 +143,7 @@ class AtkEvalConfig extends LitElement {
         } else {
           types.push([args, ratio / 100.0])
         }
-      }
+      })
     }
 
     return {
@@ -157,15 +156,7 @@ class AtkEvalConfig extends LitElement {
   }
 
   awakeningCheckBox_(i) {
-    return html`
-      <span class="icon-checkbox">
-        <input type="checkbox" id="a${i}" @change="${this.handleChange}"
-               .checked=${this.awakenings.includes(i)}>
-        <label for="a${i}">
-          <div class="awakening-${i}"></div>
-        </label>
-      </span>
-    `
+    return iconCheckbox(`awakening-${i}`, bind(this, 'awakenings', i), false)
   }
 
   get targetCard() {
@@ -188,22 +179,18 @@ class AtkEvalConfig extends LitElement {
     let type = x['skill_type']
     let args = bitFlagToArray(x['param'][0])
     let ratio = x['param'][1]
-    return html`
-      <div>
-        <input type="radio" name="passive-id" value="${i}"
-               id="passive-id-${i}"
-               @click="${this.handleChange}"
-               .checked="${this.passiveResistIndex == i}">
-        <label for="passive-id-${i}">
-          ${x['skill_name']} -
-          ${type == 72 ?
-            args.map(i => html`<div class="orb-${i}"></div>`) :
-            args.map(i => html`<div class="type-${i}"></div>`)
-          }
-          傷害${ratio}%輕減
-        </label>
-      </div>
-    `
+    return toggleCheckbox(
+      html`
+        ${x['skill_name']} -
+        ${type == 72 ?
+          args.map(i => html`<div class="orb-${i}"></div>`) :
+          args.map(i => html`<div class="type-${i}"></div>`)
+        }
+        傷害${ratio}%輕減
+      `,
+      bind(this, 'passiveResistIndexes', i),
+      false
+    )
   }
 
   updated() {
@@ -245,28 +232,16 @@ class AtkEvalConfig extends LitElement {
                      min="0" max="3" step="1" id="latent-killer-count">
             </div>
             <div>
-              被動減傷:
-              <div>
-                <input type="radio" name="passive-id" value="-1"
-                       id="passive-id--1"
-                       @click="${this.handleChange}"
-                       .checked="${this.passiveResistIndex == -1}">
-                <label for="passive-id--1">無</label>
-              </div>
+              被動減傷:<br>
               ${this.targetCard ?
                 this.targetCard['enemy_passive_resist'].map(
-                  (x, i) => this.displayPassiveResist_(x, i)) :
+                  (x, i) => html`${this.displayPassiveResist_(x, i)}<br>`) :
                 ''}
             </div>
           </div>
         </div>
         <div>
-          <span class="toggle-checkbox">
-            <input type="checkbox" id="sub-elem"
-                   .checked="${bind(this, 'includeSubElemDamage')}">
-            <label for="sub-elem" class="material-icons"></label>
-            主副屬相同時加算副屬傷害
-          </span>
+          ${toggleCheckbox('主副屬相同時加算副屬傷害', bind(this, 'includeSubElemDamage'), false)}
         </div>
       </div>
     `

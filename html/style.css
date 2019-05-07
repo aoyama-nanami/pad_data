@@ -9,14 +9,14 @@ body {
   display: none;
 }
 
-.icon-checkbox, .icon-checkbox > label {
+label.icon-checkbox {
   display: inline-block;
   width: 24px;
   height: 24px;
   vertical-align: middle;
 }
 
-.icon-checkbox > input:not(:checked) + label {
+.icon-checkbox > input:not(:checked) + div {
   filter: grayscale(100%);
 }
 
@@ -24,13 +24,13 @@ body {
   display: none;
 }
 
-.toggle-checkbox > input:checked ~ label::after {
+.toggle-checkbox > input:checked ~ span:after {
   content: "toggle_on";
   color: rgb(84, 135, 229);
   vertical-align: middle;
 }
 
-.toggle-checkbox > input:not(:checked) ~ label::after {
+.toggle-checkbox > input:not(:checked) ~ span:after {
   content: "toggle_off";
   vertical-align: middle;
 }

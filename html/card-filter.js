@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-e
 import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
 import { bind } from './util/bind.js'
+import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
 
 const FILTERS_ = [
   {
@@ -107,12 +108,7 @@ class FilterAwakening extends FilterBase {
           type="number" min="1" step="1" .value="${bind(this, 'count')}"
           maxlength="2" id="count">
       </span>
-      <span class="toggle-checkbox">
-        超覺醒
-        <input type="checkbox" .checked="${bind(this, 'superAwakening')}"
-               id="sa">
-        <label for="sa" class="material-icons"></label>
-      </span>
+      ${toggleCheckbox('超覺醒', bind(this, 'superAwakening'), false)}
     `
   }
 
@@ -162,15 +158,7 @@ class FilterElement extends FilterBase {
   }
 
   orbCheckbox_(i) {
-    return html`
-      <span class="icon-checkbox">
-        <input type="checkbox" id="o${i}" @change="${this.handleChange}"
-               .checked=${this.elements[i]}>
-        <label for="o${i}">
-          <div class="orb-${i}"></div>
-        </label>
-      </span>
-    `
+    return iconCheckbox(`orb-${i}`, bind(this, 'elements', i), false)
   }
 
   render() {

@@ -4,13 +4,12 @@ import { directive } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js?module';
 const bindMap = new WeakSet();
 
 // 2-way binding helper... use with caution.
-export const bind = directive((context, propName, eventName) => (part) => {
+export const bind = directive((context, ...props) => (part) => {
+  let lastProp = props.pop()
   if (!bindMap.has(part)) {
     // add the event listener 1x.
     bindMap.add(part);
-    // default event name to Polymer convention for naming notifying events.
-    eventName = eventName || 'change';
-    part.committer.element.addEventListener(eventName, (ev) => {
+    part.committer.element.addEventListener('change', (ev) => {
       let target = ev.target
       if (target.tagName == 'INPUT') {
         let v;
@@ -24,9 +23,14 @@ export const bind = directive((context, propName, eventName) => (part) => {
             v = target.checked
             break
         }
-        context[propName] = v;
+        let obj = context;
+        props.forEach(prop => obj = obj[prop]);
+        obj[lastProp] = v;
+        context.requestUpdate()
       }
     });
   }
-  part.setValue(context[propName]);
+  let obj = context;
+  props.forEach(prop => obj = obj[prop]);
+  part.setValue(obj[lastProp]);
 });
