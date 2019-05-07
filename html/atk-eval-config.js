@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-e
 import './atk-eval-config.js'
 import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
-import { Type, TypeReverse } from './type.js'
+import { Type, typeToKiller } from './type.js'
 import { bind } from './util/bind.js'
 import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
 
@@ -67,6 +67,15 @@ class AtkEvalConfig extends LitElement {
       'change', ev => {
         this.passiveResistIndexes = []
         this.latentKillerCount = 0
+        let target = this.targetCard
+        if (target) {
+          let killers = target.type.map(typeToKiller)
+          for (let i = Awakening.DRAGON_KILLER;
+               i <= Awakening.VENDOR_MATERIAL_KILLER;
+               i++) {
+            this.awakenings[i] = killers.includes(i)
+          }
+        }
       })
   }
 
@@ -91,12 +100,6 @@ class AtkEvalConfig extends LitElement {
 
     let target = this.targetCard
     if (target) {
-      target.type
-        .filter(x => x >= 0)
-        .map(x => TypeReverse[x] + '_KILLER')
-        .map(x => Awakening[x])
-        .forEach(x => awakenings.add(x))
-
       switch (target.attr_id) {
         case 0:
           elements[1] *= 2
@@ -116,7 +119,6 @@ class AtkEvalConfig extends LitElement {
         case 4:
           elements[3] *= 2
           break;
-
       }
       if (this.latentKillerCount > 0) {
         let latentTypes = new Set()
@@ -140,7 +142,7 @@ class AtkEvalConfig extends LitElement {
 
         if (type == 72) {
           args.forEach(x => elements[x] *= (ratio / 100.0))
-        } else {
+        } else if (type == 118) {
           types.push([args, ratio / 100.0])
         }
       })
@@ -156,7 +158,10 @@ class AtkEvalConfig extends LitElement {
   }
 
   awakeningCheckBox_(i) {
-    return iconCheckbox(`awakening-${i}`, bind(this, 'awakenings', i), false)
+    let target = this.targetCard
+    let disabled = (target && i >= Awakening.DRAGON_KILLER &&
+                    i <= Awakening.VENDOR_MATERIAL_KILLER)
+    return iconCheckbox(`awakening-${i}`, bind(this, 'awakenings', i), disabled)
   }
 
   get targetCard() {
@@ -179,18 +184,20 @@ class AtkEvalConfig extends LitElement {
     let type = x['skill_type']
     let args = bitFlagToArray(x['param'][0])
     let ratio = x['param'][1]
-    return toggleCheckbox(
-      html`
-        ${x['skill_name']} -
-        ${type == 72 ?
-          args.map(i => html`<div class="orb-${i}"></div>`) :
-          args.map(i => html`<div class="type-${i}"></div>`)
-        }
-        傷害${ratio}%輕減
-      `,
-      bind(this, 'passiveResistIndexes', i),
-      false
-    )
+    if (type == 72 || type == 118) {
+      return toggleCheckbox(
+        html`
+          ${x['skill_name']} -
+          ${type == 72 ?
+            args.map(i => html`<div class="orb-${i}"></div>`) :
+            args.map(i => html`<div class="type-${i}"></div>`)
+          }
+          傷害${ratio}%輕減
+        `,
+        bind(this, 'passiveResistIndexes', i),
+        false
+      )
+    }
   }
 
   updated() {

@@ -20,6 +20,10 @@ label.icon-checkbox {
   filter: grayscale(100%);
 }
 
+.icon-checkbox > input:disabled + div {
+  cursor: not-allowed;
+}
+
 .toggle-checkbox > input {
   display: none;
 }
@@ -33,6 +37,10 @@ label.icon-checkbox {
 .toggle-checkbox > input:not(:checked) ~ span:after {
   content: "toggle_off";
   vertical-align: middle;
+}
+
+.toggle-checkbox > input:disabled ~ * {
+  cursor: not-allowed;
 }
 
 :host(.card), .card {

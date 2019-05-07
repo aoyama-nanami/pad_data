@@ -1,4 +1,6 @@
-const Type = {
+import { Awakening } from './awakening.js'
+
+export const Type = {
     EVOLVE_MATERIAL: 0,
     BALANCE: 1,
     PHYSICAL: 2,
@@ -13,7 +15,11 @@ const Type = {
     VENDOR_MATERIAL: 15,
 }
 
+const typeToKillerMap_ = []
 const TypeReverse = {}
-Object.keys(Type).forEach(k => TypeReverse[Type[k]] = k)
+Object.keys(Type).forEach(k =>
+  typeToKillerMap_[Type[k]] = Awakening[k + '_KILLER'])
 
-export { Type, TypeReverse }
+export function typeToKiller(t) {
+  return typeToKillerMap_[t]
+}
