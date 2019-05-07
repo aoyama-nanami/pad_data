@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module'
 import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
+import { bind } from './util/bind.js'
 
 const FILTERS_ = [
   {
@@ -12,7 +13,7 @@ const FILTERS_ = [
     render: () => html`
       <filter-awakening
         class="filter"
-        arg="[${Awakening.VOID_DAMAGE_PIERCER}, 1]"
+        arg="[[${Awakening.VOID_DAMAGE_PIERCER}, 1]]"
         superAwakening
         count="1">
       </filter-awakening>`
@@ -34,7 +35,7 @@ const FILTERS_ = [
     render: () => html`
       <filter-awakening
         class="filter"
-        arg="[${Awakening.EXTEND_TIME}, 1, ${Awakening.EXTEND_TIME_PLUS}, 2]"
+        arg="[[${Awakening.EXTEND_TIME}, 1], [${Awakening.EXTEND_TIME_PLUS}, 2]]"
         count="1"
         superAwakening
         canEdit>
@@ -45,7 +46,7 @@ const FILTERS_ = [
     render: () => html`
       <filter-awakening
         class="filter"
-        arg="[${Awakening.SKILL_BOOST}, 1, ${Awakening.SKILL_BOOST_PLUS}, 2]"
+        arg="[[${Awakening.SKILL_BOOST}, 1], [${Awakening.SKILL_BOOST_PLUS}, 2]]"
         count="1"
         superAwakening
         canEdit>
@@ -57,6 +58,14 @@ class FilterBase extends LitElement {
   updated() {
     super.updated()
     document.querySelector('app-main').sort()
+  }
+
+  get commonCss() {
+    return html`
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet">
+      `
   }
 }
 
@@ -82,34 +91,26 @@ class FilterAwakening extends FilterBase {
   }
 
   countAwakening(a) {
-    if (a == this.arg[0])
-      return this.arg[1]
-    if (a == this.arg[2])
-      return this.arg[3]
+    for (let [awakening, value] of this.arg) {
+      if (a == awakening)
+        return value
+    }
     return 0
-  }
-
-  handleChange() {
-    this.count = parseInt(this.shadowRoot.querySelector('#count').value)
-    this.superAwakening = this.shadowRoot.querySelector('#sa').checked
   }
 
   render() {
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-            rel="stylesheet">
+      ${this.commonCss}
       <span class="${this.canEdit ? '' : 'hidden'}">
         &ge;
         <input
-          type="number" min="1" step="1" .value="${this.count}"
-          maxlength="2" id="count" @change="${this.handleChange}"
-          >
+          type="number" min="1" step="1" .value="${bind(this, 'count')}"
+          maxlength="2" id="count">
       </span>
       <span class="toggle-checkbox">
         超覺醒
-        <input type="checkbox" .checked="${this.superAwakening}" id="sa"
-               @change="${this.handleChange}">
+        <input type="checkbox" .checked="${bind(this, 'superAwakening')}"
+               id="sa">
         <label for="sa" class="material-icons"></label>
       </span>
     `
@@ -174,7 +175,7 @@ class FilterElement extends FilterBase {
 
   render() {
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      ${this.commonCss}
       ${[0, 1, 2, 3, 4].map(i => this.orbCheckbox_(i))}
     `
   }

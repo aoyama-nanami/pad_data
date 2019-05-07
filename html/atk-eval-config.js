@@ -3,6 +3,7 @@ import './atk-eval-config.js'
 import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
 import { Type, TypeReverse } from './type.js'
+import { bind } from './util/bind.js'
 
 const LATENT = new Map([
   [Type.GOD, new Set([Type.BALANCE, Type.DEMON, Type.MACHINE])],
@@ -232,8 +233,7 @@ class AtkEvalConfig extends LitElement {
         </div>
         <div>
           目標敵人:
-          <input type="text" id="target" .value="${this.target}"
-                 @change="${this.handleChange}"
+          <input type="text" id="target" .value="${bind(this, 'target')}"
                  size="12" maxlength="5"
                  placeholder="input pet ID">
           ${this.displayTargetName_()}
@@ -241,8 +241,7 @@ class AtkEvalConfig extends LitElement {
           <div style="${!this.targetCard ? 'display: none' : ''}">
             <div>
               潛覺殺手:
-              <input type="number" .value="${this.latentKillerCount}"
-                     @change="${this.handleChange}"
+              <input type="number" .value="${bind(this, 'latentKillerCount')}"
                      min="0" max="3" step="1" id="latent-killer-count">
             </div>
             <div>
@@ -263,8 +262,8 @@ class AtkEvalConfig extends LitElement {
         </div>
         <div>
           <span class="toggle-checkbox">
-            <input type="checkbox" .checked="${this.includeSubElemDamage}"
-                   id="sub-elem" @change="${this.handleChange}">
+            <input type="checkbox" id="sub-elem"
+                   .checked="${bind(this, 'includeSubElemDamage')}">
             <label for="sub-elem" class="material-icons"></label>
             主副屬相同時加算副屬傷害
           </span>
