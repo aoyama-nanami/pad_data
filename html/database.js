@@ -32,11 +32,12 @@ class Database {
   }
 
   sort() {
+    if (this.data.length == 0) return
     let config = document.querySelector('atk-eval-config').generateConfig()
-    let filter = document.querySelector('card-filter')
+    let filter = document.querySelector('card-filter').filterFunc()
     let cmp = this.compareFunction_(config.sortBy)
     let a = this.data
-      .filter(c => filter.apply(c))
+      .filter(filter)
       .map(c => [c, atkEval(c, config)])
       .sort(cmp)
       .slice(0, config.maxResult)

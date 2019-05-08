@@ -7,10 +7,6 @@ import { database } from './database.js'
 
 const FILTERS_ = [
   {
-    desc: '',
-    render: () => ''
-  },
-  {
     desc: '無效貫通',
     render: () => html`
       <filter-awakening
@@ -179,24 +175,44 @@ class CardFilter extends LitElement {
   static get styles() {
     return [
       assetsToIconCss(),
+      css`
+        .grid {
+          display: grid;
+          grid-template-columns: 20px max-content auto;
+          line-height: 24px;
+        }
+        .grid-row {
+          display: contents;
+        }
+
+        .grid-row:hover .grid-cell {
+          background-color: rgba(161, 194, 250, 0.2);
+        }
+
+        .grid-cell {
+          padding: 3px 3px 0 3px;
+          display: inline-block;
+          vertical-align: baseline;
+          border-bottom: 1px solid rgb(85, 85, 85);
+        }
+      `
     ]
   }
 
   constructor() {
     super()
     this.filters = []
-    this.filter_elements_ = []
     this.overrideFilter = false
   }
 
-  apply(card) {
-    if (this.overrideFilter) {
-    }
-    return this.filter_elements_.every(e => e.apply(card))
+  filterFunc() {
+    let elems = Array.from(
+      this.shadowRoot.querySelectorAll('.filter'))
+    return card => elems.every(e => e.apply(card))
   }
 
   newFilter_() {
-    this.filters.push(0)
+    this.filters.push(-1)
     this.requestUpdate();
   }
 
@@ -205,24 +221,32 @@ class CardFilter extends LitElement {
     this.requestUpdate();
   }
 
-  updateFilter_(ev, index) {
-    let elem = ev.target
-    this.filters[index] = parseInt(elem.value)
-    this.requestUpdate();
-  }
-
   renderFilterRow_(x, i) {
     return html`
-      <span @click="${()=>this.deleteFilter_(i)}" class="material-icons"
-              title="remove">
-        remove
-      </span>
-      <select @change="${ev => this.updateFilter_(ev, i)}">
-        ${FILTERS_.map((y, j) =>
-          html`<option value="${j}" .selected="${x == j}">${y.desc}</option>`)}
-      </select>
-      ${FILTERS_[x].render()}
-      <br>
+      <div class="grid-row">
+        <div class="grid-cell">
+          <span @click="${()=>this.deleteFilter_(i)}" class="material-icons"
+                  title="remove">
+            remove
+          </span>
+        </div>
+        <div class="grid-cell">
+          <select .value="${bind(this, 'filters', i)}">
+            <option value="-1" disabled></option>
+            ${FILTERS_.map((obj, j) =>
+              obj.isSkill ? '' :
+              html`<option value="${j}" .selected="${x == j}">${obj.desc}</option>`)}
+            <optgroup label="技能">
+              ${FILTERS_.map((obj, j) =>
+                !obj.isSkill ? '' :
+                html`<option value="${j}" .selected="${x == j}">${obj.desc}</option>`)}
+            </optgroup>
+          </select>
+        </div>
+        <div class="grid-cell">
+          ${x >= 0 ? FILTERS_[x].render() : ''}
+        </div>
+      </div>
     `
   }
 
@@ -232,21 +256,26 @@ class CardFilter extends LitElement {
 
     let v = 1
     return html`
-      <span class="material-icons" style="visibility: hidden">
-        remove
-      </span>
-      <select>
-        <option value="${v}" selected disabled>${FILTERS_[v].desc}</option>
-      </select>
-      ${FILTERS_[v].render()}
-      <br>
+      <div class="grid-row">
+        <div class="grid-cell">
+        </div>
+        <div class="grid-cell">
+          <select>
+            <option value="${v}" selected disabled>${FILTERS_[v].desc}</option>
+          </select>
+        </div>
+        <div class="grid-cell">
+          ${FILTERS_[v].render()}
+        </div>
+      </div>
     `
   }
 
   updated() {
     super.updated()
-    this.filter_elements_ = Array.from(
-      this.shadowRoot.querySelectorAll('.filter'))
+    if (this.filters.length == 0 ||
+        this.filters[this.filters.length - 1] != -1)
+      this.newFilter_()
     database.sort()
   }
 
@@ -257,12 +286,10 @@ class CardFilter extends LitElement {
             rel="stylesheet">
       <div class="card-title">Filter</div>
       <div class="card-body">
-        <span @click="${this.newFilter_}" class="material-icons"
-                title="add filter">
-          add_circle
-        </span><br>
-        ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
-        ${this.renderForcedFilter_()}
+        <div class="grid">
+          ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
+          ${this.renderForcedFilter_()}
+        </div>
       </div>
     `
   }

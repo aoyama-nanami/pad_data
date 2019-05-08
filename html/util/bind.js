@@ -29,6 +29,9 @@ export const bind = directive((context, ...props) => (part) => {
         }
         obj[lastProp] = v;
         context.requestUpdate()
+      } else if (target.tagName == 'SELECT') {
+        obj[lastProp] = parseInt(target.value);
+        context.requestUpdate()
       }
     });
   }

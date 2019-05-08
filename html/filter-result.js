@@ -17,6 +17,7 @@ class FilterResult extends LitElement {
           grid-template-columns: 90px 270px 50px 80px 50px 270px 30px 30px auto;
           line-height: 24px;
         }
+
         .grid-row {
           display: contents;
         }
@@ -39,6 +40,7 @@ class FilterResult extends LitElement {
           padding-left: 5px;
           padding-right: 5px;
         }
+
         .skill-desc {
           font-family: inherit;
           font-size: inherit;
