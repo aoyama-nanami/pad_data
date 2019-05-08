@@ -47,6 +47,10 @@ const FILTERS_ = [
       </filter-awakening>`
   },
   {
+    desc: '技能 CD',
+    render: () => html`<filter-skill-cd class="filter"></filter-skill-cd>`
+  },
+  {
     desc: '大砲',
     isSkill: true,
     render: () => html`<filter-nuke class="filter"></filter-nuke>`

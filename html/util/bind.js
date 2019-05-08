@@ -30,7 +30,15 @@ export const bind = directive((context, ...props) => (part) => {
         obj[lastProp] = v;
         context.requestUpdate()
       } else if (target.tagName == 'SELECT') {
-        obj[lastProp] = parseInt(target.value);
+        let v;
+        switch (target.dataset.type) {
+          case 'string':
+            v = target.value
+            break
+          default:
+            v = parseInt(target.value)
+        }
+        obj[lastProp] = v
         context.requestUpdate()
       }
     });

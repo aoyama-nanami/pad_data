@@ -12,17 +12,6 @@ class FilterAwakening extends FilterBase {
     }
   }
 
-  static get styles() {
-    return css`
-      #count {
-        width: 40px;
-      }
-      .hidden {
-        display: none;
-      }
-    `
-  }
-
   countAwakening(a) {
     for (let [awakening, value] of this.arg) {
       if (a == awakening)
@@ -34,11 +23,11 @@ class FilterAwakening extends FilterBase {
   render() {
     return html`
       ${this.commonCss}
-      <span class="${this.canEdit ? '' : 'hidden'}">
+      <span style="${this.canEdit ? '' : 'display: none'}">
         &ge;
-        <input
-          type="number" min="1" step="1" .value="${bind(this, 'count')}"
-          maxlength="2" id="count">
+        <input type="number" min="1" step="1" .value="${bind(this, 'count')}"
+               @click="${e => e.target.select()}"
+               maxlength="2" style="width: 40px;">
       </span>
     `
   }

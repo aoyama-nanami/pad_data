@@ -57,7 +57,8 @@ class FilterNuke extends FilterBase {
       ${this.commonCss}
       倍率 &ge;
       <input type="number" min="0" step="5" style="width: 50px"
-             .value="${bind(this, 'percentage')}">,
+             .value="${bind(this, 'percentage')}"
+             @click="${e => e.target.select()}">,
       屬性:
       <select .value="${bind(this, 'element')}">
         <option value="-2">不限</option>
@@ -82,7 +83,8 @@ class FilterNuke extends FilterBase {
       </select>,
       吸血:
       <input type="number" min="0" step="5" style="width: 50px"
-             .value="${bind(this, 'leech')}"> %
+             .value="${bind(this, 'leech')}"
+             @click="${e => e.target.select()}"> %
     `
   }
 }
