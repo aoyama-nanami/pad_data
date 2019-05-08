@@ -174,7 +174,10 @@ customElements.define('filter-element', FilterElement)
 class CardFilter extends LitElement {
   static get properties() {
     return {
-      filters: { type: Array }
+      filters: { type: Array },
+      /* Force enabled filter of void damage piercer.
+       * TODO: redesign this */
+      overrideFilter: { type: Boolean },
     };
   }
 
@@ -188,9 +191,12 @@ class CardFilter extends LitElement {
     super()
     this.filters = []
     this.filter_elements_ = []
+    this.overrideFilter = false
   }
 
   apply(card) {
+    if (this.overrideFilter) {
+    }
     return this.filter_elements_.every(e => e.apply(card))
   }
 
@@ -204,9 +210,8 @@ class CardFilter extends LitElement {
     this.requestUpdate();
   }
 
-  updateFilter_(e) {
-    let elem = e.currentTarget
-    let index = parseInt(elem.dataset.index)
+  updateFilter_(ev, index) {
+    let elem = ev.target
     this.filters[index] = parseInt(elem.value)
     this.requestUpdate();
   }
@@ -217,10 +222,28 @@ class CardFilter extends LitElement {
               title="remove">
         remove
       </span>
-      <select .value="${x}" @change="${this.updateFilter_}" data-index="${i}">
-        ${FILTERS_.map((y, j) => html`<option value="${j}">${y.desc}</option>`)}
+      <select @change="${ev => this.updateFilter_(ev, i)}">
+        ${FILTERS_.map((y, j) =>
+          html`<option value="${j}" .selected="${x == j}">${y.desc}</option>`)}
       </select>
       ${FILTERS_[x].render()}
+      <br>
+    `
+  }
+
+  renderForcedFilter_() {
+    if (!this.overrideFilter)
+      return ''
+
+    let v = 1
+    return html`
+      <span class="material-icons" style="visibility: hidden">
+        remove
+      </span>
+      <select>
+        <option value="${v}" selected disabled>${FILTERS_[v].desc}</option>
+      </select>
+      ${FILTERS_[v].render()}
       <br>
     `
   }
@@ -244,6 +267,7 @@ class CardFilter extends LitElement {
           add_circle
         </span><br>
         ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
+        ${this.renderForcedFilter_()}
       </div>
     `
   }

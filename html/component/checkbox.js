@@ -11,12 +11,13 @@ export function iconCheckbox(iconClass, checked, disabled) {
   `
 }
 
-export function toggleCheckbox(text, checked, disabled) {
+export function toggleCheckbox(text, checked, disabled, onchange) {
   return html`
     <label class="toggle-checkbox">
       <input type="checkbox"
              .checked="${checked}"
-             .disabled="${disabled}">
+             .disabled="${disabled}"
+             @change="${onchange}">
       <span class="material-icons"></span>
       ${text}
     </label>

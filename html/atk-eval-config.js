@@ -64,19 +64,7 @@ class AtkEvalConfig extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties)
     this.shadowRoot.querySelector('#target').addEventListener(
-      'change', ev => {
-        this.passiveResistIndexes = []
-        this.latentKillerCount = 0
-        let target = this.targetCard
-        if (target) {
-          let killers = target.type.map(typeToKiller)
-          for (let i = Awakening.DRAGON_KILLER;
-               i <= Awakening.VENDOR_MATERIAL_KILLER;
-               i++) {
-            this.awakenings[i] = killers.includes(i)
-          }
-        }
-      })
+      'change', ev => this.handleTargetChange_(ev))
   }
 
   reset() {
@@ -100,6 +88,9 @@ class AtkEvalConfig extends LitElement {
 
     let target = this.targetCard
     if (target) {
+      this.overrideAwakenings.forEach(
+        (v, k) => { v ? awakenings.add(k) : awakenings.delete(k) })
+
       switch (target.attr_id) {
         case 0:
           elements[1] *= 2
@@ -158,10 +149,9 @@ class AtkEvalConfig extends LitElement {
   }
 
   awakeningCheckBox_(i) {
-    let target = this.targetCard
-    let disabled = (target && i >= Awakening.DRAGON_KILLER &&
-                    i <= Awakening.VENDOR_MATERIAL_KILLER)
-    return iconCheckbox(`awakening-${i}`, bind(this, 'awakenings', i), disabled)
+    if (this.overrideAwakenings.has(i))
+      return iconCheckbox(`awakening-${i}`, this.overrideAwakenings.get(i), true)
+    return iconCheckbox(`awakening-${i}`, bind(this, 'awakenings', i), false)
   }
 
   get targetCard() {
@@ -201,11 +191,55 @@ class AtkEvalConfig extends LitElement {
       let turn = x['param'][0]
       let threshold = x['param'][2]
       return toggleCheckbox(
-        `${x['skill_name']} - ${turn}回合, ${threshold}以上傷害無效化`,
-        bind(this, 'passiveResistIndexes', i),
-        true
+        `${x['skill_name']} - ${turn} 回合, ${threshold} 以上傷害無效化`,
+        this.passiveResistIndexes[i],
+        false,
+        ev => this.handleVoidShieldToggle_(ev, i)
       )
     }
+  }
+
+  handleTargetChange_(ev) {
+    this.passiveResistIndexes = []
+    this.latentKillerCount = 0
+    let card_filter = document.querySelector('app-main')
+      .shadowRoot.querySelector('card-filter')
+    card_filter.overrideFilter = false
+  }
+
+  get overrideAwakenings() {
+    let target = this.targetCard
+    let overrideAwakenings = new Map()
+    if (!target)
+      return overrideAwakenings
+
+    let killers = target.type.map(typeToKiller)
+    for (let i = Awakening.DRAGON_KILLER;
+         i <= Awakening.VENDOR_MATERIAL_KILLER;
+         i++) {
+      overrideAwakenings.set(i, killers.includes(i))
+    }
+
+    if(target.enemy_passive_resist.some(
+      (v, i) => v['skill_type'] == 71 && this.passiveResistIndexes[i]))
+      overrideAwakenings.set(Awakening.VOID_DAMAGE_PIERCER, true)
+
+    return overrideAwakenings
+  }
+
+  handleVoidShieldToggle_(ev, i) {
+    let elem = ev.target
+    let checked = elem.checked
+    this.passiveResistIndexes[i] = checked
+    if (checked) {
+      this.overrideAwakenings.set(Awakening.VOID_DAMAGE_PIERCER, true)
+    } else {
+      this.overrideAwakenings.delete(Awakening.VOID_DAMAGE_PIERCER)
+    }
+    let card_filter = document.querySelector('app-main')
+      .shadowRoot.querySelector('card-filter')
+    card_filter.overrideFilter = checked
+    this.requestUpdate()
   }
 
   updated() {
