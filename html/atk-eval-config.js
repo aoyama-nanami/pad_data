@@ -5,6 +5,7 @@ import { Awakening } from './awakening.js'
 import { Type, typeToKiller } from './type.js'
 import { bind } from './util/bind.js'
 import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
+import { database } from './database.js'
 
 const LATENT = new Map([
   [Type.GOD, new Set([Type.BALANCE, Type.DEMON, Type.MACHINE])],
@@ -134,7 +135,7 @@ class AtkEvalConfig extends LitElement {
         if (type == 72) {
           args.forEach(x => elements[x] *= (ratio / 100.0))
         } else if (type == 118) {
-          types.push([args, ratio / 100.0])
+          types.push([new Set(args), ratio / 100.0])
         }
       })
     }
@@ -157,7 +158,7 @@ class AtkEvalConfig extends LitElement {
   get targetCard() {
     let n = parseInt(this.target)
     if (isNaN(n)) return undefined
-    return document.querySelector('app-main').card(n)
+    return database.card(n)
   }
 
   displayTargetName_() {
@@ -165,7 +166,8 @@ class AtkEvalConfig extends LitElement {
     if (!card) return ''
     return html`
       <a href="http://pad.skyozora.com/pets/${card.card_id}"
-         class="target-name-info">
+         class="target-name-info"
+         target="_blank">
         ${card.name}
       </a>`
   }
@@ -202,8 +204,7 @@ class AtkEvalConfig extends LitElement {
   handleTargetChange_(ev) {
     this.passiveResistIndexes = []
     this.latentKillerCount = 0
-    let card_filter = document.querySelector('app-main')
-      .shadowRoot.querySelector('card-filter')
+    let card_filter = document.querySelector('card-filter')
     card_filter.overrideFilter = false
   }
 
@@ -236,14 +237,13 @@ class AtkEvalConfig extends LitElement {
     } else {
       this.overrideAwakenings.delete(Awakening.VOID_DAMAGE_PIERCER)
     }
-    let card_filter = document.querySelector('app-main')
-      .shadowRoot.querySelector('card-filter')
+    let card_filter = document.querySelector('card-filter')
     card_filter.overrideFilter = checked
     this.requestUpdate()
   }
 
   updated() {
-    document.querySelector('app-main').sort()
+    database.sort()
   }
 
   render() {

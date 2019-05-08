@@ -3,6 +3,7 @@ import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
 import { bind } from './util/bind.js'
 import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
+import { database } from './database.js'
 
 const FILTERS_ = [
   {
@@ -55,7 +56,7 @@ const FILTERS_ = [
 class FilterBase extends LitElement {
   updated() {
     super.updated()
-    document.querySelector('app-main').sort()
+    database.sort()
   }
 
   get commonCss() {
@@ -108,8 +109,7 @@ class FilterAwakening extends FilterBase {
   }
 
   get multi() {
-    let e = document.querySelector('app-main')
-      .shadowRoot.querySelector('atk-eval-config')
+    let e = document.querySelector('atk-eval-config')
     return e.awakenings[Awakening.MULTI_BOOST]
   }
 
@@ -252,7 +252,7 @@ class CardFilter extends LitElement {
     super.updated()
     this.filter_elements_ = Array.from(
       this.shadowRoot.querySelectorAll('.filter'))
-    document.querySelector('app-main').sort()
+    database.sort()
   }
 
   render() {

@@ -79,3 +79,13 @@ a {
   color: inherit;
   text-decoration: inherit;
 }
+
+.grid-two-col {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-column-gap: 0.5rem;
+  width: 1600px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+}

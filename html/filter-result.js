@@ -1,11 +1,10 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import { statAtMaxLv, assetsToIconCss, atkEval } from './common.js'
+import { statAtMaxLv, assetsToIconCss } from './common.js'
 
 class FilterResult extends LitElement {
   static get properties() {
     return {
       data: { type: Array },
-      config: { type: Object },
     };
   }
 
@@ -64,7 +63,8 @@ class FilterResult extends LitElement {
       return html``
   }
 
-  _renderRow(card) {
+  _renderRow(row) {
+    let [card, atk] = row
     return html`
       <a class="grid-row" href="http://pad.skyozora.com/pets/${card.card_id}"
          target="_blank">
@@ -81,7 +81,7 @@ class FilterResult extends LitElement {
           ${card.name}
         </div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
-        <div class="grid-cell numeric-cell">${atkEval(card, this.config)}</div>
+        <div class="grid-cell numeric-cell">${atk}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           <div style="height: 27px">

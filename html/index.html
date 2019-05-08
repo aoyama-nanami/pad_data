@@ -3,7 +3,7 @@
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 
-    <script src="app-main.js" type="module"></script>
+    <script src="database.js" type="module"></script>
     <script src="atk-eval-config.js" type="module"></script>
     <script src="card-filter.js" type="module"></script>
     <script src="filter-result.js" type="module"></script>
@@ -13,6 +13,11 @@
           rel="stylesheet">
   </head>
   <body>
-    <app-main></app-main>
+    <div id="loading">loading...</div>
+    <div class="grid-two-col" id="main" style="display: none">
+      <atk-eval-config class="card"></atk-eval-config>
+      <card-filter class="card"></card-filter>
+      <filter-result id="result" class="card" style="grid-column-end: span 2"></filter-result>
+    </div>
   </body>
 </html>

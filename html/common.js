@@ -37,7 +37,7 @@ function atkEval(card, config) {
     atk *= 1.1
 
   config.types.forEach(a => {
-    if (card.type.some(x => a[0].includes(x)))
+    if (card.type.some(x => a[0].has(x)))
       atk *= a[1]
   })
 
