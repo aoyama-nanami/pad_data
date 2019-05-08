@@ -153,11 +153,6 @@ class FilterElement extends FilterBase {
     return false
   }
 
-  handleChange() {
-    this.elements = Array.from(this.shadowRoot.querySelectorAll('input'))
-      .map(e => e.checked)
-  }
-
   orbCheckbox_(i) {
     return iconCheckbox(`orb-${i}`, bind(this, 'elements', i), false)
   }

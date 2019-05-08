@@ -3,8 +3,8 @@ import './atk-eval-config.js'
 import { assetsToIconCss } from './common.js'
 import { Awakening } from './awakening.js'
 import { Type, typeToKiller } from './type.js'
-import { bind } from './util/bind.js'
-import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
+import { bind, bindRadio } from './util/bind.js'
+import { iconCheckbox, toggleCheckbox, radio } from './component/checkbox.js'
 import { database } from './database.js'
 
 const LATENT = new Map([
@@ -36,6 +36,8 @@ class AtkEvalConfig extends LitElement {
       includeSubElemDamage: { type: Boolean },
       latentKillerCount: { type: Number },
       passiveResistIndexes: { type: Array },
+      sortBy: { type: String },
+      maxResult: { type: Number },
     }
   }
 
@@ -75,6 +77,8 @@ class AtkEvalConfig extends LitElement {
     this.latentKillerCount = 0
     this.includeSubElemDamage = true
     this.passiveResistIndexes = []
+    this.sortBy = 'atk'
+    this.maxResult = '30'
   }
 
   generateConfig() {
@@ -146,6 +150,8 @@ class AtkEvalConfig extends LitElement {
       elements: elements,
       includeSubElemDamage: this.includeSubElemDamage,
       types: types,
+      sortBy: this.sortBy,
+      maxResult: parseInt(this.maxResult),
     }
   }
 
@@ -291,6 +297,17 @@ class AtkEvalConfig extends LitElement {
         </div>
         <div>
           ${toggleCheckbox('主副屬相同時加算副屬傷害', bind(this, 'includeSubElemDamage'), false)}
+        </div>
+        <div>
+          排序方式:
+          ${radio('攻擊力', 'sort-by', 'atk', bindRadio(this, 'sortBy'))}
+          ${radio('最小', 'sort-by', 'cd', bindRadio(this, 'sortBy'))}
+        </div>
+        <div>
+          顯示數量:
+          ${radio('30', 'max-result', '30', bindRadio(this, 'maxResult'))}
+          ${radio('50', 'max-result', '50', bindRadio(this, 'maxResult'))}
+          ${radio('100', 'max-result', '100', bindRadio(this, 'maxResult'))}
         </div>
       </div>
     `

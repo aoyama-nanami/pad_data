@@ -23,3 +23,18 @@ export function toggleCheckbox(text, checked, disabled, onchange) {
     </label>
   `
 }
+
+export function radio(text, name, value, checked, disabled) {
+  return html`
+    <label class="radio">
+      <input type="radio"
+             name="${name}"
+             value="${value}"
+             .checked="${checked}"
+             .disabled="${disabled}"
+             @change="${onchange}">
+      <span class="material-icons"></span>
+      ${text}
+    </label>
+  `
+}

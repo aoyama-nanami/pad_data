@@ -43,6 +43,25 @@ label.icon-checkbox {
   cursor: not-allowed;
 }
 
+.radio > input {
+  display: none;
+}
+
+.radio > input:checked ~ span:after {
+  content: "radio_button_checked";
+  color: rgb(84, 135, 229);
+  vertical-align: middle;
+}
+
+.radio > input:not(:checked) ~ span:after {
+  content: "radio_button_unchecked";
+  vertical-align: middle;
+}
+
+.radio > input:disabled ~ * {
+  cursor: not-allowed;
+}
+
 :host(.card), .card {
   background-color: #333333;
   margin: 6px 6px 6px 6px;

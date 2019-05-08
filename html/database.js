@@ -23,14 +23,23 @@ class Database {
     return this.data[i]
   }
 
+  compareFunction_(sortBy) {
+    if (sortBy == 'atk') {
+      return (row1, row2) => row2[1] - row1[1]
+    } else if (sortBy == 'cd') {
+      return (row1, row2) => row1[0].skill.turn_min - row2[0].skill.turn_min
+    }
+  }
+
   sort() {
     let config = document.querySelector('atk-eval-config').generateConfig()
     let filter = document.querySelector('card-filter')
+    let cmp = this.compareFunction_(config.sortBy)
     let a = this.data
       .filter(c => filter.apply(c))
       .map(c => [c, atkEval(c, config)])
-      .sort((a1, a2) => a2[1] - a1[1])
-      .slice(0, 30)
+      .sort(cmp)
+      .slice(0, config.maxResult)
 
     let filter_result = document.querySelector('filter-result')
     filter_result.data = a

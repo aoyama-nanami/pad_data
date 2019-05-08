@@ -6,6 +6,8 @@ const bindMap = new WeakSet();
 // 2-way binding helper... use with caution.
 export const bind = directive((context, ...props) => (part) => {
   let lastProp = props.pop()
+  let obj = context;
+  props.forEach(prop => obj = obj[prop]);
   if (!bindMap.has(part)) {
     // add the event listener 1x.
     bindMap.add(part);
@@ -25,14 +27,27 @@ export const bind = directive((context, ...props) => (part) => {
             v = target.checked
             break
         }
-        let obj = context;
-        props.forEach(prop => obj = obj[prop]);
         obj[lastProp] = v;
         context.requestUpdate()
       }
     });
   }
+  part.setValue(obj[lastProp]);
+});
+
+export const bindRadio = directive((context, ...props) => (part) => {
+  let lastProp = props.pop()
   let obj = context;
   props.forEach(prop => obj = obj[prop]);
-  part.setValue(obj[lastProp]);
+  if (!bindMap.has(part)) {
+    // add the event listener 1x.
+    bindMap.add(part);
+    part.committer.element.addEventListener('change', (ev) => {
+      let target = ev.target
+      let v = target.value;
+      obj[lastProp] = v;
+      context.requestUpdate()
+    });
+  }
+  part.setValue(obj[lastProp] == part.committer.element.value);
 });
