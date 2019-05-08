@@ -37,7 +37,7 @@ class AtkEvalConfig extends LitElement {
       latentKillerCount: { type: Number },
       passiveResistIndexes: { type: Array },
       sortBy: { type: String },
-      maxResult: { type: Number },
+      maxResult: { type: String },
     }
   }
 
@@ -61,6 +61,7 @@ class AtkEvalConfig extends LitElement {
 
   constructor() {
     super()
+    this.awakenings = []
     this.reset()
   }
 
@@ -71,8 +72,9 @@ class AtkEvalConfig extends LitElement {
   }
 
   reset() {
-    this.awakenings = [];
-    [27, 43, 57, 58, 60].forEach(i => {this.awakenings[i] = true})
+    while (this.awakenings.length > 0)
+      this.awakenings.pop();
+    [27, 43, 57, 58, 60].forEach(i => this.awakenings[i] = true)
     this.target = ""
     this.latentKillerCount = 0
     this.includeSubElemDamage = true
@@ -248,7 +250,7 @@ class AtkEvalConfig extends LitElement {
     this.requestUpdate()
   }
 
-  updated() {
+  updated(changed) {
     database.sort()
   }
 

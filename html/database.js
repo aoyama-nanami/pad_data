@@ -16,7 +16,6 @@ class Database {
         this.sort()
         document.querySelector('#loading').style.display = 'none'
         document.querySelector('#main').style.display = 'grid'
-        console.log(this.card(999))
       })
   }
 
