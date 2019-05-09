@@ -137,10 +137,10 @@ class AtkEvalConfig extends LitElement {
         if (!enabled) {
           return;
         }
-        const skill = this.targetCard['enemy_passive_resist'][i];
-        const type = skill['skill_type'];
-        const args = bitFlagToArray(skill['param'][0]);
-        const ratio = skill['param'][1];
+        const skill = this.targetCard.enemy_passive_resist[i];
+        const type = skill.skill_type;
+        const args = bitFlagToArray(skill.param[0]);
+        const ratio = skill.param[1];
 
         if (type == 72) {
           args.forEach((x) => elements[x] *= (ratio / 100.0));
@@ -187,13 +187,13 @@ class AtkEvalConfig extends LitElement {
   }
 
   displayPassiveResist_(x, i) {
-    const type = x['skill_type'];
+    const type = x.skill_type;
     if (type == 72 || type == 118) {
-      const args = bitFlagToArray(x['param'][0]);
-      const ratio = x['param'][1];
+      const args = bitFlagToArray(x.param[0]);
+      const ratio = x.param[1];
       return toggleCheckbox(
           html`
-          ${x['skill_name']} -
+          ${x.skill_name} -
           ${type == 72 ?
             args.map((i) => html`<div class="orb-${i}"></div>`) :
             args.map((i) => html`<div class="type-${i}"></div>`)}
@@ -203,10 +203,10 @@ class AtkEvalConfig extends LitElement {
           false
       );
     } else if (type == 71) {
-      const turn = x['param'][0];
-      const threshold = x['param'][2];
+      const turn = x.param[0];
+      const threshold = x.param[2];
       return toggleCheckbox(
-          `${x['skill_name']} - ${turn} 回合, ${threshold} 以上傷害無效化`,
+          `${x.skill_name} - ${turn} 回合, ${threshold} 以上傷害無效化`,
           this.passiveResistIndexes[i],
           false,
           (ev) => this.handleVoidShieldToggle_(ev, i)
@@ -236,7 +236,7 @@ class AtkEvalConfig extends LitElement {
     }
 
     if (target.enemy_passive_resist.some(
-        (v, i) => v['skill_type'] == 71 && this.passiveResistIndexes[i])) {
+        (v, i) => v.skill_type == 71 && this.passiveResistIndexes[i])) {
       overrideAwakenings.set(Awakening.VOID_DAMAGE_PIERCER, true);
     }
 
@@ -298,7 +298,7 @@ class AtkEvalConfig extends LitElement {
             <div>
               被動減傷:<br>
               ${this.targetCard ?
-                this.targetCard['enemy_passive_resist'].map(
+                this.targetCard.enemy_passive_resist.map(
                     (x, i) => html`${this.displayPassiveResist_(x, i)}<br>`) :
                 ''}
             </div>

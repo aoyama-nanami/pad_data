@@ -9,7 +9,7 @@ class FilterNuke extends FilterBase {
       percentage: {type: Number},
       element: {type: Number},
       target: {type: Number},
-      self_damage: {type: Number},
+      selfDamage: {type: Number},
       leech: {type: Number},
     };
   }
@@ -25,7 +25,7 @@ class FilterNuke extends FilterBase {
     this.percentage = 0;
     this.element = -2;
     this.target = -1;
-    this.self_damage = -1;
+    this.selfDamage = -1;
     this.leech = 0;
   }
 
@@ -48,7 +48,7 @@ class FilterNuke extends FilterBase {
         return false;
       }
       const selfDamage = effect.hp_remain == 100 ? 0 : 1;
-      if (this.self_damage >= 0 && selfDamage != this.self_damage) {
+      if (this.selfDamage >= 0 && selfDamage != this.selfDamage) {
         return false;
       }
       if (effect.leech < this.leech) {
