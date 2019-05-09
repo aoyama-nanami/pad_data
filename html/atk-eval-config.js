@@ -72,9 +72,7 @@ class AtkEvalConfig extends LitElement {
   }
 
   reset() {
-    while (this.awakenings.length > 0) {
-      this.awakenings.pop();
-    }
+    this.awakenings = [];
     [27, 43, 57, 58, 60].forEach((i) => this.awakenings[i] = true);
     this.target = '';
     this.latentKillerCount = 0;
@@ -193,12 +191,12 @@ class AtkEvalConfig extends LitElement {
       const ratio = x.param[1];
       return toggleCheckbox(
           html`
-          ${x.skill_name} -
-          ${type == 72 ?
-            args.map((i) => html`<div class="orb-${i}"></div>`) :
-            args.map((i) => html`<div class="type-${i}"></div>`)}
-          傷害${ratio}%輕減
-        `,
+            ${x.skill_name} -
+            ${type == 72 ?
+              args.map((i) => html`<div class="orb-${i}"></div>`) :
+              args.map((i) => html`<div class="type-${i}"></div>`)}
+            傷害${ratio}%輕減
+          `,
           bind(this, 'passiveResistIndexes', i),
           false
       );

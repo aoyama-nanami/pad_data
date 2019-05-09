@@ -6,15 +6,16 @@ const bindMap = new WeakSet();
 // 2-way binding helper... use with caution.
 export const bind = directive((context, ...props) => (part) => {
   const lastProp = props.pop();
-  let obj = context;
-  props.forEach((prop) => obj = obj[prop]);
   if (!bindMap.has(part)) {
     // add the event listener 1x.
     bindMap.add(part);
     part.committer.element.addEventListener('change', (ev) => {
+      if (props[0] == 'passiveResistIndexes')
+        console.log(context.passiveResistIndexes)
+
       const target = ev.target;
+      let v;
       if (target.tagName == 'INPUT') {
-        let v;
         switch (target.type) {
           case 'text':
             v = target.value;
@@ -27,10 +28,7 @@ export const bind = directive((context, ...props) => (part) => {
             v = target.checked;
             break;
         }
-        obj[lastProp] = v;
-        context.requestUpdate();
       } else if (target.tagName == 'SELECT') {
-        let v;
         switch (target.dataset.type) {
           case 'string':
             v = target.value;
@@ -38,11 +36,15 @@ export const bind = directive((context, ...props) => (part) => {
           default:
             v = parseInt(target.value);
         }
-        obj[lastProp] = v;
-        context.requestUpdate();
       }
+      let obj = context;
+      props.forEach((prop) => obj = obj[prop]);
+      obj[lastProp] = v;
+      context.requestUpdate();
     });
   }
+  let obj = context;
+  props.forEach((prop) => obj = obj[prop]);
   part.setValue(obj[lastProp]);
 });
 
