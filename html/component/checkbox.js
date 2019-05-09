@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module'
+import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 
 export function iconCheckbox(iconClass, checked, disabled) {
   return html`
@@ -8,7 +8,7 @@ export function iconCheckbox(iconClass, checked, disabled) {
              .disabled="${disabled}">
       <div class="${iconClass}"></div>
     </label>
-  `
+  `;
 }
 
 export function toggleCheckbox(text, checked, disabled, onchange) {
@@ -21,7 +21,7 @@ export function toggleCheckbox(text, checked, disabled, onchange) {
       <span class="material-icons"></span>
       ${text}
     </label>
-  `
+  `;
 }
 
 export function radio(text, name, value, checked, disabled) {
@@ -36,5 +36,5 @@ export function radio(text, name, value, checked, disabled) {
       <span class="material-icons"></span>
       ${text}
     </label>
-  `
+  `;
 }

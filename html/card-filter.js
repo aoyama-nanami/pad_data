@@ -1,8 +1,7 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module'
-import { Awakening } from './awakening.js'
-import { bind } from './util/bind.js'
-import { iconCheckbox, toggleCheckbox } from './component/checkbox.js'
-import { database } from './database.js'
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {Awakening} from './awakening.js';
+import {bind} from './util/bind.js';
+import {database} from './database.js';
 
 const FILTERS_ = [
   {
@@ -12,55 +11,59 @@ const FILTERS_ = [
         class="filter"
         arg="[[${Awakening.VOID_DAMAGE_PIERCER}, 1]]"
         count="1">
-      </filter-awakening>`
+      </filter-awakening>`,
   },
   {
     desc: '主屬',
-    render: () => html`<filter-element class="filter" main></filter-element>`
+    render: () => html`<filter-element class="filter" main></filter-element>`,
   },
   {
     desc: '副屬',
-    render: () => html`<filter-element class="filter" sub></filter-element>`
+    render: () => html`<filter-element class="filter" sub></filter-element>`,
   },
   {
     desc: '主或副屬',
-    render: () => html`<filter-element class="filter" main sub></filter-element>`
+    render: () => html`
+      <filter-element class="filter" main sub>
+      </filter-element>`,
   },
   {
     desc: '操作時間延長',
     render: () => html`
       <filter-awakening
         class="filter"
-        arg="[[${Awakening.EXTEND_TIME}, 1], [${Awakening.EXTEND_TIME_PLUS}, 2]]"
+        arg="[[${Awakening.EXTEND_TIME}, 1],
+              [${Awakening.EXTEND_TIME_PLUS}, 2]]"
         count="1"
         canEdit>
-      </filter-awakening>`
+      </filter-awakening>`,
   },
   {
     desc: 'Skill Boost',
     render: () => html`
       <filter-awakening
         class="filter"
-        arg="[[${Awakening.SKILL_BOOST}, 1], [${Awakening.SKILL_BOOST_PLUS}, 2]]"
+        arg="[[${Awakening.SKILL_BOOST}, 1],
+              [${Awakening.SKILL_BOOST_PLUS}, 2]]"
         count="1"
         canEdit>
-      </filter-awakening>`
+      </filter-awakening>`,
   },
   {
     desc: '技能 CD',
-    render: () => html`<filter-skill-cd class="filter"></filter-skill-cd>`
+    render: () => html`<filter-skill-cd class="filter"></filter-skill-cd>`,
   },
   {
     desc: '大砲',
     isSkill: true,
-    render: () => html`<filter-nuke class="filter"></filter-nuke>`
+    render: () => html`<filter-nuke class="filter"></filter-nuke>`,
   },
-]
+];
 
 export class FilterBase extends LitElement {
   updated() {
-    super.updated()
-    database.sort()
+    super.updated();
+    database.sort();
   }
 
   get commonCss() {
@@ -68,17 +71,17 @@ export class FilterBase extends LitElement {
       <link rel="stylesheet" type="text/css" href="style.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet">
-      `
+      `;
   }
 }
 
 class CardFilter extends LitElement {
   static get properties() {
     return {
-      filters: { type: Array },
+      filters: {type: Array},
       /* Force enabled filter of void damage piercer.
        * TODO: redesign this */
-      overrideFilter: { type: Boolean },
+      overrideFilter: {type: Boolean},
     };
   }
 
@@ -100,29 +103,29 @@ class CardFilter extends LitElement {
           vertical-align: baseline;
           border-bottom: 1px solid rgb(85, 85, 85);
         }
-      `
-    ]
+      `,
+    ];
   }
 
   constructor() {
-    super()
-    this.filters = []
-    this.overrideFilter = false
+    super();
+    this.filters = [];
+    this.overrideFilter = false;
   }
 
   filterFunc() {
-    let elems = Array.from(
-      this.shadowRoot.querySelectorAll('.filter'))
-    return card => elems.every(e => e.apply(card))
+    const elems = Array.from(
+        this.shadowRoot.querySelectorAll('.filter'));
+    return (card) => elems.every((e) => e.apply(card));
   }
 
   newFilter_() {
-    this.filters.push(-1)
+    this.filters.push(-1);
     this.requestUpdate();
   }
 
   deleteFilter_(i) {
-    this.filters.splice(i, 1)
+    this.filters.splice(i, 1);
     this.requestUpdate();
   }
 
@@ -140,11 +143,15 @@ class CardFilter extends LitElement {
             <option value="-1" disabled></option>
             ${FILTERS_.map((obj, j) =>
               obj.isSkill ? '' :
-              html`<option value="${j}" .selected="${x == j}">${obj.desc}</option>`)}
+              html`<option value="${j}" .selected="${x == j}">
+                     ${obj.desc}
+                   </option>`)}
             <optgroup label="技能">
               ${FILTERS_.map((obj, j) =>
                 !obj.isSkill ? '' :
-                html`<option value="${j}" .selected="${x == j}">${obj.desc}</option>`)}
+                html`<option value="${j}" .selected="${x == j}">
+                       ${obj.desc}
+                     </option>`)}
             </optgroup>
           </select>
         </div>
@@ -152,14 +159,15 @@ class CardFilter extends LitElement {
           ${x >= 0 ? FILTERS_[x].render() : ''}
         </div>
       </div>
-    `
+    `;
   }
 
   renderForcedFilter_() {
-    if (!this.overrideFilter)
-      return ''
+    if (!this.overrideFilter) {
+      return '';
+    }
 
-    let v = 1
+    const v = 1;
     return html`
       <div class="grid-row">
         <div class="grid-cell">
@@ -173,15 +181,16 @@ class CardFilter extends LitElement {
           ${FILTERS_[v].render()}
         </div>
       </div>
-    `
+    `;
   }
 
   updated() {
-    super.updated()
+    super.updated();
     if (this.filters.length == 0 ||
-        this.filters[this.filters.length - 1] != -1)
-      this.newFilter_()
-    database.sort()
+        this.filters[this.filters.length - 1] != -1) {
+      this.newFilter_();
+    }
+    database.sort();
   }
 
   render() {
@@ -196,7 +205,7 @@ class CardFilter extends LitElement {
           ${this.renderForcedFilter_()}
         </div>
       </div>
-    `
+    `;
   }
 }
 customElements.define('card-filter', CardFilter);

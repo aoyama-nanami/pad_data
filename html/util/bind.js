@@ -1,45 +1,45 @@
 // https://glitch.com/edit/#!/fantasy-desk?path=bind.js:20:3
-import { directive } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js?module';
+import {directive} from 'https://unpkg.com/lit-html@1.0.0/lit-html.js?module';
 
 const bindMap = new WeakSet();
 
 // 2-way binding helper... use with caution.
 export const bind = directive((context, ...props) => (part) => {
-  let lastProp = props.pop()
+  const lastProp = props.pop();
   let obj = context;
-  props.forEach(prop => obj = obj[prop]);
+  props.forEach((prop) => obj = obj[prop]);
   if (!bindMap.has(part)) {
     // add the event listener 1x.
     bindMap.add(part);
     part.committer.element.addEventListener('change', (ev) => {
-      let target = ev.target
+      const target = ev.target;
       if (target.tagName == 'INPUT') {
         let v;
         switch (target.type) {
           case 'text':
-            v = target.value
-            break
+            v = target.value;
+            break;
           case 'number':
-            v = parseInt(target.value)
-            break
+            v = parseInt(target.value);
+            break;
           case 'checkbox':
           case 'select':
-            v = target.checked
-            break
+            v = target.checked;
+            break;
         }
         obj[lastProp] = v;
-        context.requestUpdate()
+        context.requestUpdate();
       } else if (target.tagName == 'SELECT') {
         let v;
         switch (target.dataset.type) {
           case 'string':
-            v = target.value
-            break
+            v = target.value;
+            break;
           default:
-            v = parseInt(target.value)
+            v = parseInt(target.value);
         }
-        obj[lastProp] = v
-        context.requestUpdate()
+        obj[lastProp] = v;
+        context.requestUpdate();
       }
     });
   }
@@ -47,17 +47,17 @@ export const bind = directive((context, ...props) => (part) => {
 });
 
 export const bindRadio = directive((context, ...props) => (part) => {
-  let lastProp = props.pop()
+  const lastProp = props.pop();
   let obj = context;
-  props.forEach(prop => obj = obj[prop]);
+  props.forEach((prop) => obj = obj[prop]);
   if (!bindMap.has(part)) {
     // add the event listener 1x.
     bindMap.add(part);
     part.committer.element.addEventListener('change', (ev) => {
-      let target = ev.target
-      let v = target.value;
+      const target = ev.target;
+      const v = target.value;
       obj[lastProp] = v;
-      context.requestUpdate()
+      context.requestUpdate();
     });
   }
   part.setValue(obj[lastProp] == part.committer.element.value);

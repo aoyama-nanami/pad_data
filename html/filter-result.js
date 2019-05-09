@@ -1,10 +1,10 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import { statAtMaxLv, assetsToIconCss } from './common.js'
+import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {statAtMaxLv, assetsToIconCss} from './common.js';
 
 class FilterResult extends LitElement {
   static get properties() {
     return {
-      data: { type: Array },
+      data: {type: Array},
     };
   }
 
@@ -48,8 +48,8 @@ class FilterResult extends LitElement {
           vertical-align: middle;
           padding-top: 3px;
         }
-      `
-    ]
+      `,
+    ];
   }
 
   render() {
@@ -58,15 +58,15 @@ class FilterResult extends LitElement {
         <link rel="stylesheet" type="text/css" href="style.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
               rel="stylesheet">
-        <div class="grid">${this.data.map(x => this._renderRow(x))}</div>
-      `
+        <div class="grid">${this.data.map((x) => this._renderRow(x))}</div>
+      `;
+    } else {
+      return html``;
     }
-    else
-      return html``
   }
 
   _renderRow(row) {
-    let [card, atk] = row
+    const [card, atk] = row;
     return html`
       <a class="grid-row" href="http://pad.skyozora.com/pets/${card.card_id}"
          target="_blank">
@@ -76,7 +76,7 @@ class FilterResult extends LitElement {
             <div class="orb-${card.sub_attr_id}"></div>
           </div>
           <div style="height: 24px">
-            ${card.type.map(i => html`<div class="type-${i}"></div> `)}
+            ${card.type.map((i) => html`<div class="type-${i}"></div> `)}
           </div>
         </div>
         <div class="grid-cell">
@@ -88,11 +88,11 @@ class FilterResult extends LitElement {
         <div class="grid-cell">
           <div style="height: 27px">
             ${card.awakenings.map(
-              i => html`<div class="awakening-${i}"></div> `)}
+              (i) => html`<div class="awakening-${i}"></div> `)}
           </div>
           <div style="height: 24px">
             ${card.super_awakenings.map(
-              i => html`<div class="awakening-${i}"></div> `)}
+              (i) => html`<div class="awakening-${i}"></div> `)}
           </div>
         </div>
         <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
@@ -103,7 +103,7 @@ class FilterResult extends LitElement {
           <pre class="skill-desc">${card.skill.description}</pre>
         </div>
       </a>
-    `
+    `;
   }
 }
 customElements.define('filter-result', FilterResult);
