@@ -66,7 +66,7 @@ class FilterResult extends LitElement {
   }
 
   _renderRow(row) {
-    const [card, atk] = row;
+    const [card, result] = row;
     return html`
       <a class="grid-row" href="http://pad.skyozora.com/pets/${card.card_id}"
          target="_blank">
@@ -83,7 +83,7 @@ class FilterResult extends LitElement {
           ${card.name}
         </div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
-        <div class="grid-cell numeric-cell">${atk}</div>
+        <div class="grid-cell numeric-cell">${result.atk}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           <div style="height: 27px">
@@ -92,7 +92,10 @@ class FilterResult extends LitElement {
           </div>
           <div style="height: 24px">
             ${card.super_awakenings.map(
-              (i) => html`<div class="awakening-${i}"></div> `)}
+              (a, i) => {
+                let grayscale = (i == result.superAwakeningIndex) ? '' : 'grayscale';
+                return html`<div class="awakening-${a} ${grayscale}"></div> `;
+              })}
           </div>
         </div>
         <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>

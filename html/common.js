@@ -11,8 +11,17 @@ export function statAtMaxLv(card, name) {
   return Math.round(maxValue * (1 + card.limit_mult / 100.0));
 }
 
+class AtkEvalResult {
+  constructor() {
+    this.atk = 0;
+    this.subAtk = 0;
+    this.superAwakeningIndex = -1;
+  }
+}
+
 export function atkEval(card, config) {
   let atk = statAtMaxLv(card, 'atk') + 495;
+  let result = new AtkEvalResult()
 
   card.awakenings.forEach((a) => {
     if (a == Awakening.ENHANCED_ATK) {
@@ -20,25 +29,23 @@ export function atkEval(card, config) {
     }
   });
 
-  const configAwakenings = config.awakenings;
   card.awakenings.forEach((a) => {
-    if (configAwakenings.has(a)) {
+    if (config.awakenings.has(a)) {
       atk *= awakeningDamageMultiplier(a);
     }
   });
 
   if (!config.multi) {
-    atk *= card.super_awakenings.reduce((x, a) => {
-      if (configAwakenings.has(a)) {
-        return Math.max(x, awakeningDamageMultiplier(a));
+    let max = 1;
+    card.super_awakenings.forEach((a, i) => {
+      if (config.awakenings.has(a)) {
+        if (awakeningDamageMultiplier(a) > max) {
+          result.superAwakeningIndex = i;
+          max = awakeningDamageMultiplier(a);
+        }
       }
-      return x;
-    }, 1);
-  }
-
-  atk *= config.elements[card.attr_id];
-  if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id) {
-    atk *= 1.1;
+    });
+    atk *= max;
   }
 
   config.types.forEach((a) => {
@@ -47,7 +54,13 @@ export function atkEval(card, config) {
     }
   });
 
-  return Math.round(atk);
+  atk *= config.elements[card.attr_id];
+  if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id) {
+    atk *= 1.1;
+  }
+
+  result.atk = Math.round(atk);
+  return result;
 }
 
 const ORB_CSS_ = Array(5).fill(0).map((_, i) =>

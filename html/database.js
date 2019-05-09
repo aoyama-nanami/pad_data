@@ -25,7 +25,7 @@ class Database {
 
   compareFunction_(sortBy) {
     if (sortBy == 'atk') {
-      return (row1, row2) => row2[1] - row1[1];
+      return (row1, row2) => row2[1].atk - row1[1].atk;
     } else if (sortBy == 'cd') {
       return (row1, row2) => row1[0].skill.turn_min - row2[0].skill.turn_min;
     }

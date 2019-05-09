@@ -20,6 +20,10 @@ label.icon-checkbox {
   filter: grayscale(100%);
 }
 
+.grayscale {
+  filter: grayscale(100%);
+}
+
 .icon-checkbox > input:disabled + div {
   cursor: not-allowed;
 }
