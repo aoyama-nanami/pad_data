@@ -1,5 +1,4 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import './atk-eval-config.js';
 import {assetsToIconCss} from './common.js';
 import {Awakening} from './awakening.js';
 import {Type, typeToKiller} from './type.js';
@@ -160,11 +159,15 @@ class AtkEvalConfig extends LitElement {
   }
 
   awakeningCheckBox_(i) {
-    if (this.overrideAwakenings.has(i)) {
-      return iconCheckbox(
-          `awakening-${i}`, this.overrideAwakenings.get(i), true);
-    }
-    return iconCheckbox(`awakening-${i}`, bind(this, 'awakenings', i), false);
+    return html`
+      <awakening-checkbox
+        awakeningId="${i}"
+        ?checked="${bind(this, 'awakenings', i)}"
+        ?override="${this.overrideAwakenings.has(i)}"
+        ?overrideChecked="${this.overrideAwakenings.get(i)}"
+      >
+      </awakening-checkbox>
+    `
   }
 
   get targetCard() {
@@ -228,8 +231,8 @@ class AtkEvalConfig extends LitElement {
 
     const killers = target.type.map(typeToKiller);
     for (let i = Awakening.DRAGON_KILLER;
-      i <= Awakening.VENDOR_MATERIAL_KILLER;
-      i++) {
+        i <= Awakening.VENDOR_MATERIAL_KILLER;
+        i++) {
       overrideAwakenings.set(i, killers.includes(i));
     }
 
