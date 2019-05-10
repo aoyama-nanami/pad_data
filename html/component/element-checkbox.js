@@ -1,13 +1,11 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {icon} from '../common.js';
 
-class AwakeningCheckbox extends LitElement {
+class ElementCheckbox extends LitElement {
   static get properties() {
     return {
-      awakeningId: {type: Number},
+      elementId: {type: Number},
       checked: {type: Boolean},
-      override: {type: Boolean},
-      overrideChecked: {type: Boolean},
     };
   }
 
@@ -17,18 +15,16 @@ class AwakeningCheckbox extends LitElement {
   }
 
   render() {
-    let value = this.override ? this.overrideChecked : this.checked;
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
       <label class="icon-checkbox">
         <input type="checkbox"
-               ?checked="${value}"
+               ?checked="${this.checked}"
                ?disabled="${this.override}"
                @change="${(ev) => this.onChange_(ev)}"
                >
-        ${icon('a', this.awakeningId)}
-        </div>
+        ${icon('orb', this.elementId)}
       </label>`;
   }
 }
-customElements.define('awakening-checkbox', AwakeningCheckbox);
+customElements.define('element-checkbox', ElementCheckbox);

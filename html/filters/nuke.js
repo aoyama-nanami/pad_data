@@ -1,6 +1,5 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {FilterBase} from '../card-filter.js';
-import {assetsToIconCss} from '../common.js';
 import {bind} from '../util/bind.js';
 
 class FilterNuke extends FilterBase {
@@ -12,12 +11,6 @@ class FilterNuke extends FilterBase {
       selfDamage: {type: Number},
       leech: {type: Number},
     };
-  }
-
-  static get styles() {
-    return [
-      assetsToIconCss(),
-    ];
   }
 
   constructor() {

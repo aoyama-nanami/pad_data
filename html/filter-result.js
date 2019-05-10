@@ -1,5 +1,5 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {statAtMaxLv, assetsToIconCss} from './common.js';
+import {statAtMaxLv, icon} from './common.js';
 
 class FilterResult extends LitElement {
   static get properties() {
@@ -10,7 +10,6 @@ class FilterResult extends LitElement {
 
   static get styles() {
     return [
-      assetsToIconCss(),
       css`
         .grid {
           display: grid;
@@ -72,11 +71,11 @@ class FilterResult extends LitElement {
          target="_blank">
         <div class="grid-cell">
           <div style="height: 27px">
-            <div class="orb-${card.attr_id}"></div>
-            <div class="orb-${card.sub_attr_id}"></div>
+            ${icon('orb', card.attr_id)}
+            ${icon('orb', card.sub_attr_id)}
           </div>
           <div style="height: 24px">
-            ${card.type.map((i) => html`<div class="type-${i}"></div> `)}
+            ${card.type.map((i) => html`${icon('t', i)} `)}
           </div>
         </div>
         <div class="grid-cell">
@@ -87,14 +86,13 @@ class FilterResult extends LitElement {
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           <div style="height: 27px">
-            ${card.awakenings.map(
-              (i) => html`<div class="awakening-${i}"></div> `)}
+            ${card.awakenings.map((a) => html`${icon('a', a)}`)}
           </div>
           <div style="height: 24px">
             ${card.super_awakenings.map(
               (a, i) => {
-                let grayscale = (i == result.superAwakeningIndex) ? '' : 'grayscale';
-                return html`<div class="awakening-${a} ${grayscale}"></div> `;
+                let grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
+                return html`${icon('a', a, grayscale)}`
               })}
           </div>
         </div>

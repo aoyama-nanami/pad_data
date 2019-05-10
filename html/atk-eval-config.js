@@ -1,9 +1,9 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {assetsToIconCss} from './common.js';
+import {icon} from './common.js';
 import {Awakening} from './awakening.js';
 import {Type, typeToKiller} from './type.js';
 import {bind, bindRadio} from './util/bind.js';
-import {iconCheckbox, toggleCheckbox, radio} from './component/checkbox.js';
+import {toggleCheckbox, radio} from './component/checkbox.js';
 import {database} from './database.js';
 
 const LATENT = new Map([
@@ -41,21 +41,18 @@ class AtkEvalConfig extends LitElement {
   }
 
   static get styles() {
-    return [
-      assetsToIconCss(),
-      css`
-        #elements > input {
-          width: 3em;
-          text-align: right;
-        }
-        .card-body > div {
-          padding: 3px 3px 3px 3px;
-        }
-        #latent-killer-count {
-          width: 40px;
-        }
-      `,
-    ];
+    return css`
+      #elements > input {
+        width: 3em;
+        text-align: right;
+      }
+      .card-body > div {
+        padding: 3px 3px 3px 3px;
+      }
+      #latent-killer-count {
+        width: 40px;
+      }
+    `;
   }
 
   constructor() {
@@ -196,8 +193,8 @@ class AtkEvalConfig extends LitElement {
           html`
             ${x.skill_name} -
             ${type == 72 ?
-              args.map((i) => html`<div class="orb-${i}"></div>`) :
-              args.map((i) => html`<div class="type-${i}"></div>`)}
+              args.map((i) => icon('orb', i)) :
+              args.map((i) => icon('t', i))}
             傷害${ratio}%輕減
           `,
           bind(this, 'passiveResistIndexes', i),

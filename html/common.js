@@ -1,4 +1,4 @@
-import {css, unsafeCSS} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {Awakening, awakeningDamageMultiplier} from './awakening.js';
 
 export function statAtMaxLv(card, name) {
@@ -63,47 +63,11 @@ export function atkEval(card, config) {
   return result;
 }
 
-const ORB_CSS_ = Array(5).fill(0).map((_, i) =>
-  css`.orb-${unsafeCSS(i)} {
-    background-image: url(images/orb${unsafeCSS(i)}.png);
-    background-size: contain;
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    vertical-align: middle;
-  }`);
+export function icon(prefix, id, cls) {
+  return html`<div class="icon24x24 ${cls ? cls : ''}"
+                   style="${iconCss(prefix, id)}"></div>`
+}
 
-const AWAKENING_CSS_ = Array(65).fill(0).map((_, i) =>
-  css`.awakening-${unsafeCSS(i)} {
-    background-image: url(images/a${unsafeCSS(i)}.png);
-    background-size: contain;
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    vertical-align: middle;
-  }`);
-
-const TYPE_CSS_ = Array(16).fill(1).map((_, i) =>
-  css`.type-${unsafeCSS(i)} {
-    background-image: url(images/t${unsafeCSS(i)}.png);
-    background-size: contain;
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    vertical-align: middle;
-  }`);
-
-export function assetsToIconCss() {
-  return [
-    ORB_CSS_,
-    AWAKENING_CSS_,
-    TYPE_CSS_,
-    css`
-      .orb--1, .awakening--1, .type--1 {
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-      }
-    `,
-  ];
+export function iconCss(prefix, id) {
+  return `background-image: url(images/${prefix}${id}.png)`
 }

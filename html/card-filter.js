@@ -218,7 +218,7 @@ class CardFilter extends LitElement {
       return '';
     }
 
-    const v = 1;
+    const v = 0;
     return html`
       <div class="grid-row">
         <div class="grid-cell">

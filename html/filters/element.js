@@ -1,7 +1,5 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {iconCheckbox} from '../component/checkbox.js';
 import {FilterBase} from '../card-filter.js';
-import {assetsToIconCss} from '../common.js';
 import {bind} from '../util/bind.js';
 
 class FilterElement extends FilterBase {
@@ -11,12 +9,6 @@ class FilterElement extends FilterBase {
       main: {type: Boolean},
       sub: {type: Boolean},
     };
-  }
-
-  static get styles() {
-    return [
-      assetsToIconCss(),
-    ];
   }
 
   constructor() {
@@ -38,7 +30,12 @@ class FilterElement extends FilterBase {
   }
 
   orbCheckbox_(i) {
-    return iconCheckbox(`orb-${i}`, bind(this, 'elements', i), false);
+    return html`
+      <element-checkbox
+        elementId="${i}"
+        ?checked="${bind(this, 'elements', i)}"
+        >
+      </element-checkbox>`
   }
 
   render() {

@@ -37,10 +37,12 @@ export const bind = directive((context, ...props) => (part) => {
           default:
             v = parseInt(target.value);
         }
-      } else if (target.tagName == 'AWAKENING-CHECKBOX') {
-        v = target.checked;
       } else if (target instanceof LitElement) {
-        v = target.value;
+        if (target.checked !== undefined) {
+          v = target.checked
+        } else {
+          v = target.value;
+        }
       }
       let obj = context;
       props.forEach((prop) => obj = obj[prop]);
