@@ -5,15 +5,15 @@ import {FilterBase} from '../card-filter.js';
 class FilterSkillCd extends FilterBase {
   static get properties() {
     return {
-      op: {type: Number},
+      op: {type: String},
       cd: {type: Number},
     };
   }
 
   constructor() {
     super();
-    this.op = '<=';
-    this.cd = 99;
+    this.op = '>=';
+    this.cd = 1;
   }
 
   render() {

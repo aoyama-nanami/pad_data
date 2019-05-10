@@ -6,14 +6,19 @@ import {FilterBase} from '../card-filter.js';
 class FilterAwakening extends FilterBase {
   static get properties() {
     return {
-      arg: {type: Array},
+      awakenings: {type: Array},
       count: {type: Number},
       canEdit: {type: Boolean},
     };
   }
 
+  constructor() {
+    super();
+    this.count = 1;
+  }
+
   countAwakening(a) {
-    for (const [awakening, value] of this.arg) {
+    for (const [awakening, value] of this.awakenings) {
       if (a == awakening) {
         return value;
       }

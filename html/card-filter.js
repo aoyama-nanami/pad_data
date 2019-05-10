@@ -1,4 +1,5 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {ifDefined} from 'https://unpkg.com/lit-html@1.0.0/directives/if-defined.js?module';
 import {Awakening} from './awakening.js';
 import {bind} from './util/bind.js';
 import {database} from './database.js';
@@ -9,54 +10,91 @@ const FILTERS_ = [
     render: () => html`
       <filter-awakening
         class="filter"
-        arg="[[${Awakening.VOID_DAMAGE_PIERCER}, 1]]"
+        awakenings="[[${Awakening.VOID_DAMAGE_PIERCER}, 1]]"
         count="1">
       </filter-awakening>`,
   },
   {
     desc: '主屬',
-    render: () => html`<filter-element class="filter" main></filter-element>`,
+    render: (args, elem, i) => html`
+      <filter-element
+        class="filter"
+        elements="${ifDefined(JSON.stringify(args.elements))}"
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        main>
+      </filter-element>`,
   },
   {
     desc: '副屬',
-    render: () => html`<filter-element class="filter" sub></filter-element>`,
+    render: (args, elem, i) => html`
+      <filter-element
+        class="filter"
+        elements="${ifDefined(JSON.stringify(args.elements))}"
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        sub>
+      </filter-element>`,
   },
   {
     desc: '主或副屬',
-    render: () => html`
-      <filter-element class="filter" main sub>
+    render: (args, elem, i) => html`
+      <filter-element
+        class="filter"
+        elements="${ifDefined(JSON.stringify(args.elements))}"
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        main sub>
       </filter-element>`,
   },
   {
     desc: '操作時間延長',
-    render: () => html`
+    render: (args, elem, i) => html`
       <filter-awakening
         class="filter"
-        arg="[[${Awakening.EXTEND_TIME}, 1],
-              [${Awakening.EXTEND_TIME_PLUS}, 2]]"
-        count="1"
-        canEdit>
+        awakenings="[[${Awakening.EXTEND_TIME}, 1],
+                     [${Awakening.EXTEND_TIME_PLUS}, 2]]"
+        count="${ifDefined(args.count)}"
+        canEdit
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        >
       </filter-awakening>`,
   },
   {
     desc: 'Skill Boost',
-    render: () => html`
+    render: (args, elem, i) => html`
       <filter-awakening
         class="filter"
-        arg="[[${Awakening.SKILL_BOOST}, 1],
-              [${Awakening.SKILL_BOOST_PLUS}, 2]]"
-        count="1"
-        canEdit>
+        awakenings="[[${Awakening.SKILL_BOOST}, 1],
+                     [${Awakening.SKILL_BOOST_PLUS}, 2]]"
+        count="${ifDefined(args.count)}"
+        canEdit
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        >
       </filter-awakening>`,
   },
   {
     desc: '技能 CD',
-    render: () => html`<filter-skill-cd class="filter"></filter-skill-cd>`,
+    render: (args, elem, i) => html`
+      <filter-skill-cd
+        class="filter"
+        op="${ifDefined(args.op)}"
+        cd="${ifDefined(args.cd)}"
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        >
+      </filter-skill-cd>`,
   },
   {
     desc: '大砲',
     isSkill: true,
-    render: () => html`<filter-nuke class="filter"></filter-nuke>`,
+    render: (args, elem, i) => html`
+      <filter-nuke
+        class="filter"
+        percentage="${ifDefined(args.percentage)}"
+        element="${ifDefined(args.element)}"
+        target="${ifDefined(args.target)}"
+        selfDamage="${ifDefined(args.selfDamage)}"
+        leech="${ifDefined(args.leech)}"
+        @change="${(ev) => elem.onChange_(ev, i)}"
+        >
+      </filter-nuke>`,
   },
 ];
 
@@ -66,12 +104,23 @@ export class FilterBase extends LitElement {
     database.sort();
   }
 
+  triggerChange() {
+    this.dispatchEvent(new CustomEvent('change'))
+  }
+
   get commonCss() {
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet">
       `;
+  }
+
+  get value() {
+    let v = {};
+    let properties = this.constructor.properties;
+    Object.keys(properties).forEach(k => v[k] = this[k]);
+    return v;
   }
 }
 
@@ -120,7 +169,7 @@ class CardFilter extends LitElement {
   }
 
   newFilter_() {
-    this.filters.push(-1);
+    this.filters.push({id: -1, args: {}});
     this.requestUpdate();
   }
 
@@ -129,34 +178,36 @@ class CardFilter extends LitElement {
     this.requestUpdate();
   }
 
-  renderFilterRow_(x, i) {
+  onChange_(ev, i) {
+    this.filters[i].args = ev.target.value;
+    this.requestUpdate();
+  }
+
+  renderFilterRow_(row, i) {
+    let {id, args} = row;
     return html`
       <div class="grid-row">
         <div class="grid-cell">
-          <span @click="${()=>this.deleteFilter_(i)}" class="material-icons"
+          <span @click="${() => this.deleteFilter_(i)}" class="material-icons"
                   title="remove">
             remove
           </span>
         </div>
         <div class="grid-cell">
-          <select .value="${bind(this, 'filters', i)}">
+          <select .value="${bind(this, 'filters', i, 'id')}">
             <option value="-1" disabled></option>
             ${FILTERS_.map((obj, j) =>
               obj.isSkill ? '' :
-              html`<option value="${j}" .selected="${x == j}">
-                     ${obj.desc}
-                   </option>`)}
+              html`<option value="${j}">${obj.desc}</option>`)}
             <optgroup label="技能">
               ${FILTERS_.map((obj, j) =>
                 !obj.isSkill ? '' :
-                html`<option value="${j}" .selected="${x == j}">
-                       ${obj.desc}
-                     </option>`)}
+                html`<option value="${j}">${obj.desc}</option>`)}
             </optgroup>
           </select>
         </div>
         <div class="grid-cell">
-          ${x >= 0 ? FILTERS_[x].render() : ''}
+          ${id >= 0 ? FILTERS_[id].render(args, this, i) : ''}
         </div>
       </div>
     `;
@@ -187,7 +238,7 @@ class CardFilter extends LitElement {
   updated() {
     super.updated();
     if (this.filters.length == 0 ||
-        this.filters[this.filters.length - 1] != -1) {
+        this.filters[this.filters.length - 1].id != -1) {
       this.newFilter_();
     }
     database.sort();
@@ -201,7 +252,7 @@ class CardFilter extends LitElement {
       <div class="card-title">Filter</div>
       <div class="card-body">
         <div class="grid">
-          ${this.filters.map((x, i) => this.renderFilterRow_(x, i))}
+          ${this.filters.map((row, i) => this.renderFilterRow_(row, i))}
           ${this.renderForcedFilter_()}
         </div>
       </div>

@@ -1,5 +1,6 @@
 // https://glitch.com/edit/#!/fantasy-desk?path=bind.js:20:3
 import {directive, AttributePart, BooleanAttributePart} from 'https://unpkg.com/lit-html@1.0.0/lit-html.js?module';
+import {LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 
 const bindMap = new WeakSet();
 
@@ -38,11 +39,15 @@ export const bind = directive((context, ...props) => (part) => {
         }
       } else if (target.tagName == 'AWAKENING-CHECKBOX') {
         v = target.checked;
+      } else if (target instanceof LitElement) {
+        v = target.value;
       }
       let obj = context;
       props.forEach((prop) => obj = obj[prop]);
       obj[lastProp] = v;
+
       context.requestUpdate();
+      context.triggerChange && context.triggerChange()
     });
   }
   let obj = context;
