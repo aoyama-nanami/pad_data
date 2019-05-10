@@ -1,9 +1,9 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {bind} from '../util/bind.js';
 import {Awakening} from '../awakening.js';
-import {FilterBase} from '../card-filter.js';
+import {FilterBase} from './base.js';
 
-class FilterAwakening extends FilterBase {
+export class FilterAwakening extends FilterBase {
   static get properties() {
     return {
       awakenings: {type: Array},

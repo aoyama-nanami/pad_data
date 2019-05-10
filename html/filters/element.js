@@ -1,8 +1,8 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {FilterBase} from '../card-filter.js';
+import {FilterBase} from './base.js';
 import {bind} from '../util/bind.js';
 
-class FilterElement extends FilterBase {
+export class FilterElement extends FilterBase {
   static get properties() {
     return {
       elements: {type: Array},
