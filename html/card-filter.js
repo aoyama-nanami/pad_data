@@ -23,6 +23,10 @@ function createFilter(cls, args, elem, i) {
 
 const FILTERS_ = [
   {
+    desc: ' ',  // separator
+    isSeparator: true,
+  },
+  {
     desc: '無效貫通',
     cls: FilterAwakening,
     init: {
@@ -72,26 +76,26 @@ const FILTERS_ = [
     init: {},
   },
   {
+    desc: '技能',  // separator
+    isSeparator: true,
+  },
+  {
     desc: '大砲',
-    isSkill: true,
     cls: FilterNuke,
     init: {},
   },
   {
     desc: '轉珠',
-    isSkill: true,
     cls: FilterOrbChange,
     init: {},
   },
   {
     desc: '重力',
-    isSkill: true,
     cls: FilterGravity,
     init: {},
   },
   {
     desc: '真重力',
-    isSkill: true,
     cls: FilterGravity,
     init: {trueGravity: true},
   },
@@ -125,6 +129,14 @@ class CardFilter extends LitElement {
           vertical-align: baseline;
           border-bottom: 1px solid rgb(85, 85, 85);
         }
+
+        .remove-btn {
+          font-size: 14px;
+        }
+
+        option[disabled] {
+          background-color: #333333;
+        }
       `,
     ];
   }
@@ -142,7 +154,7 @@ class CardFilter extends LitElement {
   }
 
   newFilter_() {
-    this.filters.push({id: -1});
+    this.filters.push({id: 0});
     this.requestUpdate();
   }
 
@@ -163,26 +175,23 @@ class CardFilter extends LitElement {
       <div class="grid-row">
         <div class="grid-cell">
           <span @click="${() => this.deleteFilter_(i)}"
-                class="material-icons pointer"
+                class="material-icons pointer remove-btn"
                 title="remove">
-            remove
+            remove_circle_outline
           </span>
         </div>
         <div class="grid-cell">
           <select .value="${bind(this, 'filters', i, 'id')}">
-            <option value="-1" disabled></option>
             ${FILTERS_.map((obj, j) =>
-              obj.isSkill ? '' :
-              html`<option value="${j}">${obj.desc}</option>`)}
-            <optgroup label="技能">
-              ${FILTERS_.map((obj, j) =>
-                !obj.isSkill ? '' :
-                html`<option value="${j}">${obj.desc}</option>`)}
-            </optgroup>
+              html`<option value="${j}" ?disabled="${obj.isSeparator}"
+                           ?selected="${this.filters[i].id == j}">
+                       ${obj.desc}
+                   </option>`
+              )}
           </select>
         </div>
         <div class="grid-cell">
-          ${id >= 0 ?
+          ${FILTERS_[id].cls ?
             createFilter(FILTERS_[id].cls, args || FILTERS_[id].init, this, i) :
             ''}
         </div>
@@ -195,15 +204,13 @@ class CardFilter extends LitElement {
       return '';
     }
 
-    const v = 0;
+    const v = 1;
     return html`
       <div class="grid-row">
         <div class="grid-cell">
         </div>
         <div class="grid-cell">
-          <select>
-            <option value="${v}" selected disabled>${FILTERS_[v].desc}</option>
-          </select>
+          無效貫通
         </div>
         <div class="grid-cell">
           ${createFilter(FILTERS_[v].cls, FILTERS_[v].init)}
@@ -215,7 +222,7 @@ class CardFilter extends LitElement {
   updated() {
     super.updated();
     if (this.filters.length == 0 ||
-        this.filters[this.filters.length - 1].id != -1) {
+        this.filters[this.filters.length - 1].id != 0) {
       this.newFilter_();
     }
     database.sort();

@@ -17,11 +17,11 @@ label.icon-checkbox {
 }
 
 .icon-checkbox > input:not(:checked) + div {
-  filter: grayscale(100%);
+  filter: grayscale(95%);
 }
 
 .grayscale {
-  filter: grayscale(100%);
+  filter: grayscale(95%);
 }
 
 .icon-checkbox > input:disabled + div {
