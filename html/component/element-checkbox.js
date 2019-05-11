@@ -26,7 +26,7 @@ class ElementCheckbox extends LitElement {
   render() {
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
-      <label class="icon-checkbox">
+      <label class="icon-checkbox pointer">
         <input type="checkbox"
                ?checked="${this.checked}"
                ?disabled="${this.override}"

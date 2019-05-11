@@ -271,7 +271,7 @@ class AtkEvalConfig extends LitElement {
             rel="stylesheet">
       <div class="card-title">
         Damage Parameters
-        <span id="reset" @click="${this.reset}" class="material-icons"
+        <span id="reset" @click="${this.reset}" class="material-icons pointer"
                 title="reset">
           cached
         </span>

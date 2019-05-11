@@ -92,7 +92,7 @@ class CardFilter extends LitElement {
       css`
         .grid {
           display: grid;
-          grid-template-columns: 20px max-content auto;
+          grid-template-columns: 26px max-content auto;
           line-height: 24px;
         }
         .grid-row {
@@ -142,8 +142,9 @@ class CardFilter extends LitElement {
     return html`
       <div class="grid-row">
         <div class="grid-cell">
-          <span @click="${() => this.deleteFilter_(i)}" class="material-icons"
-                  title="remove">
+          <span @click="${() => this.deleteFilter_(i)}"
+                class="material-icons pointer"
+                title="remove">
             remove
           </span>
         </div>

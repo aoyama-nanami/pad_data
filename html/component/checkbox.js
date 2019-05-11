@@ -2,7 +2,7 @@ import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 
 export function toggleCheckbox(text, checked, disabled, onchange) {
   return html`
-    <label class="toggle-checkbox">
+    <label class="toggle-checkbox pointer">
       <input type="checkbox"
              .checked="${checked}"
              .disabled="${disabled}"
@@ -15,7 +15,7 @@ export function toggleCheckbox(text, checked, disabled, onchange) {
 
 export function radio(text, name, value, checked, disabled) {
   return html`
-    <label class="radio">
+    <label class="radio pointer">
       <input type="radio"
              name="${name}"
              value="${value}"

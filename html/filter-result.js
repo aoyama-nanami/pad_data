@@ -13,7 +13,7 @@ class FilterResult extends LitElement {
       css`
         .grid {
           display: grid;
-          grid-template-columns: 90px 270px 50px 80px 50px 270px 30px 30px auto;
+          grid-template-columns: 87px 270px 50px 80px 50px 270px 30px 30px auto;
           line-height: 24px;
         }
 
@@ -71,11 +71,10 @@ class FilterResult extends LitElement {
          target="_blank">
         <div class="grid-cell">
           <div style="height: 27px">
-            ${icon('orb', card.attr_id)}
-            ${icon('orb', card.sub_attr_id)}
+            ${icon('orb', card.attr_id)}${icon('orb', card.sub_attr_id)}
           </div>
           <div style="height: 24px">
-            ${card.type.map((i) => html`${icon('t', i)} `)}
+            ${card.type.map((i) => html`${icon('t', i)}`)}
           </div>
         </div>
         <div class="grid-cell">

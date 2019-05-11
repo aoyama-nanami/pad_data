@@ -84,10 +84,15 @@ label.icon-checkbox {
   padding: 6px 6px 6px 6px;
 }
 
-span.material-icons {
+.material-icons {
   color: rgb(154, 154, 154);
   font-weight: normal;
   font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pointer {
   cursor: pointer;
 }
 
@@ -125,4 +130,5 @@ a {
   height: 24px;
   display: inline-block;
   vertical-align: middle;
+  margin-right: 3px;
 }
