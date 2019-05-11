@@ -1,7 +1,7 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {icon} from './common.js';
-import {Awakening} from './awakening.js';
-import {Type, typeToKiller} from './type.js';
+import {Awakening} from './util/awakening.js';
+import {Type, typeToKiller} from './util/type.js';
 import {bind, bindRadio} from './util/bind.js';
 import {toggleCheckbox, radio} from './component/checkbox.js';
 import {database} from './database.js';

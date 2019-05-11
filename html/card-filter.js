@@ -1,5 +1,5 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {Awakening} from './awakening.js';
+import {Awakening} from './util/awakening.js';
 import {bind} from './util/bind.js';
 import {database} from './database.js';
 

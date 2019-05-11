@@ -1,5 +1,5 @@
 import {html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {Awakening, awakeningDamageMultiplier} from './awakening.js';
+import {Awakening, awakeningDamageMultiplier} from './util/awakening.js';
 
 export function statAtMaxLv(card, name) {
   const maxValue = card['max_' + name];
