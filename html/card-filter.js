@@ -3,10 +3,13 @@ import {Awakening} from './util/awakening.js';
 import {bind} from './util/bind.js';
 import {database} from './database.js';
 
+import {FilterAssist} from './filters/assist.js'
 import {FilterAwakening} from './filters/awakening.js'
 import {FilterElement} from './filters/element.js'
-import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterSkillCd} from './filters/skill-cd.js'
+
+import {FilterGravity} from './filters/gravity.js'
+import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterNuke} from './filters/nuke.js'
 
 function createFilter(cls, args, elem, i) {
@@ -59,6 +62,11 @@ const FILTERS_ = [
     },
   },
   {
+    desc: '可裝備',
+    cls: FilterAssist,
+    init: {},
+  },
+  {
     desc: '技能 CD',
     cls: FilterSkillCd,
     init: {},
@@ -74,7 +82,19 @@ const FILTERS_ = [
     isSkill: true,
     cls: FilterOrbChange,
     init: {},
-  }
+  },
+  {
+    desc: '重力',
+    isSkill: true,
+    cls: FilterGravity,
+    init: {},
+  },
+  {
+    desc: '真重力',
+    isSkill: true,
+    cls: FilterGravity,
+    init: {trueGravity: true},
+  },
 ];
 
 class CardFilter extends LitElement {
