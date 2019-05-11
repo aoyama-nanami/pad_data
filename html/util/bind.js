@@ -54,7 +54,12 @@ export const bind = directive((context, ...props) => (part) => {
   }
   let obj = context;
   props.forEach((prop) => obj = obj[prop]);
-  part.setValue(obj[lastProp]);
+  obj = obj[lastProp];
+  if (obj instanceof Array || obj instanceof Object) {
+    part.setValue(JSON.stringify(obj));
+  } else {
+    part.setValue(obj);
+  }
 });
 
 export const bindRadio = directive((context, ...props) => (part) => {

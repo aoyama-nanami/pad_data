@@ -13,7 +13,8 @@ export class FilterElement extends FilterBase {
 
   constructor() {
     super();
-    this.elements = [false, false, false, false, false];
+    this.elements = [];
+    this.elements[4] = false;
   }
 
   apply(c) {
@@ -29,19 +30,10 @@ export class FilterElement extends FilterBase {
     return false;
   }
 
-  orbCheckbox_(i) {
-    return html`
-      <element-checkbox
-        elementId="${i}"
-        ?checked="${bind(this, 'elements', i)}"
-        >
-      </element-checkbox>`
-  }
-
   render() {
     return html`
       ${this.commonCss}
-      ${[0, 1, 2, 3, 4].map((i) => this.orbCheckbox_(i))}
+      <orb-selection value="${bind(this, 'elements')}" multi></orb-selection>
     `;
   }
 }

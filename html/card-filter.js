@@ -5,6 +5,7 @@ import {database} from './database.js';
 
 import {FilterAwakening} from './filters/awakening.js'
 import {FilterElement} from './filters/element.js'
+import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterSkillCd} from './filters/skill-cd.js'
 import {FilterNuke} from './filters/nuke.js'
 
@@ -68,6 +69,12 @@ const FILTERS_ = [
     cls: FilterNuke,
     init: {},
   },
+  {
+    desc: '轉珠',
+    isSkill: true,
+    cls: FilterOrbChange,
+    init: {},
+  }
 ];
 
 class CardFilter extends LitElement {
