@@ -284,6 +284,7 @@ class AtkEvalConfig extends LitElement {
           目標敵人:
           <input type="text" id="target" .value="${bind(this, 'target')}"
                  size="12" maxlength="5"
+                 @focus="${(e) => e.target.select()}"
                  placeholder="input pet ID">
           ${this.displayTargetName_()}
           <br>

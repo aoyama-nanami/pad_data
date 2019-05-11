@@ -75,7 +75,7 @@ export class FilterNuke extends FilterBase {
         <option value="1">單體</option>
       </select>,
       自殘:
-      <select .value="${bind(this, 'self_damage')}">
+      <select .value="${bind(this, 'selfDamage')}">
         <option value="-1">不限</option>
         <option value="1">是</option>
         <option value="0">否</option>
