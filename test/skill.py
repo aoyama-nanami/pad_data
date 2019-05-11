@@ -92,7 +92,7 @@ class TestSkillData(unittest.TestCase):
         # ブラキオス
         self.assert_skill_equal(
             11,
-            effect.DamageBuff(2, [Orb.WOOD], 150),
+            effect.ElementDamageBuff(2, [Orb.WOOD], 150),
             effect.AtkNuke(
                 element=Orb.WOOD, percentage=2000, target=effect.Target.ALL))
 
@@ -139,12 +139,12 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             888,
             effect.Cleave(3),
-            effect.DamageBuff(3, [Orb.WOOD], 115))
+            effect.ElementDamageBuff(3, [Orb.WOOD], 115))
 
         # 英雄王・ギルガメッシュ
         self.assert_skill_equal(
             5010,
-            effect.DamageBuff(1, [Type.GOD], 500),
+            effect.TypeDamageBuff(1, [Type.GOD], 500),
             effect.AtkNuke(
                 element=Orb.NO_ORB, value=150000, target=effect.Target.ONE,
                 ignore_def=True, repeat=5))

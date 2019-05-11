@@ -63,11 +63,11 @@ export function atkEval(card, config) {
   return result;
 }
 
-export function icon(prefix, id, cls) {
-  return html`<div class="icon24x24 ${cls ? cls : ''}"
-                   style="${iconCss(prefix, id)}"></div>`
+export function icon(iconName, extraClass) {
+  return html`<div class="icon24x24 ${extraClass ? extraClass : ''}"
+                   style="${iconCss(iconName)}"></div>`
 }
 
-export function iconCss(prefix, id) {
-  return `background-image: url(images/${prefix}${id}.png)`
+export function iconCss(iconName) {
+  return `background-image: url(images/${iconName}.png)`
 }

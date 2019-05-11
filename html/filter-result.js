@@ -71,10 +71,10 @@ class FilterResult extends LitElement {
          target="_blank">
         <div class="grid-cell">
           <div style="height: 27px">
-            ${icon('orb', card.attr_id)}${icon('orb', card.sub_attr_id)}
+            ${icon('orb' + card.attr_id)}${icon('orb' + card.sub_attr_id)}
           </div>
           <div style="height: 24px">
-            ${card.type.map((i) => html`${icon('t', i)}`)}
+            ${card.type.map((i) => html`${icon('t' + i)}`)}
           </div>
         </div>
         <div class="grid-cell">
@@ -85,13 +85,13 @@ class FilterResult extends LitElement {
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           <div style="height: 27px">
-            ${card.awakenings.map((a) => html`${icon('a', a)}`)}
+            ${card.awakenings.map((a) => html`${icon('a' + a)}`)}
           </div>
           <div style="height: 24px">
             ${card.super_awakenings.map(
               (a, i) => {
                 let grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
-                return html`${icon('a', a, grayscale)}`
+                return html`${icon('a' + a, grayscale)}`
               })}
           </div>
         </div>

@@ -1,5 +1,6 @@
 import {html, LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {bind} from '../util/bind.js';
+import {Orb} from '../util/orb.js';
 
 class OrbSelection extends LitElement {
   static get properties() {
@@ -14,23 +15,22 @@ class OrbSelection extends LitElement {
     this.mode = 'element';
     this.value = [];
     if (this.mode == 'orb') {
-      this.value[9] = false;
+      this.value[Orb.BOMB] = false;
     } else {
-      this.value[4] = false;
+      this.value[Orb.DARK] = false;
     }
   }
 
   orbCheckbox_(i) {
-    return html`<element-checkbox
-        elementId="${i}"
+    return html`<icon-checkbox
+        icon="orb${i}"
         ?checked="${bind(this, 'value', i)}"
         >
-      </element-checkbox>`
+      </icon-checkbox>`
   }
 
   render() {
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
       ${this.value.map((_, i) => this.orbCheckbox_(i))}`;
   }
 

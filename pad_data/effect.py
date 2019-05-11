@@ -80,8 +80,13 @@ class BaseBuff:
     duration: int
 
 @dataclass
-class DamageBuff(BaseBuff):
-    cond: List[Union[Orb, Type]]
+class ElementDamageBuff(BaseBuff):
+    cond: List[Orb]
+    percentage: int
+
+@dataclass
+class TypeDamageBuff(BaseBuff):
+    cond: List[Type]
     percentage: int
 
 @dataclass

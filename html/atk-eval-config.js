@@ -156,15 +156,13 @@ class AtkEvalConfig extends LitElement {
   }
 
   awakeningCheckBox_(i) {
-    return html`
-      <awakening-checkbox
-        awakeningId="${i}"
+    return html`<icon-checkbox
+        icon="a${i}"
         ?checked="${bind(this, 'awakenings', i)}"
         ?override="${this.overrideAwakenings.has(i)}"
         ?overrideChecked="${this.overrideAwakenings.get(i)}"
       >
-      </awakening-checkbox>
-    `
+      </icon-checkbox>`
   }
 
   get targetCard() {
@@ -193,8 +191,8 @@ class AtkEvalConfig extends LitElement {
           html`
             ${x.skill_name} -
             ${type == 72 ?
-              args.map((i) => icon('orb', i)) :
-              args.map((i) => icon('t', i))}
+              args.map((i) => icon('orb' + i)) :
+              args.map((i) => icon('t' + i))}
             傷害${ratio}%輕減
           `,
           bind(this, 'passiveResistIndexes', i),

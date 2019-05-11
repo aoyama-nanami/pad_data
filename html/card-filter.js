@@ -8,6 +8,7 @@ import {FilterAwakening} from './filters/awakening.js'
 import {FilterElement} from './filters/element.js'
 import {FilterSkillCd} from './filters/skill-cd.js'
 
+import {FilterDmgBuff} from './filters/dmg-buff.js'
 import {FilterGravity} from './filters/gravity.js'
 import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterNuke} from './filters/nuke.js'
@@ -99,6 +100,11 @@ const FILTERS_ = [
     cls: FilterGravity,
     init: {trueGravity: true},
   },
+  {
+    desc: '屬性/type 增傷',
+    cls: FilterDmgBuff,
+    init: {},
+  }
 ];
 
 class CardFilter extends LitElement {
