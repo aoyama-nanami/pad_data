@@ -38,17 +38,6 @@ export class FilterOrbChange extends FilterBase {
 
       return true;
     })
-
-    if (this.elements.every((x) => !x)) {
-      return true;
-    }
-    if (this.main && this.elements[c.attr_id]) {
-      return true;
-    }
-    if (this.sub && this.elements[c.sub_attr_id]) {
-      return true;
-    }
-    return false;
   }
 
   render() {
