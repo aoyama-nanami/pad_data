@@ -11,8 +11,9 @@ import {FilterSkillCd} from './filters/skill-cd.js'
 import {FilterAllOrbChange} from './filters/all-orb-change.js'
 import {FilterDmgBuff} from './filters/dmg-buff.js'
 import {FilterGravity} from './filters/gravity.js'
-import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterNuke} from './filters/nuke.js'
+import {FilterOrbChange} from './filters/orb-change.js'
+import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js'
 
 function createFilter(cls, args, elem, i) {
   let filter = new cls();
@@ -109,6 +110,11 @@ const FILTERS_ = [
   {
     desc: '洗版',
     cls: FilterAllOrbChange,
+    init: {},
+  },
+  {
+    desc: '隨機產生寶珠',
+    cls: FilterRandomOrbSpawn,
     init: {},
   },
 ];
