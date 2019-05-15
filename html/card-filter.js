@@ -8,6 +8,7 @@ import {FilterAwakening} from './filters/awakening.js'
 import {FilterElement} from './filters/element.js'
 import {FilterSkillCd} from './filters/skill-cd.js'
 
+import {FilterAllOrbChange} from './filters/all-orb-change.js'
 import {FilterDmgBuff} from './filters/dmg-buff.js'
 import {FilterGravity} from './filters/gravity.js'
 import {FilterOrbChange} from './filters/orb-change.js'
@@ -104,7 +105,12 @@ const FILTERS_ = [
     desc: '屬性/type 增傷',
     cls: FilterDmgBuff,
     init: {},
-  }
+  },
+  {
+    desc: '洗版',
+    cls: FilterAllOrbChange,
+    init: {},
+  },
 ];
 
 class CardFilter extends LitElement {
