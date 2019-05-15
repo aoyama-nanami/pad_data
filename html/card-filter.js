@@ -108,7 +108,7 @@ const FILTERS_ = [
     init: {},
   },
   {
-    desc: '洗版',
+    desc: '陣',
     cls: FilterAllOrbChange,
     init: {},
   },
@@ -181,6 +181,11 @@ class CardFilter extends LitElement {
     this.requestUpdate();
   }
 
+  changeFilterId_(i, ev) {
+    this.filters[i] = {id: parseInt(ev.target.value)};
+    this.requestUpdate();
+  }
+
   onChange_(ev, i) {
     this.filters[i].args = ev.target.value;
     this.requestUpdate();
@@ -199,7 +204,8 @@ class CardFilter extends LitElement {
           </span>
         </div>
         <div class="grid-cell">
-          <select .value="${bind(this, 'filters', i, 'id')}">
+          <select .value="${this.filters[i].id}"
+                  @change="${(ev) => this.changeFilterId_(i, ev)}">
             ${FILTERS_.map((obj, j) =>
               html`<option value="${j}" ?disabled="${obj.isSeparator}"
                            ?selected="${this.filters[i].id == j}">
