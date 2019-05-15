@@ -2,11 +2,6 @@ import {LitElement, html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.
 import {database} from '../database.js';
 
 export class FilterBase extends LitElement {
-  updated() {
-    super.updated();
-    database.sort();
-  }
-
   triggerChange() {
     this.dispatchEvent(new CustomEvent('change'))
   }
