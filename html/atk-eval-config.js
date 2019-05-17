@@ -3,7 +3,7 @@ import {icon} from './common.js';
 import {Awakening} from './util/awakening.js';
 import {Type, typeToKiller} from './util/type.js';
 import {bind, bindRadio} from './util/bind.js';
-import {toggleCheckbox, radio} from './component/checkbox.js';
+import {iconRadio, toggleCheckbox, radio} from './component/checkbox.js';
 import {database} from './database.js';
 
 const LATENT = new Map([
@@ -34,6 +34,7 @@ class AtkEvalConfig extends LitElement {
       target: {type: String},
       includeSubElemDamage: {type: Boolean},
       latentKillerCount: {type: Number},
+      targetAttr: {type: Number},
       passiveResistIndexes: {type: Array},
       sortBy: {type: String},
       maxResult: {type: String},
@@ -46,11 +47,12 @@ class AtkEvalConfig extends LitElement {
         width: 3em;
         text-align: right;
       }
-      .card-body > div {
-        padding: 3px 3px 3px 3px;
-      }
       #latent-killer-count {
         width: 40px;
+      }
+      div.row {
+        padding: 3px 3px 1px 3px;
+        height: 24px;
       }
     `;
   }
@@ -95,7 +97,7 @@ class AtkEvalConfig extends LitElement {
               {v ? awakenings.add(k) : awakenings.delete(k);}
           );
 
-      switch (target.attr_id) {
+      switch (this.targetAttr) {
         case 0:
           elements[1] *= 2;
           elements[2] *= 0.5;
@@ -137,7 +139,7 @@ class AtkEvalConfig extends LitElement {
         const ratio = skill.param[1];
 
         if (type == 72) {
-          args.forEach((x) => elements[x] *= (ratio / 100.0));
+          args.forEach((x) => elements[x] *= 1 - (ratio / 100.0));
         } else if (type == 118) {
           types.push([new Set(args), ratio / 100.0]);
         }
@@ -215,6 +217,11 @@ class AtkEvalConfig extends LitElement {
     this.latentKillerCount = 0;
     const cardFilter = document.querySelector('card-filter');
     cardFilter.overrideFilter = false;
+    if (this.targetCard) {
+      this.targetAttr = this.targetCard.attr_id;
+    } else {
+      this.targetAttr = 0;
+    }
   }
 
   get overrideAwakenings() {
@@ -275,42 +282,59 @@ class AtkEvalConfig extends LitElement {
         </span>
       </div>
       <div class="card-body">
-        <div id="awakenings">
+        <div id="awakenings" class="row">
           ${awakenings.map((i) => this.awakeningCheckBox_(i))}
         </div>
         <div>
-          目標敵人:
-          <input type="text" id="target" .value="${bind(this, 'target')}"
-                 size="12" maxlength="5"
-                 @focus="${(e) => e.target.select()}"
-                 placeholder="input pet ID">
-          ${this.displayTargetName_()}
-          <br>
+          <div class="row">
+            目標敵人:
+            <input type="text" id="target" .value="${bind(this, 'target')}"
+                   size="12" maxlength="5"
+                   @focus="${(e) => e.target.select()}"
+                   placeholder="input pet ID">
+            ${this.displayTargetName_()}
+          </div>
           <div style="${!this.targetCard ? 'display: none' : ''}">
-            <div>
+            <div style="display: flex" class="row">
+              屬性:
+              ${iconRadio('orb0', 'target-attr', 0,
+                bindRadio(this, 'targetAttr'), 'number')}
+              ${iconRadio('orb1', 'target-attr', 1,
+                bindRadio(this, 'targetAttr'), 'number')}
+              ${iconRadio('orb2', 'target-attr', 2,
+                bindRadio(this, 'targetAttr'), 'number')}
+              ${iconRadio('orb3', 'target-attr', 3,
+                bindRadio(this, 'targetAttr'), 'number')}
+              ${iconRadio('orb4', 'target-attr', 4,
+                bindRadio(this, 'targetAttr'), 'number')}
+            </div>
+            <div class="row">
               潛覺殺手:
               <input type="number" .value="${bind(this, 'latentKillerCount')}"
                      min="0" max="3" step="1" id="latent-killer-count">
             </div>
-            <div>
+            <div class="row">
               被動減傷:<br>
-              ${this.targetCard ?
-                this.targetCard.enemy_passive_resist.map(
-                    (x, i) => html`${this.displayPassiveResist_(x, i)}<br>`) :
-                ''}
             </div>
+            ${this.targetCard ?
+              this.targetCard.enemy_passive_resist.map(
+                  (x, i) => html`
+                    <div class="row">
+                      ${this.displayPassiveResist_(x, i)}
+                    </div>`) :
+              ''}
           </div>
         </div>
-        <div>
+        <div class="row">
           ${toggleCheckbox('主副屬相同時加算副屬傷害',
                            bind(this, 'includeSubElemDamage'), false)}
         </div>
-        <div>
+        <div class="row">
           排序方式:
           ${radio('攻擊力', 'sort-by', 'atk', bindRadio(this, 'sortBy'))}
           ${radio('最小CD', 'sort-by', 'cd', bindRadio(this, 'sortBy'))}
         </div>
-        <div>
+        <div class="row">
           顯示數量:
           ${radio('30', 'max-result', '30', bindRadio(this, 'maxResult'))}
           ${radio('50', 'max-result', '50', bindRadio(this, 'maxResult'))}

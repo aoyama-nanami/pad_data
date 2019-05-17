@@ -64,6 +64,14 @@ label.icon-checkbox {
   cursor: not-allowed;
 }
 
+.icon-radio > input:not(:checked) + div {
+  filter: grayscale(95%);
+}
+
+.icon-radio > input {
+  display: none;
+}
+
 :host(.card), .card {
   background-color: #333333;
   margin: 6px 6px 6px 6px;

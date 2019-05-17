@@ -1,4 +1,5 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {icon} from '../common.js';
 
 export function toggleCheckbox(text, checked, disabled, onchange) {
   return html`
@@ -20,10 +21,22 @@ export function radio(text, name, value, checked, disabled) {
              name="${name}"
              value="${value}"
              .checked="${checked}"
-             .disabled="${disabled}"
-             @change="${onchange}">
+             .disabled="${disabled}">
       <span class="material-icons"></span>
       ${text}
+    </label>
+  `;
+}
+
+export function iconRadio(icon_name, name, value, checked, type) {
+  return html`
+    <label class="icon-radio">
+      <input type="radio"
+             name="${name}"
+             value="${value}"
+             .checked="${checked}"
+             data-type="${type}">
+      ${icon(icon_name)}
     </label>
   `;
 }

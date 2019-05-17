@@ -68,7 +68,12 @@ export const bindRadio = directive((context, ...props) => (part) => {
     bindMap.add(part);
     part.committer.element.addEventListener('change', (ev) => {
       const target = ev.target;
-      const v = target.value;
+      let v = target.value;
+      switch (target.dataset.type) {
+        case 'number':
+          v = parseInt(v);
+          break;
+      }
       let obj = context;
       props.forEach((prop) => obj = obj[prop]);
       obj[lastProp] = v;
