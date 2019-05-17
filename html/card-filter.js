@@ -2,6 +2,7 @@ import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-ele
 import {Awakening} from './util/awakening.js';
 import {bind} from './util/bind.js';
 import {database} from './database.js';
+import {toggleCheckbox} from './component/checkbox.js';
 
 import {FilterAssist} from './filters/assist.js'
 import {FilterAwakening} from './filters/awakening.js'
@@ -14,15 +15,6 @@ import {FilterGravity} from './filters/gravity.js'
 import {FilterNuke} from './filters/nuke.js'
 import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js'
-
-function createFilter(cls, args, elem, i) {
-  let filter = new cls();
-  Object.keys(args).forEach((k) => filter[k] = args[k]);
-  filter.classList.add('filter')
-  if (elem)
-    filter.addEventListener('change', (ev) => elem.onChange_(ev, i));
-  return filter;
-}
 
 const FILTERS_ = [
   {
@@ -134,7 +126,7 @@ class CardFilter extends LitElement {
       css`
         .grid {
           display: grid;
-          grid-template-columns: 26px max-content auto;
+          grid-template-columns: 22px 30px max-content auto;
           line-height: 24px;
         }
         .grid-row {
@@ -167,8 +159,18 @@ class CardFilter extends LitElement {
 
   filterFunc() {
     const elems = Array.from(
-        this.shadowRoot.querySelectorAll('.filter'));
+        this.shadowRoot.querySelectorAll('.filter.enabled'));
     return (card) => elems.every((e) => e.apply(card));
+  }
+
+  createFilter(cls, args, i, enabled) {
+    let filter = new cls();
+    Object.keys(args).forEach((k) => filter[k] = args[k]);
+    filter.classList.add('filter')
+    filter.classList.add(enabled ? 'enabled' : 'disabled')
+    if (i >= 0)
+      filter.addEventListener('change', (ev) => this.onChange_(ev, i));
+    return filter;
   }
 
   newFilter_() {
@@ -182,7 +184,8 @@ class CardFilter extends LitElement {
   }
 
   changeFilterId_(i, ev) {
-    this.filters[i] = {id: parseInt(ev.target.value)};
+    const id = parseInt(ev.target.value);
+    this.filters[i] = {id: id, enabled: (id > 0)};
     this.requestUpdate();
   }
 
@@ -192,7 +195,8 @@ class CardFilter extends LitElement {
   }
 
   renderFilterRow_(row, i) {
-    let {id, args} = row;
+    let {id, args, enabled} = row;
+    args = args || FILTERS_[id].init;
 
     return html`
       <div class="grid-row">
@@ -202,6 +206,10 @@ class CardFilter extends LitElement {
                 title="remove">
             remove_circle_outline
           </span>
+        </div>
+        <div class="grid-cell">
+          ${toggleCheckbox('', bind(this, 'filters', i, 'enabled'),
+                           id <= 0)}
         </div>
         <div class="grid-cell">
           <select .value="${this.filters[i].id}"
@@ -216,7 +224,7 @@ class CardFilter extends LitElement {
         </div>
         <div class="grid-cell">
           ${FILTERS_[id].cls ?
-            createFilter(FILTERS_[id].cls, args || FILTERS_[id].init, this, i) :
+            this.createFilter(FILTERS_[id].cls, args, i, enabled) :
             ''}
         </div>
       </div>
@@ -234,10 +242,12 @@ class CardFilter extends LitElement {
         <div class="grid-cell">
         </div>
         <div class="grid-cell">
+        </div>
+        <div class="grid-cell">
           無效貫通
         </div>
         <div class="grid-cell">
-          ${createFilter(FILTERS_[v].cls, FILTERS_[v].init)}
+          ${this.createFilter(FILTERS_[v].cls, FILTERS_[v].init, -1, true)}
         </div>
       </div>
     `;
