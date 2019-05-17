@@ -31,7 +31,7 @@ class IconCheckbox extends LitElement {
       <link rel="stylesheet" type="text/css" href="style.css">
       <label class="icon-checkbox">
         <input type="checkbox"
-               ?checked="${value}"
+               .checked="${value}"
                ?disabled="${this.override}"
                @change="${(ev) => this.onChange_(ev)}"
                >
