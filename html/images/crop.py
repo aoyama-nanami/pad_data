@@ -1,7 +1,7 @@
 import subprocess
 
 x, y = 0, 10
-for i in range(1, 65):
+for i in range(1, 68):
     subprocess.run(['convert', 'eggs.png', '-crop',
                     f'32x32+{612 + 36 * x}+{108 + 36 * y}',
                     f'a{i}.png'],

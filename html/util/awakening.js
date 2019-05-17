@@ -74,6 +74,10 @@ export const Awakening = {
   COMBO_DROP: 62,
   SKILL_VOICE: 63,
   DUNGEON_BONUS: 64,
+
+  REDUCE_HP: 65,
+  REDUCE_ATK: 66,
+  REDUCE_RCV: 67,
 };
 
 const _AWAKENING_DAMAGE_MAP = new Map([

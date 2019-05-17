@@ -78,6 +78,10 @@ class Awakening(enum.IntEnum):
     SKILL_VOICE = 63
     DUNGEON_BONUS = 64
 
+    REDUCE_HP = 65
+    REDUCE_ATK = 66
+    REDUCE_RCV = 67
+
     def damage_multiplier(self):
         # pylint: disable=no-member
         # pylint can't detect the type of enum name/value
