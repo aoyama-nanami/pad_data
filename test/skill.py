@@ -149,5 +149,17 @@ class TestSkillData(unittest.TestCase):
                 element=Orb.NO_ORB, value=150000, target=effect.Target.ONE,
                 ignore_def=True, repeat=5))
 
+        # マタムネ
+        self.assert_skill_equal(
+            5271,
+            effect.Sacrifice(hp_remain=0),
+            effect.AtkNuke(
+                element=Orb.NO_ORB, value=10000, target=effect.Target.ALL,
+                ignore_def=True),
+            effect.RandomOrbSpawn(
+                count=5, orb=[Orb.LIGHT, Orb.DARK],
+                exclude=[Orb.LIGHT, Orb.DARK]))
+
+
 if __name__ == '__main__':
     unittest.main()

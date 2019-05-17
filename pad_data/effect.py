@@ -18,10 +18,6 @@ class RandomSkill:
         pass
 
 @dataclass
-class SacrificeMixin:
-    hp_remain: int = 100
-
-@dataclass
 class Nuke:
     element: Orb
     target: Target
@@ -38,8 +34,8 @@ class Nuke:
         assert not (self.element != Orb.NO_ORB and self.ignore_def)
 
 @dataclass
-class AtkNuke(SacrificeMixin, Nuke):
-    pass
+class AtkNuke(Nuke):
+    hp_remain: int = 100
 
 @dataclass
 class AtkNukeType2(AtkNuke):
@@ -304,7 +300,7 @@ class ComboIncrease(BaseBuff):
     combo: int
 
 @dataclass
-class Unlock(SacrificeMixin):
+class Unlock:
     pass
 
 @dataclass
@@ -332,3 +328,7 @@ class ComboHelper:
 @dataclass
 class VoidDamagePiercer(BaseBuff):
     pass
+
+@dataclass
+class Sacrifice:
+    hp_remain: int

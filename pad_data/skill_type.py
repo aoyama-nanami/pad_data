@@ -131,7 +131,7 @@ _EFFECT_MAP = {
              ignore_def=True, value=int),
     189: Map(ComboHelper),
     191: Map(VoidDamagePiercer, duration=int),
-    195: Map(Unlock, hp_remain=int),
+    195: Map(Sacrifice, hp_remain=int),
 }
 
 def parse(skill_type, args):
