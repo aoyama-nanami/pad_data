@@ -15,6 +15,7 @@ import {FilterGravity} from './filters/gravity.js'
 import {FilterNuke} from './filters/nuke.js'
 import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js'
+import {FilterType} from './filters/type.js'
 
 const FILTERS_ = [
   {
@@ -43,6 +44,11 @@ const FILTERS_ = [
     desc: '主或副屬',
     cls: FilterElement,
     init: {main: true, sub: true},
+  },
+  {
+    desc: 'Type',
+    cls: FilterType,
+    init: {},
   },
   {
     desc: '操作時間延長',
