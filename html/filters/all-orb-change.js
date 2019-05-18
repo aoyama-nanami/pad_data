@@ -27,7 +27,7 @@ export class FilterAllOrbChange extends FilterBase {
       } else if (type == 'OrbChange') {
         /*
          * This is a special case for
-         * No. 4389, 4390 双子の看守・ジュスティーヌ＆カロリーヌ,
+         * No. 4389 & 4390 双子の看守・ジュスティーヌ＆カロリーヌ,
          * Their skill is classified as orb change from 10 colors to 9 colors.
          */
         if (effect.from_.length != 10) {
@@ -64,9 +64,8 @@ export class FilterAllOrbChange extends FilterBase {
         <option value="==">==</option>
         <option value=">=">&ge;</option>
       </select>
-      <input style="width: 40px" type="number" min="1" max="8" step="1"
+      <input style="width: 40px" type="number" min="1" max="10" step="1"
              .value="${bind(this, 'num_colors')}"
-             @click="${(e) => e.target.select()}"
              maxlength="2">
       色, 包含:
       <orb-selection value="${bind(this, 'orbs')}" mode="orb">

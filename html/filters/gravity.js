@@ -36,8 +36,7 @@ export class FilterGravity extends FilterBase {
       ${this.commonCss}
       &ge;
       <input type="number" min="0" step="5" style="width: 50px"
-             .value="${bind(this, 'percentage')}"
-             @click="${(e) => e.target.select()}"> %
+             .value="${bind(this, 'percentage')}"> %
     `;
   }
 }

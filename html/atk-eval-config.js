@@ -60,17 +60,6 @@ class AtkEvalConfig extends LitElement {
   constructor() {
     super();
     this.awakenings = [];
-    this.reset();
-  }
-
-  firstUpdated(changedProperties) {
-    super.firstUpdated(changedProperties);
-    this.shadowRoot.querySelector('#target').addEventListener(
-        'change', (ev) => this.handleTargetChange_(ev));
-  }
-
-  reset() {
-    this.awakenings = [];
     [27, 43, 57, 58, 60].forEach((i) => this.awakenings[i] = true);
     this.target = '';
     this.latentKillerCount = 0;
@@ -78,6 +67,12 @@ class AtkEvalConfig extends LitElement {
     this.passiveResistIndexes = [];
     this.sortBy = 'atk';
     this.maxResult = '30';
+  }
+
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    this.shadowRoot.querySelector('#target').addEventListener(
+        'change', (ev) => this.handleTargetChange_(ev));
   }
 
   generateConfig() {
@@ -276,54 +271,43 @@ class AtkEvalConfig extends LitElement {
             rel="stylesheet">
       <div class="card-title">
         Damage Parameters
-        <span id="reset" @click="${this.reset}" class="material-icons pointer"
-                title="reset">
-          cached
-        </span>
       </div>
       <div class="card-body">
-        <div id="awakenings" class="row">
+        <div id="awakenings" class="row icon-list">
           ${awakenings.map((i) => this.awakeningCheckBox_(i))}
         </div>
-        <div>
+        <div class="row">
+          目標敵人:
+          <input type="text" id="target" .value="${bind(this, 'target')}"
+                 size="12" maxlength="5"
+                 @click="${(e) => e.target.select()}"
+                 placeholder="input pet ID">
+          ${this.displayTargetName_()}
+        </div>
+        <div style="${!this.targetCard ? 'display: none' : 'content'}">
+          <div class="row icon-list">
+            屬性:
+            ${[0, 1, 2, 3, 4].map((i) =>
+              iconRadio('orb' + i, 'target-attr', i,
+                        bindRadio(this, 'targetAttr'), 'number'))}
+          </div>
           <div class="row">
-            目標敵人:
-            <input type="text" id="target" .value="${bind(this, 'target')}"
-                   size="12" maxlength="5"
-                   @focus="${(e) => e.target.select()}"
-                   placeholder="input pet ID">
-            ${this.displayTargetName_()}
+            潛覺殺手:
+            <input type="number" .value="${bind(this, 'latentKillerCount')}"
+                   min="0" max="3" step="1" id="latent-killer-count"
+                   @click="${(ev) => ev.target.select()}"
+                   >
           </div>
-          <div style="${!this.targetCard ? 'display: none' : ''}">
-            <div style="display: flex" class="row">
-              屬性:
-              ${iconRadio('orb0', 'target-attr', 0,
-                bindRadio(this, 'targetAttr'), 'number')}
-              ${iconRadio('orb1', 'target-attr', 1,
-                bindRadio(this, 'targetAttr'), 'number')}
-              ${iconRadio('orb2', 'target-attr', 2,
-                bindRadio(this, 'targetAttr'), 'number')}
-              ${iconRadio('orb3', 'target-attr', 3,
-                bindRadio(this, 'targetAttr'), 'number')}
-              ${iconRadio('orb4', 'target-attr', 4,
-                bindRadio(this, 'targetAttr'), 'number')}
-            </div>
-            <div class="row">
-              潛覺殺手:
-              <input type="number" .value="${bind(this, 'latentKillerCount')}"
-                     min="0" max="3" step="1" id="latent-killer-count">
-            </div>
-            <div class="row">
-              被動減傷:<br>
-            </div>
-            ${this.targetCard ?
-              this.targetCard.enemy_passive_resist.map(
-                  (x, i) => html`
-                    <div class="row">
-                      ${this.displayPassiveResist_(x, i)}
-                    </div>`) :
-              ''}
+          <div class="row">
+            被動減傷:<br>
           </div>
+          ${this.targetCard ?
+            this.targetCard.enemy_passive_resist.map(
+                (x, i) => html`
+                  <div class="row">
+                    ${this.displayPassiveResist_(x, i)}
+                  </div>`) :
+            ''}
         </div>
         <div class="row">
           ${toggleCheckbox('主副屬相同時加算副屬傷害',

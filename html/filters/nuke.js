@@ -18,7 +18,6 @@ export class FilterNuke extends FilterBase {
     this.percentage = 0;
     this.element = -2;
     this.target = -1;
-    this.selfDamage = -1;
     this.leech = 0;
   }
 
@@ -40,10 +39,6 @@ export class FilterNuke extends FilterBase {
       if (this.target >= 0 && effect.target != this.target) {
         return false;
       }
-      const selfDamage = effect.hp_remain == 100 ? 0 : 1;
-      if (this.selfDamage >= 0 && selfDamage != this.selfDamage) {
-        return false;
-      }
       if (effect.leech < this.leech) {
         return false;
       }
@@ -54,10 +49,9 @@ export class FilterNuke extends FilterBase {
   render() {
     return html`
       ${this.commonCss}
-      倍率 &ge;
-      <input type="number" min="0" step="5" style="width: 50px"
-             .value="${bind(this, 'percentage')}"
-             @click="${(e) => e.target.select()}">,
+      &ge;
+      <input type="number" min="0" step="5" style="width: 40px"
+             .value="${bind(this, 'percentage')}"> 倍,
       屬性:
       <select .value="${bind(this, 'element')}">
         <option value="-2">不限</option>
@@ -74,16 +68,9 @@ export class FilterNuke extends FilterBase {
         <option value="0">全體</option>
         <option value="1">單體</option>
       </select>,
-      自殘:
-      <select .value="${bind(this, 'selfDamage')}">
-        <option value="-1">不限</option>
-        <option value="1">是</option>
-        <option value="0">否</option>
-      </select>,
       吸血:
-      <input type="number" min="0" step="5" style="width: 50px"
-             .value="${bind(this, 'leech')}"
-             @click="${(e) => e.target.select()}"> %
+      <input type="number" min="0" step="5" style="width: 40px"
+             .value="${bind(this, 'leech')}"> %
     `;
   }
 }

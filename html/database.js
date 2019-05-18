@@ -10,12 +10,10 @@ class Database {
     fetch('data/jp_cards_merged.json')
         .then((r) => r.json())
         .then((obj) => {
-          const a = [];
-          obj.forEach((c) => a[c.card_id] = c);
-          this.data = a;
+          obj.forEach((c) => this.data[c.card_id] = c);
           this.sort();
           document.querySelector('#loading').style.display = 'none';
-          document.querySelector('#main').style.display = 'grid';
+          document.querySelector('#main').style.removeProperty('display');
         });
   }
 

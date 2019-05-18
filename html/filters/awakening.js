@@ -32,7 +32,6 @@ export class FilterAwakening extends FilterBase {
       <span style="${this.canEdit ? '' : 'display: none'}">
         &ge;
         <input type="number" min="1" step="1" .value="${bind(this, 'count')}"
-               @click="${(e) => e.target.select()}"
                maxlength="2" style="width: 40px;">
       </span>
     `;

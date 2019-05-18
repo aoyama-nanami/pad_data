@@ -11,15 +11,6 @@ class IconCheckbox extends LitElement {
     };
   }
 
-  static get styles() {
-    return css`
-      :host {
-        font-size: 0;
-        vertical-align: middle;
-      }
-    `;
-  }
-
   onChange_(ev) {
     this.checked = ev.target.checked;
     this.dispatchEvent(new CustomEvent('change'));

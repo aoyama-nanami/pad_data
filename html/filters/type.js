@@ -27,7 +27,7 @@ export class FilterType extends FilterBase {
   render() {
     return html`
       ${this.commonCss}
-      <div style="display: flex">
+      <div class="icon-list">
         ${this.types.map((v, i) =>
           html`
             <icon-checkbox icon="t${i}" ?checked="${bind(this, 'types', i)}">

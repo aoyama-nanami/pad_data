@@ -25,7 +25,6 @@ export class FilterSkillCd extends FilterBase {
       </select>
       <input style="width: 40px" type="number" min="1" step="1"
              .value="${bind(this, 'cd')}"
-             @click="${(e) => e.target.select()}"
              maxlength="2">
     `;
   }

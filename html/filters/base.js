@@ -14,6 +14,12 @@ export class FilterBase extends LitElement {
       `;
   }
 
+  firstUpdated() {
+    super.firstUpdated();
+    this.shadowRoot.querySelectorAll('input[type=number]').forEach(
+      (e) => e.addEventListener('click', (ev) => ev.target.select()));
+  }
+
   get value() {
     let v = {};
     let properties = this.constructor.properties;

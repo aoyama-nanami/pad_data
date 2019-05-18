@@ -52,11 +52,15 @@ label.icon-checkbox {
 .radio > input:checked ~ span:after {
   content: "radio_button_checked";
   color: rgb(84, 135, 229);
+  font-size: 12px;
+  display: block;
   vertical-align: middle;
 }
 
 .radio > input:not(:checked) ~ span:after {
   content: "radio_button_unchecked";
+  font-size: 12px;
+  display: block;
   vertical-align: middle;
 }
 
@@ -72,7 +76,7 @@ label.icon-checkbox {
   display: none;
 }
 
-:host(.card), .card {
+.card {
   background-color: #333333;
   margin: 6px 6px 6px 6px;
 }
@@ -123,7 +127,6 @@ a {
 .grid-two-col {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-column-gap: 0.5rem;
   width: 1600px;
   overflow: hidden;
   margin-left: auto;
@@ -137,4 +140,9 @@ a {
   display: inline-block;
   vertical-align: middle;
   margin-right: 3px;
+}
+
+div.icon-list {
+  display: flex;
+  height: 24px;
 }

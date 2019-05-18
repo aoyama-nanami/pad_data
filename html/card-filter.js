@@ -15,12 +15,12 @@ import {FilterGravity} from './filters/gravity.js'
 import {FilterNuke} from './filters/nuke.js'
 import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js'
+import {FilterSacrifice} from './filters/sacrifice.js'
 import {FilterType} from './filters/type.js'
 
 const FILTERS_ = [
   {
     desc: ' ',  // separator
-    isSeparator: true,
   },
   {
     desc: '無效貫通',
@@ -48,7 +48,6 @@ const FILTERS_ = [
   {
     desc: 'Type',
     cls: FilterType,
-    init: {},
   },
   {
     desc: '操作時間延長',
@@ -69,31 +68,29 @@ const FILTERS_ = [
   {
     desc: '可裝備',
     cls: FilterAssist,
-    init: {},
   },
   {
     desc: '技能 CD',
     cls: FilterSkillCd,
-    init: {},
   },
   {
-    desc: '技能',  // separator
-    isSeparator: true,
+    desc: '主動技',  // separator
   },
   {
     desc: '大砲',
     cls: FilterNuke,
-    init: {},
+  },
+  {
+    desc: '自殘',
+    cls: FilterSacrifice,
   },
   {
     desc: '轉珠',
     cls: FilterOrbChange,
-    init: {},
   },
   {
     desc: '重力',
     cls: FilterGravity,
-    init: {},
   },
   {
     desc: '真重力',
@@ -103,17 +100,14 @@ const FILTERS_ = [
   {
     desc: '屬性/type 增傷',
     cls: FilterDmgBuff,
-    init: {},
   },
   {
     desc: '陣',
     cls: FilterAllOrbChange,
-    init: {},
   },
   {
     desc: '隨機產生寶珠',
     cls: FilterRandomOrbSpawn,
-    init: {},
   },
 ];
 
@@ -133,6 +127,7 @@ class CardFilter extends LitElement {
         .grid {
           display: grid;
           grid-template-columns: 22px 30px max-content auto;
+          grid-auto-rows: 28px;
           line-height: 24px;
         }
         .grid-row {
@@ -160,6 +155,7 @@ class CardFilter extends LitElement {
   constructor() {
     super();
     this.filters = [];
+    this.newFilter_();
     this.overrideFilter = false;
   }
 
@@ -192,6 +188,9 @@ class CardFilter extends LitElement {
   changeFilterId_(i, ev) {
     const id = parseInt(ev.target.value);
     this.filters[i] = {id: id, enabled: (id > 0)};
+    if (i == this.filters.length - 1 && id > 0) {
+      this.newFilter_();
+    }
     this.requestUpdate();
   }
 
@@ -202,26 +201,27 @@ class CardFilter extends LitElement {
 
   renderFilterRow_(row, i) {
     let {id, args, enabled} = row;
-    args = args || FILTERS_[id].init;
+    args = args || FILTERS_[id].init || {};
 
     return html`
       <div class="grid-row">
         <div class="grid-cell">
           <span @click="${() => this.deleteFilter_(i)}"
                 class="material-icons pointer remove-btn"
+                style="${id <= 0 ? 'display: none' : ''}"
                 title="remove">
             remove_circle_outline
           </span>
         </div>
         <div class="grid-cell">
-          ${toggleCheckbox('', bind(this, 'filters', i, 'enabled'),
-                           id <= 0)}
+          ${id <= 0 ? '' :
+            toggleCheckbox('', bind(this, 'filters', i, 'enabled'))}
         </div>
         <div class="grid-cell">
           <select .value="${this.filters[i].id}"
                   @change="${(ev) => this.changeFilterId_(i, ev)}">
             ${FILTERS_.map((obj, j) =>
-              html`<option value="${j}" ?disabled="${obj.isSeparator}"
+              html`<option value="${j}" ?disabled="${!obj.cls}"
                            ?selected="${this.filters[i].id == j}">
                        ${obj.desc}
                    </option>`
@@ -261,10 +261,6 @@ class CardFilter extends LitElement {
 
   updated() {
     super.updated();
-    if (this.filters.length == 0 ||
-        this.filters[this.filters.length - 1].id != 0) {
-      this.newFilter_();
-    }
     database.sort();
   }
 

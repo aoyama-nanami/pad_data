@@ -59,9 +59,8 @@ class FilterResult extends LitElement {
               rel="stylesheet">
         <div class="grid">${this.data.map((x) => this._renderRow(x))}</div>
       `;
-    } else {
-      return html``;
     }
+    return html``;
   }
 
   _renderRow(row) {
@@ -74,30 +73,31 @@ class FilterResult extends LitElement {
             ${icon('orb' + card.attr_id)}${icon('orb' + card.sub_attr_id)}
           </div>
           <div style="height: 24px">
-            ${card.type.map((i) => html`${icon('t' + i)}`)}
+            ${card.type.map((i) => icon('t' + i))}
           </div>
         </div>
-        <div class="grid-cell">
-          ${card.name}
-        </div>
+        <div class="grid-cell">${card.name}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
         <div class="grid-cell numeric-cell">${result.atk}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
         <div class="grid-cell">
           <div style="height: 27px">
-            ${card.awakenings.map((a) => html`${icon('a' + a)}`)}
+            ${card.awakenings.map((a) => icon('a' + a))}
           </div>
           <div style="height: 24px">
             ${card.super_awakenings.map(
               (a, i) => {
                 let grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
-                return html`${icon('a' + a, grayscale)}`
+                return icon('a' + a, grayscale)
               })}
           </div>
         </div>
         <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
-        <div class="grid-cell material-icons">
-          ${card.inheritable ? 'check' : ''}
+        <div class="grid-cell">
+          <div class="material-icons"
+            style="font-size: 16px; vertical-align: middle">
+            ${card.inheritable ? 'check' : ''}
+          </div>
         </div>
         <div class="grid-cell">
           <pre class="skill-desc">${card.skill.description}</pre>

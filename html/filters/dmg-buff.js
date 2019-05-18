@@ -58,16 +58,14 @@ export class FilterDmgBuff extends FilterBase {
     return html`
       ${this.commonCss}
       <input type="number" min="1" step="1" style="width: 50px"
-             .value="${bind(this, 'duration')}"
-             @click="${(e) => e.target.select()}">
+             .value="${bind(this, 'duration')}">
       回合,
       <orb-selection value="${bind(this, 'condElement')}" mode="element">
       </orb-selection>
       <type-selection value="${bind(this, 'condType')}">
       </type-selection>
       <input type="number" min="100" step="50" style="width: 50px"
-             .value="${bind(this, 'percentage')}"
-             @click="${(e) => e.target.select()}">
+             .value="${bind(this, 'percentage')}">
       %增傷
     `;
   }

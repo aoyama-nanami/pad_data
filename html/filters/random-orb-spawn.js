@@ -40,7 +40,6 @@ export class FilterRandomOrbSpawn extends FilterBase {
       , &ge;
       <input style="width: 40px" type="number" min="1" max="842" step="1"
              .value="${bind(this, 'count')}"
-             @click="${(e) => e.target.select()}"
              maxlength="2">
       顆
     `;
