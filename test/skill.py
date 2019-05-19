@@ -69,7 +69,7 @@ class TestSkillData(unittest.TestCase):
         # ダルシム
         self.assert_skill_equal(
             5107,
-            effect.Recovery(5, 0, 0, 0, 5),
+            effect.Heal(5, 0, 0, 0, 5),
             effect.OrbChange([Orb.LIGHT], [Orb.WATER]),
             effect.OrbChange([Orb.DARK], [Orb.FIRE]))
 

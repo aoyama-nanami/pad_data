@@ -114,14 +114,6 @@ class OrbRefresh:
     pass
 
 @dataclass
-class FixedHeal:
-    value: int
-
-@dataclass
-class RcvBasedHeal:
-    percentage: int
-
-@dataclass
 class TeamRcvBasedHeal:
     percentage: int
 
@@ -207,7 +199,7 @@ class DelayEnemyAttack:
         assert unused == 0 or unused == self.duration
 
 @dataclass
-class Recovery:
+class Heal:
     # バインド状態をnターン回復
     bind: int
     # 回復力n倍のHP回復
@@ -218,12 +210,18 @@ class Recovery:
     hp_percentage: int
     # 覚醒無効状態をnターン回復
     awoken_bind: int
+    def __post_init__(self):
+        heals = [self.rcv_percentage, self.hp_value, self.hp_percentage]
+        assert len([x for x in heals if x > 0]) <= 1
 
 @dataclass
-class RecoveryOverTime(BaseBuff, Recovery):
+class HealOverTime(BaseBuff, Heal):
     unused: InitVar[int]
     def __post_init__(self, unused):
+        super().__post_init__()
         assert unused == 0
+        assert self.rcv_percentage == 0
+        assert self.hp_value == 0
 
 @dataclass
 class Poison:
