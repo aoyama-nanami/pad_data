@@ -27,7 +27,7 @@ class Card:
     def __init__(self, json_data):
         self._json_data = json_data
         self.skill = None
-        self.enemy_passive_resist = []
+        self.enemy_passive_resist = {}
 
     def __getattr__(self, name):
         return self._json_data[name]
@@ -81,9 +81,9 @@ class Card:
             list(map(lambda e: [type(e).__name__, e.__dict__],
                      self.skill.effects)))
         obj['enemy_passive_resist'] = (
-            list(e.__dict__ for e in self.enemy_passive_resist))
+            list(e.__dict__ for e in self.enemy_passive_resist.values()))
         return dict((k, v) for k, v in obj.items()
-                     if k in Card._FIELD_WHITELIST)
+                    if k in Card._FIELD_WHITELIST)
 
     def atk_at_level(self, level=None):
         return self._stat_at_level('atk', level)

@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
-from pad_data import common, database, effect, filters, util
+from pad_data import common, database, filters, util
+from pad_data.active_skill import effect
 
 util.import_enum_members(common.Awakening, globals())
 util.import_enum_members(common.Orb, globals())
