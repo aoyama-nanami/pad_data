@@ -12,6 +12,7 @@ import {FilterSkillCd} from './filters/skill-cd.js'
 import {FilterAllOrbChange} from './filters/all-orb-change.js'
 import {FilterDmgBuff} from './filters/dmg-buff.js'
 import {FilterGravity} from './filters/gravity.js'
+import {FilterLowHpNuke} from './filters/low-hp-nuke.js'
 import {FilterNuke} from './filters/nuke.js'
 import {FilterOrbChange} from './filters/orb-change.js'
 import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js'
@@ -79,6 +80,10 @@ const FILTERS_ = [
   {
     desc: '大砲',
     cls: FilterNuke,
+  },
+  {
+    desc: '低血砲',
+    cls: FilterLowHpNuke,
   },
   {
     desc: '自殘',
