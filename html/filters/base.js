@@ -16,7 +16,7 @@ export class FilterBase extends LitElement {
   firstUpdated() {
     super.firstUpdated();
     this.shadowRoot.querySelectorAll('input[type=number]').forEach(
-        (e) => e.addEventListener('click', (ev) => ev.target.select()));
+        (e) => e.addEventListener('focus', (ev) => ev.target.select()));
   }
 
   get value() {

@@ -278,7 +278,7 @@ class AtkEvalConfig extends LitElement {
           目標敵人:
           <input type="text" id="target" .value="${bind(this, 'target')}"
                  size="12" maxlength="5"
-                 @click="${(e) => e.target.select()}"
+                 @focus="${(ev) => ev.target.select()}"
                  placeholder="input pet ID">
           ${this.displayTargetName_()}
         </div>
@@ -293,7 +293,7 @@ class AtkEvalConfig extends LitElement {
             潛覺殺手:
             <input type="number" .value="${bind(this, 'latentKillerCount')}"
                    min="0" max="3" step="1" id="latent-killer-count"
-                   @click="${(ev) => ev.target.select()}"
+                   @focus="${(ev) => ev.target.select()}"
                    >
           </div>
           <div class="row">
