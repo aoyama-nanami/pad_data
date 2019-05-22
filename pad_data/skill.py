@@ -194,7 +194,7 @@ _LS_EFFECT_MAP = {
     39: Map(LS.by_stat_id(LS.HpBelow), hp_below=int, stat_id_list=[int, int],
             percentage=int),
     40: Map(LS.StatBoost, elements=[Orb, Orb], types=[], atk=int),
-    41: Map(LS.Counter, proc_rate=int, atk=int, element=Orb),
+    41: Map(LS.Counter, proc_rate=int, atk=int, orb=Orb),
     43: Map(LS.HpAbove, hp_above=int, unused=Unused(100), dr=int),
     44: Map(LS.by_stat_id(LS.HpAbove), hp_above=int, stat_id_list=[int, int],
             percentage=int),
@@ -207,7 +207,7 @@ _LS_EFFECT_MAP = {
     54: Map(LS.GoldLootUp, percentage=int),
 
     # n色以上同時攻擊で攻撃力がx倍、最大m色y倍
-    61: Map(LS.Rainbow, elements=orb_list, color_min=int, atk=int, atk_step=int,
+    61: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, atk_step=int,
             color_step=int),
     62: Map(LS.StatBoost, elements=[], types=[Type], hp=int, atk=Ref('hp')),
     63: Map(LS.StatBoost, elements=[], types=[Type], hp=int, rcv=Ref('hp')),
@@ -321,14 +321,14 @@ _LS_EFFECT_MAP = {
     164: Map(LS.ElementCombo, combos=[orb_list] * 4, combo_min=int, atk=int,
              rcv=int, atk_step=int, rcv_step=Ref('atk_step')),
     # n色以上同時攻撃で攻撃力と回復力が上昇、最大m倍
-    165: Map(LS.Rainbow, elements=orb_list, color_min=int, atk=int, rcv=int,
+    165: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, rcv=int,
              atk_step=int, rcv_step=int, color_step=int),
     166: Map(LS.Combo, combo=int, atk=int, rcv=int, atk_step=int, rcv_step=int,
              combo_max=int),
     167: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, atk=int, rcv=int,
              atk_step=int, rcv_step=int, size_max=int),
     169: Map(LS.Combo, combo=int, atk=int, dr=int),
-    170: Map(LS.Rainbow, elements=orb_list, color_min=int, atk=int, dr=int),
+    170: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, dr=int),
     # see id 124
     171: Map(LS.ElementCombo, combos=[orb_list] * 4, combo_min=int, atk=int,
              dr=int),
@@ -355,20 +355,20 @@ _LS_EFFECT_MAP = {
              combo_increase=int),
     # 5個L字消し
     193: Map(LS.LShape, orbs=orb_list, atk=int, rcv=int, dr=int),
-    194: Map(LS.Rainbow, elements=orb_list, color_min=int, atk=int,
+    194: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int,
              combo_increase=int),
 }
 
 # special case:
 #   type=129, arg=[8, 0, 100] => モンスター経験値アップ
 #   type=48, arg=[3, 100] => たまドラ
-#
+#   type=121, arg=[] => ぷれドラ
 def parse(skill_type, args, is_active_skill):
     if is_active_skill:
         return _AS_EFFECT_MAP[skill_type](*args)
 
-    if skill_type == 129 and args == [8, 0, 100]:
-        return LS.ExpUp()
-    if skill_type == 48 and args == [3, 100]:
-        return LS.Awakening()
+    if ((skill_type == 129 and args == [8, 0, 100]) or
+            (skill_type == 48 and args == [3, 100]) or
+            (skill_type == 121 and args == [])):
+        return LS.Dummy()
     return _LS_EFFECT_MAP[skill_type](*args)

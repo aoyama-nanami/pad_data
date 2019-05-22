@@ -30,8 +30,14 @@ class Database:
             enemy_skills = dict((s['enemy_skill_id'], s) for s in json.load(f))
 
         for c in self._cards.values():
-            c.skill = self._process_skill(c.active_skill_id, True)
-            c.leader_skill = self._process_skill(c.leader_skill_id, False)
+            try:
+                c.skill = self._process_skill(c.active_skill_id, True)
+                c.leader_skill = self._process_skill(c.leader_skill_id, False)
+            except UnknownSkillEffect as e:
+                print(c.card_id, c.name)
+                print(e.desc)
+                print(e.effects)
+                raise
 
         for c in self._cards.values():
             card_id = c.card_id % 100000

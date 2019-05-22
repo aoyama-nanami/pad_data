@@ -54,26 +54,45 @@ class Combo(StatBoost):
     combo: int = 0
     combo_max: int = 0
 
+    def __post_init__(self):
+        super().__post_init__()
+        if self.combo_max == 0:
+            self.combo_max = self.combo
+
 @dataclass
 class ComboExact(StatBoost):
     combo: int = 0
 
 @dataclass
 class Rainbow(StatBoost):
-    elements: List[common.Orb] = field(default_factory=list)
+    orbs: List[common.Orb] = field(default_factory=list)
     color_min: int = 0
-    color_step: int = 0
+    color_max: int = field(init=False)
+
+    color_step: InitVar[int] = 0
+
+    # pylint: disable=arguments-differ
+    def __post_init__(self, color_step):
+        super().__post_init__()
+
+        if color_step == 0:
+            self.color_max = self.color_min
+        else:
+            self.color_max = min(self.color_min + color_step, len(self.orbs))
 
 @dataclass
 class ElementCombo(StatBoost):
     combos: List[List[common.Orb]] = field(default_factory=list)
     combo_min: int = 0
+
     def __post_init__(self):
         super().__post_init__()
+
+        self.combos = list(filter(lambda x: x, self.combos))
         # pylint: disable=not-an-iterable
         assert all(len(c) <= 1 for c in self.combos)
         # pylint: disable=not-an-iterable
-        assert len([c for c in self.combos if c]) >= self.combo_min
+        assert len(self.combos) >= self.combo_min
 
 @dataclass
 class ConnectedOrbs(StatBoost):
@@ -161,15 +180,19 @@ def hp_cond_139(elements, types, spec):
             return HpAbove(elements=elements, types=types, hp_above=s[0],
                            atk=s[2])
         return HpBelow(elements=elements, types=types, hp_below=s[0], atk=s[2])
-    return [conv(s) for s in spec]
+    return [conv(s) for s in spec if s[0]]
 
 # pylint: disable=too-many-arguments
 def hp_cond_183(elements, types, hp_above, atk_above, rcv_above, hp_below,
                 atk_below, rcv_below):
-    return [HpAbove(elements=elements, types=types, hp_above=hp_above,
-                    atk=atk_above, rcv=rcv_above),
-            HpBelow(elements=elements, types=types, hp_below=hp_below,
-                    atk=atk_below, rcv=rcv_below)]
+    res = []
+    if hp_above:
+        res.append(HpAbove(elements=elements, types=types, hp_above=hp_above,
+                           atk=atk_above, rcv=rcv_above))
+    if hp_below:
+        res.append(HpBelow(elements=elements, types=types, hp_below=hp_below,
+                           atk=atk_below, rcv=rcv_below))
+    return res
 
 def double_stat_boost(params_0, params_1):
     # param = [elements, types, hp, atk, rcv]
@@ -186,7 +209,7 @@ class Resolve: # 根性
 class Counter:
     proc_rate: int
     atk: int
-    element: common.Orb
+    orb: common.Orb
 
 @dataclass
 class ExtraAttack:
@@ -201,13 +224,8 @@ class TaikoNoise:
     pass
 
 @dataclass
-class ExpUp:
-    # モンスター経験値アップ
-    pass
-
-@dataclass
-class Awakening:
-    # 覚醒スキル解放
+class Dummy:
+    # モンスター経験値アップ, 覚醒スキル解放 etc
     pass
 
 @dataclass
