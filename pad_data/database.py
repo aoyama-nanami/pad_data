@@ -1,11 +1,19 @@
 import functools
 import json
 
-from pad_data import card, common, active_skill, skill
+from pad_data import active_skill, card, common, leader_skill, skill
 
 RESISTS = [common.EnemySkill.VOID_SHIELD,
            common.EnemySkill.ELEMENT_RESIST,
            common.EnemySkill.TYPE_RESIST]
+
+SKILL_SET_ID = [skill.ACTIVE_SKILL_SET, skill.LEADER_SKILL_SET]
+
+class UnknownSkillEffect(Exception):
+    def __init__(self, desc, effects):
+        super().__init__()
+        self.desc = desc
+        self.effects = effects
 
 class Database:
     def __init__(self, raw_cards_json='data/processed/jp_raw_cards.json',
@@ -22,28 +30,8 @@ class Database:
             enemy_skills = dict((s['enemy_skill_id'], s) for s in json.load(f))
 
         for c in self._cards.values():
-            raw_effects = self._expand_skill(c.active_skill_id)
-            if c.active_skill_id == 0:
-                c.skill = card.Skill('', '', '', [], 0, 0, raw_effects)
-                continue
-            s = self._skills[c.active_skill_id]
-            name = s['name']
-            clean_description = s['clean_description']
-            description = s['description']
-            turn_max = s['turn_max']
-            turn_min = s['turn_min']
-            effects = []
-            for s in raw_effects:
-                try:
-                    e = skill.parse(s['skill_type'], s['other_fields'])
-                    effects.append(e)
-                except Exception:
-                    print(c.card_id, description, s, sep=' ')
-                    raise
-            active_skill.post_process(effects)
-            c.skill = card.Skill(
-                name, clean_description, description, effects, turn_max,
-                turn_min, raw_effects)
+            c.skill = self._process_skill(c.active_skill_id, True)
+            c.leader_skill = self._process_skill(c.leader_skill_id, False)
 
         for c in self._cards.values():
             card_id = c.card_id % 100000
@@ -70,10 +58,36 @@ class Database:
     def card(self, card_id):
         return self._cards[card_id]
 
+    def _process_skill(self, skill_id, is_active_skill):
+        if skill_id == 0:
+            return card.Skill('', '', '', [], 0, 0, [])
+        raw_effects = self._expand_skill(skill_id)
+        s = self._skills[skill_id]
+        name = s['name']
+        clean_description = s['clean_description']
+        description = s['description']
+        turn_max = s['turn_max']
+        turn_min = s['turn_min']
+        effects = []
+        for s in raw_effects:
+            try:
+                e = skill.parse(s['skill_type'], s['other_fields'],
+                                is_active_skill)
+                effects.append(e)
+            except Exception:
+                raise UnknownSkillEffect(clean_description, raw_effects)
+        if is_active_skill:
+            active_skill.post_process(effects)
+        else:
+            effects = leader_skill.post_process(effects)
+        return card.Skill(
+            name, clean_description, description, effects, turn_max,
+            turn_min, raw_effects)
+
     def _expand_skill(self, skill_id):
         s = self._skills[skill_id]
 
-        if s['skill_type'] != skill.ACTIVE_SKILL_SET:
+        if s['skill_type'] not in SKILL_SET_ID:
             return [s]
 
         return functools.reduce(list.__iadd__,

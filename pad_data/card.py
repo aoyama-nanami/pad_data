@@ -27,6 +27,7 @@ class Card:
     def __init__(self, json_data):
         self._json_data = json_data
         self.skill = None
+        self.leader_skill = None
         self.enemy_passive_resist = {}
 
     def __getattr__(self, name):
