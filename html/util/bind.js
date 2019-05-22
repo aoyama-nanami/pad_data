@@ -1,5 +1,5 @@
 // https://glitch.com/edit/#!/fantasy-desk?path=bind.js:20:3
-import {directive, AttributePart, BooleanAttributePart} from 'https://unpkg.com/lit-html@1.0.0/lit-html.js?module';
+import {directive, AttributePart} from 'https://unpkg.com/lit-html@1.0.0/lit-html.js?module';
 import {LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 
 const bindMap = new WeakSet();
@@ -39,7 +39,7 @@ export const bind = directive((context, ...props) => (part) => {
         }
       } else if (target instanceof LitElement) {
         if (target.checked !== undefined) {
-          v = target.checked
+          v = target.checked;
         } else {
           v = target.value;
         }
@@ -49,7 +49,7 @@ export const bind = directive((context, ...props) => (part) => {
       obj[lastProp] = v;
 
       context.requestUpdate();
-      context.triggerChange && context.triggerChange()
+      context.triggerChange && context.triggerChange();
     });
   }
   let obj = context;

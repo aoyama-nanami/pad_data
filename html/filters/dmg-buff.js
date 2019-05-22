@@ -1,7 +1,6 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {FilterBase} from './base.js';
 import {bind} from '../util/bind.js';
-import {Type} from '../util/type.js';
 import {Orb} from '../util/orb.js';
 
 export class FilterDmgBuff extends FilterBase {
@@ -51,7 +50,7 @@ export class FilterDmgBuff extends FilterBase {
       }
 
       return true;
-    })
+    });
   }
 
   render() {

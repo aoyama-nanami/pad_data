@@ -7,7 +7,7 @@ class OrbSelection extends LitElement {
     return {
       value: {type: Array},
       mode: {type: String}, // "element" (default) or "orb"
-    }
+    };
   }
 
   static get styles() {
@@ -33,7 +33,7 @@ class OrbSelection extends LitElement {
     return html`
       <icon-checkbox
         icon="orb${i}" ?checked="${bind(this, 'value', i)}">
-      </icon-checkbox>`
+      </icon-checkbox>`;
   }
 
   render() {
@@ -45,7 +45,7 @@ class OrbSelection extends LitElement {
   }
 
   triggerChange() {
-    this.dispatchEvent(new CustomEvent('change'))
+    this.dispatchEvent(new CustomEvent('change'));
   }
 };
 customElements.define('orb-selection', OrbSelection);

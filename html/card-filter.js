@@ -4,24 +4,24 @@ import {bind} from './util/bind.js';
 import {database} from './database.js';
 import {toggleCheckbox} from './component/checkbox.js';
 
-import {FilterAssist} from './filters/assist.js'
-import {FilterAwakening} from './filters/awakening.js'
-import {FilterElement} from './filters/element.js'
-import {FilterSkillCd} from './filters/skill-cd.js'
+import {FilterAssist} from './filters/assist.js';
+import {FilterAwakening} from './filters/awakening.js';
+import {FilterElement} from './filters/element.js';
+import {FilterSkillCd} from './filters/skill-cd.js';
 
-import {FilterAllOrbChange} from './filters/all-orb-change.js'
-import {FilterDmgBuff} from './filters/dmg-buff.js'
-import {FilterGravity} from './filters/gravity.js'
-import {FilterLowHpNuke} from './filters/low-hp-nuke.js'
-import {FilterNuke} from './filters/nuke.js'
-import {FilterOrbChange} from './filters/orb-change.js'
-import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js'
-import {FilterSacrifice} from './filters/sacrifice.js'
-import {FilterType} from './filters/type.js'
+import {FilterAllOrbChange} from './filters/all-orb-change.js';
+import {FilterDmgBuff} from './filters/dmg-buff.js';
+import {FilterGravity} from './filters/gravity.js';
+import {FilterLowHpNuke} from './filters/low-hp-nuke.js';
+import {FilterNuke} from './filters/nuke.js';
+import {FilterOrbChange} from './filters/orb-change.js';
+import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js';
+import {FilterSacrifice} from './filters/sacrifice.js';
+import {FilterType} from './filters/type.js';
 
 const FILTERS_ = [
   {
-    desc: ' ',  // separator
+    desc: ' ', // separator
   },
   {
     desc: '無效貫通',
@@ -75,7 +75,7 @@ const FILTERS_ = [
     cls: FilterSkillCd,
   },
   {
-    desc: '主動技',  // separator
+    desc: '主動技', // separator
   },
   {
     desc: '大砲',
@@ -170,13 +170,14 @@ class CardFilter extends LitElement {
     return (card) => elems.every((e) => e.apply(card));
   }
 
-  createFilter(cls, args, i, enabled) {
-    let filter = new cls();
+  createFilter(Cls, args, i, enabled) {
+    const filter = new Cls();
     Object.keys(args).forEach((k) => filter[k] = args[k]);
-    filter.classList.add('filter')
-    filter.classList.add(enabled ? 'enabled' : 'disabled')
-    if (i >= 0)
+    filter.classList.add('filter');
+    filter.classList.add(enabled ? 'enabled' : 'disabled');
+    if (i >= 0) {
       filter.addEventListener('change', (ev) => this.onChange_(ev, i));
+    }
     return filter;
   }
 

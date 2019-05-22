@@ -88,9 +88,7 @@ class AtkEvalConfig extends LitElement {
     const target = this.targetCard;
     if (target) {
       this.overrideAwakenings.forEach(
-          (v, k) =>
-              {v ? awakenings.add(k) : awakenings.delete(k);}
-          );
+          (v, k) => v ? awakenings.add(k) : awakenings.delete(k));
 
       switch (this.targetAttr) {
         case 0:
@@ -159,7 +157,7 @@ class AtkEvalConfig extends LitElement {
         ?override="${this.overrideAwakenings.has(i)}"
         ?overrideChecked="${this.overrideAwakenings.get(i)}"
       >
-      </icon-checkbox>`
+      </icon-checkbox>`;
   }
 
   get targetCard() {
@@ -228,8 +226,8 @@ class AtkEvalConfig extends LitElement {
 
     const killers = target.type.map(typeToKiller);
     for (let i = Awakening.DRAGON_KILLER;
-        i <= Awakening.VENDOR_MATERIAL_KILLER;
-        i++) {
+      i <= Awakening.VENDOR_MATERIAL_KILLER;
+      i++) {
       overrideAwakenings.set(i, killers.includes(i));
     }
 

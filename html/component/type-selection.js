@@ -6,7 +6,7 @@ class TypeSelection extends LitElement {
   static get properties() {
     return {
       value: {type: Array},
-    }
+    };
   }
 
   constructor() {
@@ -19,7 +19,7 @@ class TypeSelection extends LitElement {
         icon="t${i}"
         ?checked="${bind(this, 'value', i)}"
         >
-      </icon-checkbox>`
+      </icon-checkbox>`;
   }
 
   render() {
@@ -30,7 +30,7 @@ class TypeSelection extends LitElement {
   }
 
   triggerChange() {
-    this.dispatchEvent(new CustomEvent('change'))
+    this.dispatchEvent(new CustomEvent('change'));
   }
 };
 customElements.define('type-selection', TypeSelection);

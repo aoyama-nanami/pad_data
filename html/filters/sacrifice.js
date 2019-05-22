@@ -22,8 +22,7 @@ export class FilterSacrifice extends FilterBase {
       if (effect.hp_remain == 100) {
         return false;
       }
-      const hp_remain = 100 - this.hp_reduce;
-      return effect.hp_remain <= hp_remain;
+      return effect.hp_remain <= 100 - this.hp_reduce;
     });
   }
 

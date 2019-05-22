@@ -1,9 +1,8 @@
 import {LitElement, html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
-import {database} from '../database.js';
 
 export class FilterBase extends LitElement {
   triggerChange() {
-    this.dispatchEvent(new CustomEvent('change'))
+    this.dispatchEvent(new CustomEvent('change'));
   }
 
   get commonCss() {
@@ -17,13 +16,13 @@ export class FilterBase extends LitElement {
   firstUpdated() {
     super.firstUpdated();
     this.shadowRoot.querySelectorAll('input[type=number]').forEach(
-      (e) => e.addEventListener('click', (ev) => ev.target.select()));
+        (e) => e.addEventListener('click', (ev) => ev.target.select()));
   }
 
   get value() {
-    let v = {};
-    let properties = this.constructor.properties;
-    Object.keys(properties).forEach(k => v[k] = this[k]);
+    const v = {};
+    const properties = this.constructor.properties;
+    Object.keys(properties).forEach((k) => v[k] = this[k]);
     return v;
   }
 }

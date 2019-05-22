@@ -1,4 +1,4 @@
-import {html, css, unsafeCSS} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {Awakening, awakeningDamageMultiplier} from './util/awakening.js';
 
 export function statAtMaxLv(card, name) {
@@ -21,7 +21,7 @@ class AtkEvalResult {
 
 export function atkEval(card, config) {
   let atk = statAtMaxLv(card, 'atk') + 495;
-  let result = new AtkEvalResult()
+  const result = new AtkEvalResult();
 
   card.awakenings.forEach((a) => {
     if (a == Awakening.ENHANCED_ATK) {
@@ -65,9 +65,9 @@ export function atkEval(card, config) {
 
 export function icon(iconName, extraClass) {
   return html`<div class="icon24x24 ${extraClass ? extraClass : ''}"
-                   style="${iconCss(iconName)}"></div>`
+                   style="${iconCss(iconName)}"></div>`;
 }
 
-export function iconCss(iconName) {
-  return `background-image: url(images/${iconName}.png)`
+function iconCss(iconName) {
+  return `background-image: url(images/${iconName}.png)`;
 }

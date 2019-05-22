@@ -1,4 +1,4 @@
-import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {LitElement, html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {icon} from '../common.js';
 
 class IconCheckbox extends LitElement {
@@ -17,7 +17,7 @@ class IconCheckbox extends LitElement {
   }
 
   render() {
-    let value = this.override ? this.overrideChecked : this.checked;
+    const value = this.override ? this.overrideChecked : this.checked;
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
       <label class="icon-checkbox">

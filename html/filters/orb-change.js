@@ -37,7 +37,7 @@ export class FilterOrbChange extends FilterBase {
       }
 
       return true;
-    })
+    });
   }
 
   render() {
@@ -45,7 +45,9 @@ export class FilterOrbChange extends FilterBase {
       ${this.commonCss}
       <orb-selection value="${bind(this, 'from_')}" mode="orb">
       </orb-selection>
-      <span class="material-icons" style="font-size: 16px">keyboard_arrow_right</span>
+      <span class="material-icons" style="font-size: 16px">
+        keyboard_arrow_right
+      </span>
       <orb-selection value="${bind(this, 'to')}" mode="orb">
       </orb-selection>
     `;

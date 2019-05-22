@@ -28,7 +28,7 @@ export class FilterRandomOrbSpawn extends FilterBase {
       }
 
       return effect.count >= this.count;
-    })
+    });
   }
 
   render() {

@@ -43,17 +43,17 @@ export class FilterAllOrbChange extends FilterBase {
       }
 
       switch (this.op) {
-      case '<=':
-        return orbs.length <= this.num_colors;
-      case '==':
-        return orbs.length == this.num_colors;
-      case '>=':
-        return orbs.length >= this.num_colors;
+        case '<=':
+          return orbs.length <= this.num_colors;
+        case '==':
+          return orbs.length == this.num_colors;
+        case '>=':
+          return orbs.length >= this.num_colors;
       }
 
       /* should not happen */
       return false;
-    })
+    });
   }
 
   render() {

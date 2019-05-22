@@ -28,7 +28,7 @@ export function radio(text, name, value, checked, disabled) {
   `;
 }
 
-export function iconRadio(icon_name, name, value, checked, type) {
+export function iconRadio(iconName, name, value, checked, type) {
   return html`
     <label class="icon-radio">
       <input type="radio"
@@ -36,7 +36,7 @@ export function iconRadio(icon_name, name, value, checked, type) {
              value="${value}"
              .checked="${checked}"
              data-type="${type}">
-      ${icon(icon_name)}
+      ${icon(iconName)}
     </label>
   `;
 }

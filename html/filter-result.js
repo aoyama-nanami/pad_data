@@ -87,8 +87,8 @@ class FilterResult extends LitElement {
           <div style="height: 24px">
             ${card.super_awakenings.map(
               (a, i) => {
-                let grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
-                return icon('a' + a, grayscale)
+                const grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
+                return icon('a' + a, grayscale);
               })}
           </div>
         </div>
