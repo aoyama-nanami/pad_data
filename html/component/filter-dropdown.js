@@ -9,6 +9,7 @@ import {FilterSkillCd} from '../filters/skill-cd.js';
 
 import {FilterAllOrbChange} from '../filters/all-orb-change.js';
 import {FilterCombo} from '../filters/combo.js';
+import {FilterDefenseReduction} from '../filters/defense-reduction.js';
 import {FilterDmgBuff} from '../filters/dmg-buff.js';
 import {FilterGravity} from '../filters/gravity.js';
 import {FilterLowHpNuke} from '../filters/low-hp-nuke.js';
@@ -124,6 +125,10 @@ export const FILTERS = [
     {
       desc: 'combo 增加',
       cls: FilterCombo,
+    },
+    {
+      desc: '降防',
+      cls: FilterDefenseReduction,
     },
   ]
 ];
