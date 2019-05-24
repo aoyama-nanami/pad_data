@@ -24,9 +24,12 @@ class TypeSelection extends LitElement {
 
   render() {
     return html`
-      ${[...Array(Type.MACHINE + 1).keys()]
-          .filter((i) => i != Type.EVOLVE_MATERIAL)
-          .map((i) => this.typeCheckbox_(i))}`;
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <div class="icon-list">
+        ${[...Array(Type.MACHINE + 1).keys()]
+            .filter((i) => i != Type.EVOLVE_MATERIAL)
+            .map((i) => this.typeCheckbox_(i))}
+      </div>`;
   }
 
   triggerChange() {

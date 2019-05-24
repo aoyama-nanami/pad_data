@@ -3,6 +3,7 @@ body {
   margin: 15px 15px 15px 15px;
   background-color: black;
   color: #DDD;
+  min-height: 100vh;
 }
 
 .icon-checkbox > input {
@@ -124,9 +125,14 @@ a {
   text-decoration: inherit;
 }
 
+#main {
+  min-height: 100vh;
+}
+
 .grid-two-col {
   display: grid;
   grid-template-columns: 50% 50%;
+  grid-template-rows: max-content max-content 100fr;
   width: 1600px;
   overflow: hidden;
   margin-left: auto;
@@ -143,6 +149,6 @@ a {
 }
 
 div.icon-list {
-  display: flex;
+  display: inline-flex;
   height: 24px;
 }

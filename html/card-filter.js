@@ -4,122 +4,7 @@ import {bind} from './util/bind.js';
 import {database} from './database.js';
 import {toggleCheckbox} from './component/checkbox.js';
 
-import {FilterAssist} from './filters/assist.js';
-import {FilterAwakening} from './filters/awakening.js';
-import {FilterElement} from './filters/element.js';
-import {FilterSkillCd} from './filters/skill-cd.js';
-
-import {FilterAllOrbChange} from './filters/all-orb-change.js';
-import {FilterCombo} from './filters/combo.js';
-import {FilterDmgBuff} from './filters/dmg-buff.js';
-import {FilterGravity} from './filters/gravity.js';
-import {FilterLowHpNuke} from './filters/low-hp-nuke.js';
-import {FilterNuke} from './filters/nuke.js';
-import {FilterOrbChange} from './filters/orb-change.js';
-import {FilterRandomOrbSpawn} from './filters/random-orb-spawn.js';
-import {FilterSacrifice} from './filters/sacrifice.js';
-import {FilterType} from './filters/type.js';
-
-const FILTERS_ = [
-  {
-    desc: ' ', // separator
-  },
-  {
-    desc: '無效貫通',
-    cls: FilterAwakening,
-    init: {
-      awakenings: [[Awakening.VOID_DAMAGE_PIERCER, 1]],
-      count: 1,
-    },
-  },
-  {
-    desc: '主屬',
-    cls: FilterElement,
-    init: {main: true},
-  },
-  {
-    desc: '副屬',
-    cls: FilterElement,
-    init: {sub: true},
-  },
-  {
-    desc: '主或副屬',
-    cls: FilterElement,
-    init: {main: true, sub: true},
-  },
-  {
-    desc: 'Type',
-    cls: FilterType,
-  },
-  {
-    desc: '操作時間延長',
-    cls: FilterAwakening,
-    init: {
-      awakenings: [[Awakening.EXTEND_TIME, 1], [Awakening.EXTEND_TIME_PLUS, 2]],
-      canEdit: true,
-    },
-  },
-  {
-    desc: 'Skill Boost',
-    cls: FilterAwakening,
-    init: {
-      awakenings: [[Awakening.SKILL_BOOST, 1], [Awakening.SKILL_BOOST_PLUS, 2]],
-      canEdit: true,
-    },
-  },
-  {
-    desc: '可裝備',
-    cls: FilterAssist,
-  },
-  {
-    desc: '技能 CD',
-    cls: FilterSkillCd,
-  },
-  {
-    desc: '主動技', // separator
-  },
-  {
-    desc: '大砲',
-    cls: FilterNuke,
-  },
-  {
-    desc: '低血砲',
-    cls: FilterLowHpNuke,
-  },
-  {
-    desc: '自殘',
-    cls: FilterSacrifice,
-  },
-  {
-    desc: '轉珠',
-    cls: FilterOrbChange,
-  },
-  {
-    desc: '重力',
-    cls: FilterGravity,
-  },
-  {
-    desc: '真重力',
-    cls: FilterGravity,
-    init: {trueGravity: true},
-  },
-  {
-    desc: '屬性/type 增傷',
-    cls: FilterDmgBuff,
-  },
-  {
-    desc: '陣',
-    cls: FilterAllOrbChange,
-  },
-  {
-    desc: '隨機產生寶珠',
-    cls: FilterRandomOrbSpawn,
-  },
-  {
-    desc: 'combo 增加',
-    cls: FilterCombo,
-  },
-];
+import {FilterById} from './component/filter-dropdown.js';
 
 class CardFilter extends LitElement {
   static get properties() {
@@ -175,7 +60,14 @@ class CardFilter extends LitElement {
     return (card) => elems.every((e) => e.apply(card));
   }
 
-  createFilter(Cls, args, i, enabled) {
+  createFilter(id, args, i, enabled) {
+    const spec = FilterById(id);
+    const Cls = spec.cls
+    if (!Cls) {
+      return html``;
+    }
+
+    args = args || spec.init || {};
     const filter = new Cls();
     Object.keys(args).forEach((k) => filter[k] = args[k]);
     filter.classList.add('filter');
@@ -187,7 +79,7 @@ class CardFilter extends LitElement {
   }
 
   newFilter_() {
-    this.filters.push({id: 0});
+    this.filters.push({});
     this.requestUpdate();
   }
 
@@ -197,9 +89,9 @@ class CardFilter extends LitElement {
   }
 
   changeFilterId_(i, ev) {
-    const id = parseInt(ev.target.value);
-    this.filters[i] = {id: id, enabled: (id > 0)};
-    if (i == this.filters.length - 1 && id > 0) {
+    const id = ev.target.value;
+    this.filters[i] = {id: id, enabled: !!id};
+    if (i == this.filters.length - 1 && id) {
       this.newFilter_();
     }
     this.requestUpdate();
@@ -212,37 +104,28 @@ class CardFilter extends LitElement {
 
   renderFilterRow_(row, i) {
     let {id, args, enabled} = row;
-    args = args || FILTERS_[id].init || {};
 
     return html`
       <div class="grid-row">
         <div class="grid-cell">
           <span @click="${() => this.deleteFilter_(i)}"
                 class="material-icons pointer remove-btn"
-                style="${id <= 0 ? 'display: none' : ''}"
+                style="${id ? '' : 'display: none'}"
                 title="remove">
             remove_circle_outline
           </span>
         </div>
         <div class="grid-cell">
-          ${id <= 0 ? '' :
-            toggleCheckbox('', bind(this, 'filters', i, 'enabled'))}
+          ${id ? toggleCheckbox('', bind(this, 'filters', i, 'enabled')) : ''}
         </div>
         <div class="grid-cell">
-          <select .value="${this.filters[i].id}"
-                  @change="${(ev) => this.changeFilterId_(i, ev)}">
-            ${FILTERS_.map((obj, j) =>
-              html`<option value="${j}" ?disabled="${!obj.cls}"
-                           ?selected="${this.filters[i].id == j}">
-                       ${obj.desc}
-                   </option>`
-              )}
-          </select>
+          <filter-dropdown
+            .value="${id}"
+            @change="${(ev) => this.changeFilterId_(i, ev)}">
+          </filter-dropdown>
         </div>
         <div class="grid-cell">
-          ${FILTERS_[id].cls ?
-            this.createFilter(FILTERS_[id].cls, args, i, enabled) :
-            ''}
+          ${this.createFilter(id, args, i, enabled)}
         </div>
       </div>
     `;
@@ -253,7 +136,7 @@ class CardFilter extends LitElement {
       return '';
     }
 
-    const v = 1;
+    const v = '無效貫通';
     return html`
       <div class="grid-row">
         <div class="grid-cell">
@@ -264,7 +147,7 @@ class CardFilter extends LitElement {
           無效貫通
         </div>
         <div class="grid-cell">
-          ${this.createFilter(FILTERS_[v].cls, FILTERS_[v].init, -1, true)}
+          ${this.createFilter(v, FilterById(v).init, -1, true)}
         </div>
       </div>
     `;
