@@ -2,6 +2,11 @@ import {html, LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.
 import {bind} from '../util/bind.js';
 import {Type} from '../util/type.js';
 
+const _TYPE_IDS = Object.keys(Type)
+  .map((k) => Type[k])
+  .filter((k) => k != Type.EVOLVE_MATERIAL && k < Type.AWAKEN_MATERIAL)
+  .sort();
+
 class TypeSelection extends LitElement {
   static get properties() {
     return {
@@ -15,10 +20,9 @@ class TypeSelection extends LitElement {
   }
 
   typeCheckbox_(i) {
-    return html`<icon-checkbox
-        icon="t${i}"
-        ?checked="${bind(this, 'value', i)}"
-        >
+    return html`
+      <icon-checkbox icon="t${i}"
+        ?checked="${bind(this, 'value', i)}">
       </icon-checkbox>`;
   }
 
@@ -26,9 +30,7 @@ class TypeSelection extends LitElement {
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">
       <div class="icon-list">
-        ${[...Array(Type.MACHINE + 1).keys()]
-            .filter((i) => i != Type.EVOLVE_MATERIAL)
-            .map((i) => this.typeCheckbox_(i))}
+        ${_TYPE_IDS.map((i) => this.typeCheckbox_(i))}
       </div>`;
   }
 

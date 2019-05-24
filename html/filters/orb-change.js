@@ -1,6 +1,7 @@
 import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {FilterBase} from './base.js';
 import {bind} from '../util/bind.js';
+import {Orb} from '../util/orb.js';
 
 export class FilterOrbChange extends FilterBase {
   static get properties() {
@@ -12,10 +13,8 @@ export class FilterOrbChange extends FilterBase {
 
   constructor() {
     super();
-    this.from_ = [];
-    this.from_[9] = false;
-    this.to = [];
-    this.to[9] = false;
+    this.from_ = new Array(Orb.BOMB + 1);
+    this.to = new Array(Orb.BOMB + 1);
   }
 
   apply(c) {

@@ -25,9 +25,6 @@ class CardFilter extends LitElement {
           grid-auto-rows: 28px;
           line-height: 24px;
         }
-        .grid-row {
-          display: contents;
-        }
 
         .grid-cell {
           padding: 3px 3px 0 3px;
@@ -37,7 +34,7 @@ class CardFilter extends LitElement {
         }
 
         .remove-btn {
-          font-size: 14px;
+          font-size: 0.8em;
         }
 
         option[disabled] {
@@ -72,9 +69,7 @@ class CardFilter extends LitElement {
     Object.keys(args).forEach((k) => filter[k] = args[k]);
     filter.classList.add('filter');
     filter.classList.add(enabled ? 'enabled' : 'disabled');
-    if (i >= 0) {
-      filter.addEventListener('change', (ev) => this.onChange_(ev, i));
-    }
+    filter.addEventListener('change', (ev) => this.updateFilter_(ev, i));
     return filter;
   }
 
@@ -90,6 +85,9 @@ class CardFilter extends LitElement {
 
   changeFilterId_(i, ev) {
     const id = ev.target.value;
+    if (this.filters[i].id == id) {
+      return;
+    }
     this.filters[i] = {id: id, enabled: !!id};
     if (i == this.filters.length - 1 && id) {
       this.newFilter_();
@@ -97,7 +95,7 @@ class CardFilter extends LitElement {
     this.requestUpdate();
   }
 
-  onChange_(ev, i) {
+  updateFilter_(ev, i) {
     this.filters[i].args = ev.target.value;
     this.requestUpdate();
   }
@@ -106,27 +104,25 @@ class CardFilter extends LitElement {
     let {id, args, enabled} = row;
 
     return html`
-      <div class="grid-row">
-        <div class="grid-cell">
-          <span @click="${() => this.deleteFilter_(i)}"
-                class="material-icons pointer remove-btn"
-                style="${id ? '' : 'display: none'}"
-                title="remove">
-            remove_circle_outline
-          </span>
-        </div>
-        <div class="grid-cell">
-          ${id ? toggleCheckbox('', bind(this, 'filters', i, 'enabled')) : ''}
-        </div>
-        <div class="grid-cell">
-          <filter-dropdown
-            .value="${id}"
-            @change="${(ev) => this.changeFilterId_(i, ev)}">
-          </filter-dropdown>
-        </div>
-        <div class="grid-cell">
-          ${this.createFilter(id, args, i, enabled)}
-        </div>
+      <div class="grid-cell">
+        <span @click="${() => this.deleteFilter_(i)}"
+              class="material-icons pointer remove-btn"
+              style="${id ? '' : 'display: none'}"
+              title="remove">
+          remove_circle_outline
+        </span>
+      </div>
+      <div class="grid-cell">
+        ${id ? toggleCheckbox('', bind(this, 'filters', i, 'enabled')) : ''}
+      </div>
+      <div class="grid-cell">
+        <filter-dropdown
+          .value="${id}"
+          @change="${(ev) => this.changeFilterId_(i, ev)}">
+        </filter-dropdown>
+      </div>
+      <div class="grid-cell">
+        ${this.createFilter(id, args, i, enabled)}
       </div>
     `;
   }
@@ -138,17 +134,15 @@ class CardFilter extends LitElement {
 
     const v = '無效貫通';
     return html`
-      <div class="grid-row">
-        <div class="grid-cell">
-        </div>
-        <div class="grid-cell">
-        </div>
-        <div class="grid-cell">
-          無效貫通
-        </div>
-        <div class="grid-cell">
-          ${this.createFilter(v, FilterById(v).init, -1, true)}
-        </div>
+      <div class="grid-cell">
+      </div>
+      <div class="grid-cell">
+      </div>
+      <div class="grid-cell">
+        無效貫通
+      </div>
+      <div class="grid-cell">
+        ${this.createFilter(v, FilterById(v).init, -1, true)}
       </div>
     `;
   }

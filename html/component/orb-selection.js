@@ -1,4 +1,4 @@
-import {css, html, LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {html, LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {bind} from '../util/bind.js';
 import {Orb} from '../util/orb.js';
 
@@ -10,22 +10,13 @@ class OrbSelection extends LitElement {
     };
   }
 
-  static get styles() {
-    return css`
-      :host {
-        display: inline-block;
-      }
-    `;
-  }
-
   constructor() {
     super();
     this.mode = 'element';
-    this.value = [];
     if (this.mode == 'orb') {
-      this.value[Orb.BOMB] = false;
+      this.value = new Array(Orb.BOMB + 1);
     } else {
-      this.value[Orb.DARK] = false;
+      this.value = new Array(Orb.DARK + 1);
     }
   }
 

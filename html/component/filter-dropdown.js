@@ -223,7 +223,7 @@ class FilterDropdown extends LitElement {
       <div class="dropdown"
            @focusin="${() => this.opened = true}"
            @focusout="${() => this.opened = false}">
-        <input type="text" value="${v}" readonly></input>
+        <input type="text" value="${v}" readonly>
         <div class="dropdown-${this.opened ? 'opened' : 'closed'}">
           <ul>
             ${FILTERS[1].map((x, i) => this.listItem(x, i))}

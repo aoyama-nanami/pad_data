@@ -6,25 +6,8 @@ body {
   min-height: 100vh;
 }
 
-.icon-checkbox > input {
-  display: none;
-}
-
-label.icon-checkbox {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.icon-checkbox > input:not(:checked) + div {
-  filter: grayscale(95%);
-}
-
 .grayscale {
   filter: grayscale(95%);
-}
-
-.icon-checkbox > input:disabled + div {
-  cursor: not-allowed;
 }
 
 .toggle-checkbox > input {
@@ -46,11 +29,11 @@ label.icon-checkbox {
   cursor: not-allowed;
 }
 
-.radio > input {
+input.radio {
   display: none;
 }
 
-.radio > input:checked ~ span:after {
+input.radio:checked ~ span:after {
   content: "radio_button_checked";
   color: rgb(84, 135, 229);
   font-size: 12px;
@@ -58,15 +41,11 @@ label.icon-checkbox {
   vertical-align: middle;
 }
 
-.radio > input:not(:checked) ~ span:after {
+input.radio:not(:checked) ~ span:after {
   content: "radio_button_unchecked";
   font-size: 12px;
   display: block;
   vertical-align: middle;
-}
-
-.radio > input:disabled ~ * {
-  cursor: not-allowed;
 }
 
 .icon-radio > input:not(:checked) + div {
@@ -109,12 +88,6 @@ label.icon-checkbox {
 
 input[type=text], input[type=number], select, option {
   background-color: rgb(33, 33, 33);
-  color: rgb(226, 226, 226);
-  border: none;
-}
-
-optgroup {
-  background-color: #333333;
   color: rgb(226, 226, 226);
   border: none;
 }

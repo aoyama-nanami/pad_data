@@ -14,14 +14,14 @@ export function toggleCheckbox(text, checked, disabled, onchange) {
   `;
 }
 
-export function radio(text, name, value, checked, disabled) {
+export function radio(text, name, value, checked) {
   return html`
     <label class="radio pointer">
       <input type="radio"
+             class="radio"
              name="${name}"
              value="${value}"
-             .checked="${checked}"
-             .disabled="${disabled}">
+             .checked="${checked}">
       <span class="material-icons"></span>
       ${text}
     </label>

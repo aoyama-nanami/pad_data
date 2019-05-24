@@ -43,16 +43,24 @@ class AtkEvalConfig extends LitElement {
 
   static get styles() {
     return css`
-      #elements > input {
-        width: 3em;
-        text-align: right;
-      }
       #latent-killer-count {
         width: 40px;
       }
       div.row {
         padding: 3px 3px 1px 3px;
         height: 24px;
+      }
+      fieldset {
+        border-color: rgb(85, 85, 85);
+        padding: 5px 0 5px 12px;
+      }
+      legend {
+        border: 1px solid rgb(85, 85, 85);
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      legend:hover {
+        text-decoration: underline;
       }
     `;
   }
@@ -275,14 +283,13 @@ class AtkEvalConfig extends LitElement {
           ${awakenings.map((i) => this.awakeningCheckBox_(i))}
         </div>
         <div class="row">
-          目標敵人:
+          目標敵人ID:
           <input type="text" id="target" .value="${bind(this, 'target')}"
-                 size="12" maxlength="5"
-                 @focus="${(ev) => ev.target.select()}"
-                 placeholder="input pet ID">
-          ${this.displayTargetName_()}
+                 size="5" maxlength="5"
+                 @focus="${(ev) => ev.target.select()}">
         </div>
-        <div style="${!this.targetCard ? 'display: none' : 'content'}">
+        <fieldset style="${!this.targetCard ? 'display: none' : 'content'}">
+          <legend> ${this.displayTargetName_()} </legend>
           <div class="row icon-list">
             屬性:
             ${[0, 1, 2, 3, 4].map((i) =>
@@ -296,9 +303,6 @@ class AtkEvalConfig extends LitElement {
                    @focus="${(ev) => ev.target.select()}"
                    >
           </div>
-          <div class="row">
-            被動減傷:<br>
-          </div>
           ${this.targetCard ?
             this.targetCard.enemy_passive_resist.map(
                 (x, i) => html`
@@ -306,7 +310,7 @@ class AtkEvalConfig extends LitElement {
                     ${this.displayPassiveResist_(x, i)}
                   </div>`) :
             ''}
-        </div>
+        </fieldset>
         <div class="row">
           ${toggleCheckbox('主副屬相同時加算副屬傷害',
                            bind(this, 'includeSubElemDamage'), false)}
