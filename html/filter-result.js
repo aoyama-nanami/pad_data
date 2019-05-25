@@ -13,7 +13,7 @@ class FilterResult extends LitElement {
       css`
         .grid {
           display: grid;
-          grid-template-columns: 87px 270px 50px 80px 50px 270px 30px 30px auto;
+          grid-template-columns: max-content 270px 50px 80px 50px 270px 30px 30px auto;
           line-height: 24px;
         }
 
@@ -33,6 +33,10 @@ class FilterResult extends LitElement {
           border-bottom: 1px solid rgb(85, 85, 85);
         }
 
+        .grid-cell:first-child {
+          padding-left: 9px;
+        }
+
         .numeric-cell {
           font-family: Roboto;
           text-align: right;
@@ -46,6 +50,11 @@ class FilterResult extends LitElement {
           display: inline;
           vertical-align: middle;
           padding-top: 3px;
+        }
+
+        .two-row-icons {
+          display: flex;
+          flex-direction: column;
         }
       `,
     ];
@@ -68,11 +77,13 @@ class FilterResult extends LitElement {
     return html`
       <a class="grid-row" href="http://pad.skyozora.com/pets/${card.card_id}"
          target="_blank">
-        <div class="grid-cell">
-          <div style="height: 27px">
-            ${icon('orb' + card.attr_id)}${icon('orb' + card.sub_attr_id)}
+        <div class="grid-cell two-row-icons">
+          <div class="icon-list" style="margin-bottom: 3px">
+            ${icon('orb' + card.attr_id)}
+            ${icon('orb' + card.sub_attr_id)}
+            ${icon('')}
           </div>
-          <div style="height: 24px">
+          <div class="icon-list">
             ${card.type.map((i) => icon('t' + i))}
           </div>
         </div>
@@ -80,11 +91,11 @@ class FilterResult extends LitElement {
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
         <div class="grid-cell numeric-cell">${result.atk}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
-        <div class="grid-cell">
-          <div style="height: 27px">
+        <div class="grid-cell two-row-icons"">
+          <div class="icon-list" style="margin-bottom: 3px">
             ${card.awakenings.map((a) => icon('a' + a))}
           </div>
-          <div style="height: 24px">
+          <div class="icon-list">
             ${card.super_awakenings.map(
               (a, i) => {
                 const grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
@@ -95,7 +106,7 @@ class FilterResult extends LitElement {
         <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
         <div class="grid-cell">
           <div class="material-icons"
-            style="font-size: 16px; vertical-align: middle">
+            style="font-size: 1rem">
             ${card.inheritable ? 'check' : ''}
           </div>
         </div>

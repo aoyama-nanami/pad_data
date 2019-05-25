@@ -34,7 +34,7 @@ class CardFilter extends LitElement {
         }
 
         .remove-btn {
-          font-size: 0.8em;
+          font-size: 0.8rem;
         }
 
         option[disabled] {

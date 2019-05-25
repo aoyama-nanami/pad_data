@@ -22,12 +22,7 @@ import {FilterType} from '../filters/type.js';
 export const FILTERS = [
   [
     {
-      desc: '', // initial value
-    },
-  ],
-  [
-    {
-      desc: ' ',
+      desc: '',
     },
     {
       desc: '無效貫通',
@@ -171,29 +166,30 @@ class FilterDropdown extends LitElement {
       .dropdown-opened {
         background-color: rgb(33, 33, 33);
         line-height: 1.4;
-        font-size: 14px;
+        font-size: 0.9rem;
         display: flex;
         position: absolute;
         top: 22px;
         left: 0px;
         z-index: 9999;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
       }
 
       ul {
         display: block;
         padding: 0 0 0 0;
         margin: 5px 5px 5px 5px;
-        width: 120px;
+        white-space: nowrap;
       }
 
       li {
         list-style-type: none;
         display: block;
-        height: 23px;
         cursor: default;
         padding-left: 3px;
         padding-right: 20px;
         padding-top: 3px;
+        white-space: nowrap;
       }
 
       li:not(:first-child):hover, li.selected {
@@ -203,7 +199,8 @@ class FilterDropdown extends LitElement {
       li:first-child {
         font-weight: bold;
         text-align: center;
-        border-bottom: 1px solid #DDD
+        border-bottom: 1px solid #DDD;
+        height: 1.5rem;
       }
     `;
   }
@@ -231,10 +228,10 @@ class FilterDropdown extends LitElement {
         <input type="text" value="${v}" readonly>
         <div class="dropdown-${this.opened ? 'opened' : 'closed'}">
           <ul>
-            ${FILTERS[1].map((x, i) => this.listItem(x, i))}
+            ${FILTERS[0].map((x, i) => this.listItem(x, i))}
           </ul>
           <ul>
-            ${FILTERS[2].map((x, i) => this.listItem(x, i))}
+            ${FILTERS[1].map((x, i) => this.listItem(x, i))}
           </ul>
         </div>
       </div>

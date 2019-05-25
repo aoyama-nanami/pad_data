@@ -36,14 +36,14 @@ input.radio {
 input.radio:checked ~ span:after {
   content: "radio_button_checked";
   color: rgb(84, 135, 229);
-  font-size: 12px;
+  font-size: 0.75rem;
   display: block;
   vertical-align: middle;
 }
 
 input.radio:not(:checked) ~ span:after {
   content: "radio_button_unchecked";
-  font-size: 12px;
+  font-size: 0.75rem;
   display: block;
   vertical-align: middle;
 }
@@ -76,9 +76,6 @@ input.radio:not(:checked) ~ span:after {
 
 .material-icons {
   color: rgb(154, 154, 154);
-  font-weight: normal;
-  font-size: 20px;
-  display: inline-block;
   vertical-align: middle;
 }
 

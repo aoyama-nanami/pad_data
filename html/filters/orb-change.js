@@ -42,13 +42,11 @@ export class FilterOrbChange extends FilterBase {
   render() {
     return html`
       ${this.commonCss}
-      <orb-selection value="${bind(this, 'from_')}" mode="orb">
-      </orb-selection>
-      <span class="material-icons" style="font-size: 16px">
+      <orb-selection value="${bind(this, 'from_')}" mode="orb"></orb-selection>
+      <span class="material-icons" style="font-size: 1rem">
         keyboard_arrow_right
       </span>
-      <orb-selection value="${bind(this, 'to')}" mode="orb">
-      </orb-selection>
+      <orb-selection value="${bind(this, 'to')}" mode="orb"></orb-selection>
     `;
   }
 }
