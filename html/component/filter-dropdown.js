@@ -16,6 +16,7 @@ import {FilterLowHpNuke} from '../filters/low-hp-nuke.js';
 import {FilterNuke} from '../filters/nuke.js';
 import {FilterOrbChange} from '../filters/orb-change.js';
 import {FilterRandomOrbSpawn} from '../filters/random-orb-spawn.js';
+import {FilterReduceCooldown} from '../filters/reduce-cooldown.js';
 import {FilterSacrifice} from '../filters/sacrifice.js';
 import {FilterType} from '../filters/type.js';
 
@@ -65,6 +66,14 @@ export const FILTERS = [
       init: {
         awakenings: [[Awakening.SKILL_BOOST, 1], [Awakening.SKILL_BOOST_PLUS, 2]],
         canEdit: true,
+      },
+    },
+    {
+      desc: '五色破防',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.GUARD_BREAK, 1]],
+        count: 1,
       },
     },
     {
@@ -124,6 +133,10 @@ export const FILTERS = [
     {
       desc: '降防',
       cls: FilterDefenseReduction,
+    },
+    {
+      desc: '技能 CD 減少',
+      cls: FilterReduceCooldown,
     },
   ]
 ];
