@@ -328,3 +328,8 @@ class VoidDamagePiercer(BaseBuff):
 @dataclass
 class Sacrifice:
     hp_remain: int
+
+@dataclass
+class UnmatchableRecover:
+    # 消せないドロップ状態をnターン回復
+    turn: int

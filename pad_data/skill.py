@@ -161,6 +161,7 @@ _AS_EFFECT_MAP = {
     189: Map(AS.ComboHelper),
     191: Map(AS.VoidDamagePiercer, duration=int),
     195: Map(AS.Sacrifice, hp_remain=int),
+    196: Map(AS.UnmatchableRecover, turn=int),
 }
 
 _ALL_ELEM = [Orb.FIRE, Orb.WATER, Orb.WOOD, Orb.LIGHT, Orb.DARK]
