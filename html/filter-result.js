@@ -90,7 +90,7 @@ class FilterResult extends LitElement {
         <div class="grid-cell">${card.name}</div>
         <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
         <div class="grid-cell numeric-cell">${result.atk}</div>
-        <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'rcv')}</div>
+        <div class="grid-cell numeric-cell">${result.rcv}</div>
         <div class="grid-cell two-row-icons"">
           <div class="icon-list" style="margin-bottom: 3px">
             ${card.awakenings.map((a) => icon('a' + a))}

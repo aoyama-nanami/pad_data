@@ -1,4 +1,4 @@
-import {atkEval} from './common.js';
+import {statEval} from './common.js';
 
 class Database {
   constructor() {
@@ -22,10 +22,18 @@ class Database {
   }
 
   compareFunction_(sortBy) {
-    if (sortBy == 'atk') {
-      return (row1, row2) => row2[1].atk - row1[1].atk;
-    } else if (sortBy == 'cd') {
-      return (row1, row2) => row1[0].skill.turn_min - row2[0].skill.turn_min;
+    switch (sortBy) {
+      case 'atk':
+        return (row1, row2) => row2[1].atk - row1[1].atk;
+      case 'rcv':
+        return (row1, row2) => row2[1].rcv - row1[1].rcv;
+      case 'cd':
+        return (row1, row2) => {
+          if (row1[0].skill.turn_min == 0) {  // no skill
+            return 1;
+          }
+          return row1[0].skill.turn_min - row2[0].skill.turn_min;
+        };
     }
   }
 
@@ -36,7 +44,7 @@ class Database {
     const cmp = this.compareFunction_(config.sortBy);
     const a = this.data
         .filter(filter)
-        .map((c) => [c, atkEval(c, config)])
+        .map((c) => [c, statEval(c, config)])
         .sort(cmp)
         .slice(0, config.maxResult);
 

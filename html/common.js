@@ -15,17 +15,63 @@ class AtkEvalResult {
   constructor() {
     this.atk = 0;
     this.subAtk = 0;
+    this.rcv = 0;
     this.superAwakeningIndex = -1;
   }
 }
 
-export function atkEval(card, config) {
+export function statEval(card, config) {
+  if (config.sortBy == 'rcv') {
+    return rcvEval(card, config);
+  }
+  return atkEval(card, config);
+}
+
+function rcvEval(card, config) {
   let atk = statAtMaxLv(card, 'atk') + 495;
+  let rcv = statAtMaxLv(card, 'rcv') * 1.9 + 297;
   const result = new AtkEvalResult();
 
   card.awakenings.forEach((a) => {
     if (a == Awakening.ENHANCED_ATK) {
       atk += 100;
+    } else if (a == Awakening.ENHANCED_RCV) {
+      rcv += 200;
+    }
+  });
+
+  card.awakenings.forEach((a) => {
+    if (a == Awakening.ENHANCED_HEART_ORB) {
+      rcv *= 1.5;
+    } else if (a == Awakening.MULTI_BOOST && config.multi) {
+      rcv *= 1.5;
+    }
+  });
+
+  if (!config.multi) {
+    const idx = card.super_awakenings.findIndex(
+      (a) => a == Awakening.ENHANCED_HEART_ORB);
+    if (idx >= 0) {
+      result.superAwakeningIndex = idx;
+      rcv *= 1.5;
+    }
+  }
+
+  result.atk = Math.round(atk);
+  result.rcv = Math.round(rcv);
+  return result;
+}
+
+function atkEval(card, config) {
+  const result = new AtkEvalResult();
+  let atk = statAtMaxLv(card, 'atk') + 495;
+  let rcv = statAtMaxLv(card, 'rcv') + 297;
+
+  card.awakenings.forEach((a) => {
+    if (a == Awakening.ENHANCED_ATK) {
+      atk += 100;
+    } else if (a == Awakening.ENHANCED_RCV) {
+      rcv += 200;
     }
   });
 
@@ -60,6 +106,7 @@ export function atkEval(card, config) {
   }
 
   result.atk = Math.round(atk);
+  result.rcv = Math.round(rcv);
   return result;
 }
 
