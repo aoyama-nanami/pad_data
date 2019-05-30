@@ -1,16 +1,18 @@
-Web UI (experimental)
-======
+# Puzzle and Dragon Database
+
+A tool for パズドラ to search pets and sort by various attributes.
+
+## Web UI (experimental)
+
 Requires Chrome 65+, Firefox 63+.
 
 <https://aoyama-nanami.github.io/pad_data/html/>
 
-Code Review
-======
+## Code Review
 
 [Gerrithub](https://review.gerrithub.io/q/project:aoyama-nanami%252Fpad_data)
 
-Reference
-======
+## Reference
 
 Part of the source code comes from 
 [u/tactical_retreat](https://www.reddit.com/user/tactical_retreat),
