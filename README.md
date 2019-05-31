@@ -1,8 +1,8 @@
-# Puzzle and Dragon Database
+# Puzzle and Dragons Database
 
-A tool for パズドラ to search pets and sort by various attributes.
+A tool for [Puzzle and Dragons](https://pad.gungho.jp/member/) to search pets and sort by various attributes.
 
-## Web UI (experimental)
+## Web UI
 
 Requires Chrome 65+, Firefox 63+.
 
