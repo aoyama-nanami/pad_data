@@ -9,6 +9,7 @@ import {FilterSkillCd} from '../filters/skill-cd.js';
 
 import {FilterAllOrbChange} from '../filters/all-orb-change.js';
 import {FilterCombo} from '../filters/combo.js';
+import {FilterDelayEnemyAttack} from '../filters/delay-enemy-attack.js';
 import {FilterDefenseReduction} from '../filters/defense-reduction.js';
 import {FilterDmgBuff} from '../filters/dmg-buff.js';
 import {FilterGravity} from '../filters/gravity.js';
@@ -137,6 +138,10 @@ export const FILTERS = [
     {
       desc: '技能 CD 減少',
       cls: FilterReduceCooldown,
+    },
+    {
+      desc: '威嚇',
+      cls: FilterDelayEnemyAttack,
     },
   ]
 ];
