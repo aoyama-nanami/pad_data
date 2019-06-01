@@ -76,7 +76,6 @@ input.radio:not(:checked) ~ span:after {
 
 .material-icons {
   color: rgb(154, 154, 154);
-  vertical-align: middle;
 }
 
 .pointer {
