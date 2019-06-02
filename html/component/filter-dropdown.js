@@ -27,6 +27,10 @@ export const FILTERS = [
       desc: '',
     },
     {
+      desc: '可裝備',
+      cls: FilterAssist,
+    },
+    {
       desc: '無效貫通',
       cls: FilterAwakening,
       init: {
@@ -76,10 +80,6 @@ export const FILTERS = [
         awakenings: [[Awakening.GUARD_BREAK, 1]],
         count: 1,
       },
-    },
-    {
-      desc: '可裝備',
-      cls: FilterAssist,
     },
     {
       desc: '技能 CD',
