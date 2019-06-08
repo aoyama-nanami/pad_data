@@ -164,8 +164,6 @@ _AS_EFFECT_MAP = {
     196: Map(AS.UnmatchableRecover, turn=int),
 }
 
-_ALL_ELEM = [Orb.FIRE, Orb.WATER, Orb.WOOD, Orb.LIGHT, Orb.DARK]
-
 _LS_EFFECT_MAP = {
     11: Map(LS.StatBoost, elements=[Orb], types=[], atk=int),
     # ドロップを消した時、攻撃力n倍の追い打ち
@@ -175,7 +173,7 @@ _LS_EFFECT_MAP = {
     # 根性, unused = proc rate?
     14: Map(LS.Resolve, hp_threshold=int, unused=Unused(100)),
     15: Map(LS.StatBoost, move_time_extend=int),
-    16: Map(LS.StatBoost, dr_elements=_ALL_ELEM, dr=int),
+    16: Map(LS.StatBoost, dr_elements=LS.BaseStatBoost.ALL_ELEM, dr=int),
     17: Map(LS.StatBoost, dr_elements=[Orb], dr=int),
     22: Map(LS.StatBoost, elements=[], types=[Type], atk=int),
     23: Map(LS.StatBoost, elements=[], types=[Type], hp=int),

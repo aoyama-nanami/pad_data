@@ -1,3 +1,4 @@
+import dataclasses
 import enum
 
 @enum.unique
@@ -143,3 +144,17 @@ class EnemySkill(enum.IntEnum):
     # passive skill
     ELEMENT_RESIST = 72
     TYPE_RESIST = 118
+
+@enum.unique
+class Shape(enum.IntEnum):
+    OTHER = 0
+    L = 1
+    CROSS = 2
+    ROW = 3
+    SQUARE = 4
+
+@dataclasses.dataclass
+class Combo:
+    orb: Orb
+    size: int = 3
+    shape: Shape = Shape.OTHER

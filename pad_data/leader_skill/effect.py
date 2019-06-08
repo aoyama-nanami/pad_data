@@ -4,7 +4,7 @@ from typing import ClassVar, List
 from pad_data import common
 
 @dataclass
-class StatBoost:
+class BaseStatBoost:
     elements: List[common.Orb] = field(default_factory=list)
     types: List[common.Type] = field(default_factory=list)
     hp: int = 0
@@ -24,9 +24,12 @@ class StatBoost:
 
     def __post_init__(self):
         if self.elements == [] and self.types == []:
-            self.elements = StatBoost.ALL_ELEM
+            self.elements = BaseStatBoost.ALL_ELEM
         if self.dr > 0 and self.dr_elements == []:
-            self.dr_elements = StatBoost.ALL_ELEM
+            self.dr_elements = BaseStatBoost.ALL_ELEM
+
+    def calculate_atk(self, combos, trigger=False, hp=100):
+        raise NotImplementedError
 
 def by_stat_id(cls):
     def func(stat_id_list, percentage, **kwargs):
@@ -42,15 +45,19 @@ def by_stat_id(cls):
 # conditions
 
 @dataclass
-class HpAbove(StatBoost):
+class StatBoost(BaseStatBoost):
+    pass
+
+@dataclass
+class HpAbove(BaseStatBoost):
     hp_above: int = 0
 
 @dataclass
-class HpBelow(StatBoost):
+class HpBelow(BaseStatBoost):
     hp_below: int = 0
 
 @dataclass
-class Combo(StatBoost):
+class Combo(BaseStatBoost):
     combo: int = 0
     combo_max: int = 0
 
@@ -59,12 +66,18 @@ class Combo(StatBoost):
         if self.combo_max == 0:
             self.combo_max = self.combo
 
+    def calculate_atk(self, combos, trigger=False, hp=100):
+        c = min(len(combos), self.combo_max)
+        if c < self.combo:
+            return None
+        return self.atk + (self.combo_max - c) * self.atk_step
+
 @dataclass
-class ComboExact(StatBoost):
+class ComboExact(BaseStatBoost):
     combo: int = 0
 
 @dataclass
-class Rainbow(StatBoost):
+class Rainbow(BaseStatBoost):
     orbs: List[common.Orb] = field(default_factory=list)
     color_min: int = 0
     color_max: int = field(init=False)
@@ -81,7 +94,7 @@ class Rainbow(StatBoost):
             self.color_max = min(self.color_min + color_step, len(self.orbs))
 
 @dataclass
-class ElementCombo(StatBoost):
+class ElementCombo(BaseStatBoost):
     combos: List[List[common.Orb]] = field(default_factory=list)
     combo_min: int = 0
 
@@ -95,7 +108,7 @@ class ElementCombo(StatBoost):
         assert len(self.combos) >= self.combo_min
 
 @dataclass
-class ConnectedOrbs(StatBoost):
+class ConnectedOrbs(BaseStatBoost):
     # xyzをn個以上つなげて消す
     # triggers if any matched
     orbs: List[common.Orb] = field(default_factory=list)
@@ -103,43 +116,49 @@ class ConnectedOrbs(StatBoost):
     size_max: int = 0
 
 @dataclass
-class ConnectedOrbsAll(StatBoost):
+class ConnectedOrbsAll(BaseStatBoost):
     # xyzを"同時"にn個以上つなげて消す
     # triggers if all matched
     orbs: List[common.Orb] = field(default_factory=list)
     size: int = 0
 
 @dataclass
-class HeartCross(StatBoost):
+class HeartCross(BaseStatBoost):
     pass
 
 @dataclass
-class Trigger(StatBoost):
+class Trigger(BaseStatBoost):
+    def calculate_atk(self, combos, trigger=False, hp=100):
+        return self.atk if trigger else None
+
+@dataclass
+class EnhancedOrbs5(BaseStatBoost):
     pass
 
 @dataclass
-class EnhancedOrbs5(StatBoost):
+class MultiplayerGame(BaseStatBoost):
     pass
 
 @dataclass
-class MultiplayerGame(StatBoost):
+class NoSkyfall(BaseStatBoost):
     pass
 
 @dataclass
-class NoSkyfall(StatBoost):
-    pass
-
-@dataclass
-class MatchFourOrAbove(StatBoost):
+class MatchFourOrAbove(BaseStatBoost):
     # ドロップをn個以下で消せない
     match: int = 0
 
 @dataclass
-class LShape(StatBoost):
+class LShape(BaseStatBoost):
     orbs: List[common.Orb] = field(default_factory=list)
+    def calculate_atk(self, combos, trigger=False, hp=100):
+        for c in combos:
+            if c.shape == common.Shape.L and c.orb in self.orbs:
+                return self.atk
+        return None
 
 @dataclass
-class Board7x6(StatBoost):
+class Board7x6(BaseStatBoost):
     pass
 
 @dataclass
@@ -148,16 +167,16 @@ class OrbRemaining(NoSkyfall):
     threshold: int = 0
 
 @dataclass
-class FixedMovementTime(StatBoost):
+class FixedMovementTime(BaseStatBoost):
     # 操作時間n秒固定
     seconds: int = 0
 
 @dataclass
-class TeamStatBoost(StatBoost):
+class TeamStatBoost(BaseStatBoost):
     card_ids: List[int] = field(default_factory=list)
 
 @dataclass
-class CollaboTeamStatBoost(StatBoost):
+class CollaboTeamStatBoost(BaseStatBoost):
     collabo_ids: List[int] = field(default_factory=list)
 
 # end condition
