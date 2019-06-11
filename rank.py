@@ -88,13 +88,13 @@ class AtkEvaluator:
         atk += c.awakenings.count(ENHANCED_ATK) * 100
 
         for a in self.awakenings:
-            atk *= a.damage_multiplier() ** c.awakenings.count(a)
+            atk *= a.damage_multiplier ** c.awakenings.count(a)
 
         if not self.multi:
             a = max(self.awakenings & set(c.super_awakenings),
                     default=Awakening.ENHANCED_HP, # somthing without damage
-                    key=Awakening.damage_multiplier)
-            atk *= a.damage_multiplier()
+                    key=lambda a: a.damage_multiplier)
+            atk *= a.damage_multiplier
 
         atk *= self.elements[c.element]
         atk *= max(self.types[t] for t in c.type)

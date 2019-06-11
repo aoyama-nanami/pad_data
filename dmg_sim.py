@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 from dataclasses import dataclass
+import decimal
 import itertools
 import math
 from typing import List, Optional
@@ -13,6 +14,8 @@ from pad_data.leader_skill import effect as LS
 util.import_enum_members(Awakening, globals())
 util.import_enum_members(Orb, globals())
 util.import_enum_members(Type, globals())
+
+decimal.getcontext().rounding = decimal.ROUND_HALF_UP
 
 DB = database.Database()
 
@@ -116,50 +119,60 @@ def main():
                     any(t in ls.types for t in m.types)):
                 ls_mult *= mult / 100
 
-        awaken_mult = lambda a: a.damage_multiplier() ** m.awakenings.count(a)
+        awaken_mult = lambda a: decimal.Decimal(a.damage_multiplier) ** m.awakenings.count(a)
         for c in COMBOS:
             if c.orb != m.element and c.orb != m.sub_element:
                 continue
+            # TODO: add enhanced orbs
             dmg = math.ceil(m.atk * (1 + 0.25 * (c.size - 3)))
 
             if c.size == 4:
-                dmg *= awaken_mult(TWO_WAY)
+                dmg = round(dmg * awaken_mult(TWO_WAY), 0)
             elif c.shape == Shape.L:
-                dmg *= awaken_mult(L_ATTACK)
+                dmg = round(dmg * awaken_mult(L_ATTACK), 0)
             elif c.shape == Shape.SQUARE:
-                dmg *= awaken_mult(VOID_DAMAGE_PIERCER)
+                dmg = round(dmg * awaken_mult(VOID_DAMAGE_PIERCER), 0)
 
             if c.orb == m.element:
-                main_dmg += round(dmg)
+                main_dmg += dmg
             if c.orb == m.sub_element:
                 if m.element == m.sub_element:
                     sub_dmg += math.ceil(dmg / 10)
                 else:
                     sub_dmg += math.ceil(dmg / 3)
 
-
-        combo_mult = (1 + 0.25 * (len(COMBOS) - 1))
+        combo_mult = decimal.Decimal(1 + 0.25 * (len(COMBOS) - 1))
         main_dmg = math.ceil(main_dmg * combo_mult)
         sub_dmg = math.ceil(sub_dmg * combo_mult)
 
-        extra_mult = 1
-        if len(COMBOS) >= 7:
-            extra_mult *= awaken_mult(ENHANCED_COMBO)
-        if len(COMBOS) >= 10:
-            extra_mult *= awaken_mult(ENHANCED_10_COMBO)
+        print(main_dmg, sub_dmg)
 
         # TODO: check if this should happen in earlier phase
+        extra_mult = 1
         if HP >= 80:
             extra_mult *= awaken_mult(EIGHTY_HP_ENHANCED)
         if HP <= 50:
             extra_mult *= awaken_mult(FIFTY_HP_ENHANCED)
+        # TODO: add row attack multiplier
 
-        main_dmg = round(main_dmg * ls_mult * extra_mult)
-        sub_dmg = round(sub_dmg * ls_mult * extra_mult)
+        main_dmg = round(main_dmg * extra_mult, 0)
+        sub_dmg = round(sub_dmg * extra_mult, 0)
+
+        combo_enh_mult = 1
+        if len(COMBOS) >= 7:
+            combo_enh_mult *= awaken_mult(ENHANCED_COMBO)
+        if len(COMBOS) >= 10:
+            combo_enh_mult *= awaken_mult(ENHANCED_10_COMBO)
+
+        main_dmg = round(main_dmg * decimal.Decimal(combo_enh_mult), 0)
+        sub_dmg = round(sub_dmg * decimal.Decimal(combo_enh_mult), 0)
+
+        main_dmg = round(main_dmg * decimal.Decimal(ls_mult), 0)
+        sub_dmg = round(sub_dmg * decimal.Decimal(ls_mult), 0)
 
         print(m.name, ' ' * (50 - wcwidth.wcswidth(m.name)),
-              util.element_to_color(m.element), f'{main_dmg:>13,d}',
-              util.element_to_color(m.sub_element), f'{sub_dmg:>13,d}',
+              util.element_to_color(m.element), f'{int(main_dmg):>13,d}',
+              util.element_to_color(m.sub_element), f'{int(sub_dmg):>13,d}',
               util.element_to_color(NO_ORB))
 
 if __name__ == '__main__':
