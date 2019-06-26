@@ -64,9 +64,9 @@ class Card:
 
     _FIELD_WHITELIST = set([
         'attr_id', 'awakenings', 'card_id', 'enemy_passive_resist',
-        'inheritable', 'limit_mult', 'max_atk', 'max_hp', 'max_level',
-        'max_rcv', 'min_atk', 'min_hp', 'min_rcv', 'name', 'skill',
-        'sub_attr_id', 'super_awakenings', 'type',
+        'inheritable', 'leader_skill', 'limit_mult', 'max_atk', 'max_hp',
+        'max_level', 'max_rcv', 'min_atk', 'min_hp', 'min_rcv', 'name',
+        'skill', 'sub_attr_id', 'super_awakenings', 'type',
     ])
     @property
     def merged_json(self):
@@ -81,6 +81,13 @@ class Card:
         obj['skill']['effects'] = (
             list(map(lambda e: [type(e).__name__, e.__dict__],
                      self.skill.effects)))
+        obj['leader_skill'] = {
+            'name': self.leader_skill.name,
+            'description': self.leader_skill.description,
+        }
+        obj['leader_skill']['effects'] = (
+            list(map(lambda e: [type(e).__name__, e.__dict__],
+                     self.leader_skill.effects)))
         obj['enemy_passive_resist'] = (
             list(e.__dict__ for e in self.enemy_passive_resist.values()))
         return dict((k, v) for k, v in obj.items()
