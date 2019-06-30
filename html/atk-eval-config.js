@@ -37,7 +37,6 @@ class AtkEvalConfig extends LitElement {
       targetAttr: {type: Number},
       passiveResistIndexes: {type: Array},
       sortBy: {type: String},
-      maxResult: {type: String},
     };
   }
 
@@ -74,7 +73,6 @@ class AtkEvalConfig extends LitElement {
     this.includeSubElemDamage = true;
     this.passiveResistIndexes = [];
     this.sortBy = 'atk';
-    this.maxResult = '30';
   }
 
   firstUpdated(changedProperties) {
@@ -154,7 +152,6 @@ class AtkEvalConfig extends LitElement {
       includeSubElemDamage: this.includeSubElemDamage,
       types: types,
       sortBy: this.sortBy,
-      maxResult: parseInt(this.maxResult),
     };
   }
 
@@ -320,12 +317,6 @@ class AtkEvalConfig extends LitElement {
           ${radio('攻擊', 'sort-by', 'atk', bindRadio(this, 'sortBy'))}
           ${radio('回復', 'sort-by', 'rcv', bindRadio(this, 'sortBy'))}
           ${radio('最小CD', 'sort-by', 'cd', bindRadio(this, 'sortBy'))}
-        </div>
-        <div class="row">
-          顯示數量:
-          ${radio('30', 'max-result', '30', bindRadio(this, 'maxResult'))}
-          ${radio('50', 'max-result', '50', bindRadio(this, 'maxResult'))}
-          ${radio('100', 'max-result', '100', bindRadio(this, 'maxResult'))}
         </div>
       </div>
     `;

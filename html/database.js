@@ -45,8 +45,7 @@ class Database {
     const a = this.data
         .filter(filter)
         .map((c) => [c, statEval(c, config)])
-        .sort(cmp)
-        .slice(0, config.maxResult);
+        .sort(cmp);
 
     const filterResult = document.querySelector('filter-result');
     filterResult.data = a;

@@ -1,11 +1,41 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
 import {statAtMaxLv, icon} from './common.js';
 
+const RESULTS_PER_PAGE = 30;
+
 class FilterResult extends LitElement {
   static get properties() {
     return {
       data: {type: Array},
+      page: {type: Number},
     };
+  }
+
+  set data(newValue) {
+    const oldValue = this.data;
+    this._data = newValue;
+    this.page = 1;
+    this.requestUpdate('data', oldValue);
+  }
+
+  get data() {
+    return this._data;
+  }
+
+  get maxPage() {
+    const data = this.data;
+    return data ? Math.ceil(data.length / RESULTS_PER_PAGE) : 1;
+  }
+
+  set page(newValue) {
+    const oldValue = this.page;
+    const sanitizedValue = Math.min(this.maxPage, Math.max(newValue, 1));
+    this._page = sanitizedValue;
+    this.requestUpdate('page', oldValue);
+  }
+
+  get page() {
+    return this._page;
   }
 
   static get styles() {
@@ -31,6 +61,7 @@ class FilterResult extends LitElement {
           display: inline-block;
           vertical-align: baseline;
           border-bottom: 1px solid rgb(85, 85, 85);
+          border-top: 1px solid rgb(85, 85, 85);
         }
 
         .grid-cell:first-child {
@@ -56,20 +87,57 @@ class FilterResult extends LitElement {
           display: flex;
           flex-direction: column;
         }
+
+        .pagination {
+          padding-top: 3px;
+          padding-left: 9px;
+          line-height: 24px;
+        }
+
+        .pagination > button {
+          font-size: 1rem;
+          padding: 0;
+          border: none;
+          background: none;
+          vertical-align: middle;
+        }
       `,
     ];
   }
 
   render() {
     if (this.data) {
+      const page = this.page;
+      const begin = (page - 1) * RESULTS_PER_PAGE;
+      const data = this.data.slice(begin, begin + RESULTS_PER_PAGE);
       return html`
         <link rel="stylesheet" type="text/css" href="style.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
               rel="stylesheet">
-        <div class="grid">${this.data.map((x) => this._renderRow(x))}</div>
+        ${this._paginationSection()}
+        <div class="grid">${data.map((x) => this._renderRow(x))}</div>
       `;
     }
     return html``;
+  }
+
+  _paginationSection() {
+    return html`
+      <div class="pagination">
+        <button @click="${() => this.page = 1}">
+          <span class="material-icons">first_page</span>
+        </button>
+        <button @click="${() => this.page--}">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        ${this.page} / ${this.maxPage}
+        <button @click="${() => this.page++}">
+          <span class="material-icons">chevron_right</span>
+        </button>
+        <button @click="${() => this.page = 1000000}">
+          <span class="material-icons">last_page</span>
+        </button>
+      </div>`
   }
 
   _renderRow(row) {
