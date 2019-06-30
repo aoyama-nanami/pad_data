@@ -10,7 +10,7 @@ Requires Chrome 65+, Firefox 63+.
 
 ## Code Review
 
-[Gerrithub](https://review.gerrithub.io/q/project:aoyama-nanami%252Fpad_data)
+[Gerrithub](https://review.gerrithub.io/q/project:p9n%252Fpad_data)
 
 ## Reference
 
