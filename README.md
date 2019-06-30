@@ -6,7 +6,7 @@ A tool for [Puzzle and Dragons](https://pad.gungho.jp/member/) to search pets an
 
 Requires Chrome 65+, Firefox 63+.
 
-<https://aoyama-nanami.github.io/pad_data/html/>
+<https://p9n.github.io/pad_data/html/>
 
 ## Code Review
 
