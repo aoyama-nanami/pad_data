@@ -189,12 +189,12 @@ _LS_EFFECT_MAP = {
     # TODO:
     # 3390-神国の魔術神・オーディン has a strange value:
     #   [100, 100, 80]
-    38: Map(LS.HpBelow, hp_below=int, unused=Unused(100), dr=int),
+    38: Map(LS.HpBelow, hp_below=int, proc_rate=int, dr=int),
     39: Map(LS.by_stat_id(LS.HpBelow), hp_below=int, stat_id_list=[int, int],
             percentage=int),
     40: Map(LS.StatBoost, elements=[Orb, Orb], types=[], atk=int),
     41: Map(LS.Counter, proc_rate=int, atk=int, orb=Orb),
-    43: Map(LS.HpAbove, hp_above=int, unused=Unused(100), dr=int),
+    43: Map(LS.HpAbove, hp_above=int, proc_rate=int, dr=int),
     44: Map(LS.by_stat_id(LS.HpAbove), hp_above=int, stat_id_list=[int, int],
             percentage=int),
     45: Map(LS.StatBoost, elements=[Orb], types=[], hp=int, atk=Ref('hp')),
