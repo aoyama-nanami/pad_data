@@ -89,6 +89,7 @@ def main():
     db = database.Database()
     cards = db.get_all_released_cards()
     new = list(map(lambda c: c.merged_json, cards))
+    new = json.loads(json.dumps(new))
     with open(JSON_PATH, 'r') as f:
         old = json.load(f)
     diff(new, old)
