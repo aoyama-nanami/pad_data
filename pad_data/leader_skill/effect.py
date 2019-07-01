@@ -50,10 +50,12 @@ class StatBoost(BaseStatBoost):
 
 @dataclass
 class HpAbove(BaseStatBoost):
+    proc_rate: int = 100
     hp_above: int = 0
 
 @dataclass
 class HpBelow(BaseStatBoost):
+    proc_rate: int = 100
     hp_below: int = 0
 
 @dataclass
