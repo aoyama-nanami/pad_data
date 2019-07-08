@@ -11,10 +11,9 @@ export function statAtMaxLv(card, name) {
   return Math.round(maxValue * (1 + card.limit_mult / 100.0));
 }
 
-class AtkEvalResult {
+class EvalResult {
   constructor() {
     this.atk = 0;
-    this.subAtk = 0;
     this.rcv = 0;
     this.superAwakeningIndex = -1;
   }
@@ -30,7 +29,7 @@ export function statEval(card, config) {
 function rcvEval(card, config) {
   let atk = statAtMaxLv(card, 'atk') + 495;
   let rcv = statAtMaxLv(card, 'rcv') * 1.9 + 297;
-  const result = new AtkEvalResult();
+  const result = new EvalResult();
 
   card.awakenings.forEach((a) => {
     if (a == Awakening.ENHANCED_ATK) {
@@ -63,7 +62,7 @@ function rcvEval(card, config) {
 }
 
 function atkEval(card, config) {
-  const result = new AtkEvalResult();
+  const result = new EvalResult();
   let atk = statAtMaxLv(card, 'atk') + 495;
   let rcv = statAtMaxLv(card, 'rcv') + 297;
 
@@ -75,19 +74,45 @@ function atkEval(card, config) {
     }
   });
 
+  let atk_80 = 1, atk_50 = 1;
   card.awakenings.forEach((a) => {
     if (config.awakenings.has(a)) {
-      atk *= awakeningDamageMultiplier(a);
+      let m = awakeningDamageMultiplier(a);
+      switch (a) {
+        case Awakening.EIGHTY_HP_ENHANCED:
+          atk_80 *= m;
+          break;
+        case Awakening.FIFTY_HP_ENHANCED:
+          atk_50 *= m;
+          break;
+        default:
+          atk_80 *= m;
+          atk_50 *= m;
+      }
     }
   });
 
-  if (!config.multi) {
-    let max = 1;
+  if (config.multi) {
+    atk *= Math.max(atk_80, atk_50);
+  } else {
+    let max = Math.max(atk_80, atk_50);
     card.super_awakenings.forEach((a, i) => {
       if (config.awakenings.has(a)) {
-        if (awakeningDamageMultiplier(a) > max) {
+        let m = awakeningDamageMultiplier(a);
+        switch (a) {
+          case Awakening.EIGHTY_HP_ENHANCED:
+            m *= atk_80;
+            break;
+          case Awakening.FIFTY_HP_ENHANCED:
+            m *= atk_50;
+            break;
+          default:
+            m *= Math.max(atk_80, atk_50);
+        }
+
+        if (m > max) {
           result.superAwakeningIndex = i;
-          max = awakeningDamageMultiplier(a);
+          max = m
         }
       }
     });
