@@ -20,16 +20,9 @@ class EvalResult {
 }
 
 export function statEval(card, config) {
-  if (config.sortBy == 'rcv') {
-    return rcvEval(card, config);
-  }
-  return atkEval(card, config);
-}
-
-function rcvEval(card, config) {
-  let atk = statAtMaxLv(card, 'atk') + 495;
-  let rcv = statAtMaxLv(card, 'rcv') * 1.9 + 297;
   const result = new EvalResult();
+  let atk = statAtMaxLv(card, 'atk') + 495;
+  let rcv = statAtMaxLv(card, 'rcv') * (config.sortBy == 'rcv' ? 1.9 : 1) + 297;
 
   card.awakenings.forEach((a) => {
     if (a == Awakening.ENHANCED_ATK) {
@@ -39,84 +32,68 @@ function rcvEval(card, config) {
     }
   });
 
-  card.awakenings.forEach((a) => {
-    if (a == Awakening.ENHANCED_HEART_ORB) {
-      rcv *= 1.5;
-    } else if (a == Awakening.MULTI_BOOST && config.multi) {
-      rcv *= 1.5;
-    }
-  });
-
-  if (!config.multi) {
-    const idx = card.super_awakenings.findIndex(
-      (a) => a == Awakening.ENHANCED_HEART_ORB);
-    if (idx >= 0) {
-      result.superAwakeningIndex = idx;
-      rcv *= 1.5;
-    }
-  }
-
-  result.atk = Math.round(atk);
-  result.rcv = Math.round(rcv);
-  return result;
-}
-
-function atkEval(card, config) {
-  const result = new EvalResult();
-  let atk = statAtMaxLv(card, 'atk') + 495;
-  let rcv = statAtMaxLv(card, 'rcv') + 297;
-
-  card.awakenings.forEach((a) => {
-    if (a == Awakening.ENHANCED_ATK) {
-      atk += 100;
-    } else if (a == Awakening.ENHANCED_RCV) {
-      rcv += 200;
-    }
-  });
-
-  let atk_80 = 1, atk_50 = 1;
+  let atk80 = 1, atk50 = 1;
   card.awakenings.forEach((a) => {
     if (config.awakenings.has(a)) {
       let m = awakeningDamageMultiplier(a);
       switch (a) {
         case Awakening.EIGHTY_HP_ENHANCED:
-          atk_80 *= m;
+          atk80 *= m;
           break;
         case Awakening.FIFTY_HP_ENHANCED:
-          atk_50 *= m;
+          atk50 *= m;
           break;
+        case Awakening.MULTI_BOOST:
+          rcv *= 1.5;
+          // fall through
         default:
-          atk_80 *= m;
-          atk_50 *= m;
+          atk80 *= m;
+          atk50 *= m;
       }
+    } else if (config.sortBy == 'rcv' && a == Awakening.ENHANCED_HEART_ORB) {
+      rcv *= 1.5;
     }
   });
 
   if (config.multi) {
-    atk *= Math.max(atk_80, atk_50);
+    atk *= Math.max(atk80, atk50);
   } else {
-    let max = Math.max(atk_80, atk_50);
-    card.super_awakenings.forEach((a, i) => {
-      if (config.awakenings.has(a)) {
-        let m = awakeningDamageMultiplier(a);
-        switch (a) {
-          case Awakening.EIGHTY_HP_ENHANCED:
-            m *= atk_80;
-            break;
-          case Awakening.FIFTY_HP_ENHANCED:
-            m *= atk_50;
-            break;
-          default:
-            m *= Math.max(atk_80, atk_50);
+    const idx = card.super_awakenings.indexOf(Awakening.ENHANCED_HEART_ORB);
+    if (config.sortBy == 'rcv' && idx >= 0) {
+      /*
+       * If super awakenings contains heart+ and we are sorting by rcv,
+       * pick heart+.
+       */
+      result.superAwakeningIndex = idx;
+      rcv *= 1.5;
+      atk *= Math.max(atk80, atk50);
+    } else {
+      /*
+       * Otherwise, pick the highest damage option.
+       */
+      let max = Math.max(atk80, atk50);
+      let [vMax, iMax] = card.super_awakenings.map(a => {
+        if (config.awakenings.has(a)) {
+          let m = awakeningDamageMultiplier(a);
+          switch (a) {
+            case Awakening.EIGHTY_HP_ENHANCED:
+              return m * atk80;
+            case Awakening.FIFTY_HP_ENHANCED:
+              return m * atk50;
+            default:
+              return m * Math.max(atk80, atk50);
+          }
         }
+        return Math.max(atk80, atk50);
+      }).reduce(([vMax, iMax], vCur, iCur) => {
+        if (vCur > vMax)
+          return [vCur, iCur];
+        return [vMax, iMax];
+      }, [1, -1]);
 
-        if (m > max) {
-          result.superAwakeningIndex = i;
-          max = m
-        }
-      }
-    });
-    atk *= max;
+      atk *= vMax;
+      result.superAwakeningIndex = iMax;
+    }
   }
 
   config.types.forEach((a) => {
