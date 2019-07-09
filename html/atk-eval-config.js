@@ -314,6 +314,7 @@ class AtkEvalConfig extends LitElement {
         </div>
         <div class="row">
           排序方式:
+          ${radio('HP', 'sort-by', 'hp', bindRadio(this, 'sortBy'))}
           ${radio('攻擊', 'sort-by', 'atk', bindRadio(this, 'sortBy'))}
           ${radio('回復', 'sort-by', 'rcv', bindRadio(this, 'sortBy'))}
           ${radio('最小CD', 'sort-by', 'cd', bindRadio(this, 'sortBy'))}

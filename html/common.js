@@ -13,6 +13,7 @@ export function statAtMaxLv(card, name) {
 
 class EvalResult {
   constructor() {
+    this.hp = 0;
     this.atk = 0;
     this.rcv = 0;
     this.superAwakeningIndex = -1;
@@ -21,11 +22,14 @@ class EvalResult {
 
 export function statEval(card, config) {
   const result = new EvalResult();
+  let hp = statAtMaxLv(card, 'hp') + 990;
   let atk = statAtMaxLv(card, 'atk') + 495;
   let rcv = statAtMaxLv(card, 'rcv') * (config.sortBy == 'rcv' ? 1.9 : 1) + 297;
 
   card.awakenings.forEach((a) => {
-    if (a == Awakening.ENHANCED_ATK) {
+    if (a == Awakening.ENHANCED_HP) {
+      hp += 500;
+    } else if (a == Awakening.ENHANCED_ATK) {
       atk += 100;
     } else if (a == Awakening.ENHANCED_RCV) {
       rcv += 200;
@@ -44,7 +48,8 @@ export function statEval(card, config) {
           atk50 *= m;
           break;
         case Awakening.MULTI_BOOST:
-          rcv *= 1.5;
+          hp *= m;
+          rcv *= m;
           // fall through
         default:
           atk80 *= m;
@@ -107,6 +112,7 @@ export function statEval(card, config) {
     atk *= 1.1;
   }
 
+  result.hp = Math.round(hp);
   result.atk = Math.round(atk);
   result.rcv = Math.round(rcv);
   return result;

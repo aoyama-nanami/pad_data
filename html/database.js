@@ -23,10 +23,10 @@ class Database {
 
   compareFunction_(sortBy) {
     switch (sortBy) {
+      case 'hp':
       case 'atk':
-        return (row1, row2) => row2[1].atk - row1[1].atk;
       case 'rcv':
-        return (row1, row2) => row2[1].rcv - row1[1].rcv;
+        return (row1, row2) => row2[1][sortBy] - row1[1][sortBy];
       case 'cd':
         return (row1, row2) => {
           if (row1[0].skill.turn_min == 0) {  // no skill

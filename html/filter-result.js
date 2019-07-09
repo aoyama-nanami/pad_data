@@ -156,7 +156,7 @@ class FilterResult extends LitElement {
           </div>
         </div>
         <div class="grid-cell">${card.name}</div>
-        <div class="grid-cell numeric-cell">${statAtMaxLv(card, 'hp')}</div>
+        <div class="grid-cell numeric-cell">${result.hp}</div>
         <div class="grid-cell numeric-cell">${result.atk}</div>
         <div class="grid-cell numeric-cell">${result.rcv}</div>
         <div class="grid-cell two-row-icons"">
