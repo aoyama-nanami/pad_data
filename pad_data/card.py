@@ -66,7 +66,7 @@ class Card:
         'attr_id', 'awakenings', 'card_id', 'enemy_passive_resist',
         'inheritable', 'leader_skill', 'limit_mult', 'max_atk', 'max_hp',
         'max_level', 'max_rcv', 'min_atk', 'min_hp', 'min_rcv', 'name',
-        'skill', 'sub_attr_id', 'super_awakenings', 'type',
+        'rarity', 'skill', 'sub_attr_id', 'super_awakenings', 'type',
     ])
     @property
     def merged_json(self):

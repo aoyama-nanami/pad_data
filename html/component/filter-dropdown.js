@@ -5,6 +5,7 @@ import {Awakening} from '../util/awakening.js';
 import {FilterAssist} from '../filters/assist.js';
 import {FilterAwakening} from '../filters/awakening.js';
 import {FilterElement} from '../filters/element.js';
+import {FilterRarity} from '../filters/rarity.js';
 import {FilterSkillCd} from '../filters/skill-cd.js';
 
 import {FilterAllOrbChange} from '../filters/all-orb-change.js';
@@ -84,6 +85,10 @@ export const FILTERS = [
     {
       desc: '技能 CD',
       cls: FilterSkillCd,
+    },
+    {
+      desc: '稀有度',
+      cls: FilterRarity,
     },
   ],
   [
