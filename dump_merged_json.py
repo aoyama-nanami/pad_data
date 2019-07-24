@@ -94,7 +94,9 @@ def main():
         old = json.load(f)
     diff(new, old)
     with open(JSON_PATH, 'w') as f:
-        json.dump(list(map(lambda c: c.merged_json, cards)), f)
+        json.dump(list(map(lambda c: c.merged_json, cards)), f,
+                  separators=(',', ':'),
+                  ensure_ascii=False)
 
 if __name__ == '__main__':
     main()
