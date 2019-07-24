@@ -124,7 +124,7 @@ class Card:
             getattr(self, f'type_{i}_id')) for i in range(1, 4))
 
     def dump(self, atk_eval=atk_at_level, rcv_eval=rcv_at_level,
-             print_skill=True):
+             print_active_skill=True, print_leader_skill=False):
         print(util.element_to_color(self.element),
               self.name,
               util.element_to_color(common.Orb.NO_ORB),
@@ -135,8 +135,11 @@ class Card:
               sep='',
               end='  ')
 
-        if print_skill:
+        if print_active_skill:
             print(f'{self.skill.turn_max:2}/{self.skill.turn_min:2}',
-                  self.skill.clean_description)
-        else:
-            print()
+                  self.skill.clean_description,
+                  sep='',
+                  end='')
+        if print_leader_skill:
+            print(self.leader_skill.clean_description, end='')
+        print()
