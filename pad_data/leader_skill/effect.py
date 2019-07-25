@@ -17,6 +17,7 @@ class BaseStatBoost:
     dr: int = 0
     move_time_extend: int = 0 # unit is 1/100 sec
     combo_increase: int = 0
+    fixed_extra_attack: int = 0
 
     ALL_ELEM: ClassVar[common.Orb] = [
         common.Orb.FIRE, common.Orb.WATER, common.Orb.WOOD,
@@ -181,6 +182,10 @@ class TeamStatBoost(BaseStatBoost):
 class CollaboTeamStatBoost(BaseStatBoost):
     collabo_ids: List[int] = field(default_factory=list)
 
+@dataclass
+class HealAbove(BaseStatBoost):
+    threshold: int = 0
+
 # end condition
 
 @dataclass
@@ -237,6 +242,10 @@ class ExtraAttack:
     atk: int
 
 @dataclass
+class FixedValueExtraAttack:
+    value: int = 0
+
+@dataclass
 class ExtraHeal:
     rcv: int
 
@@ -260,3 +269,7 @@ class GoldLootUp:
 @dataclass
 class TreasureLootUp:
     percentage: int
+
+@dataclass
+class PoisonImmune:
+    pass

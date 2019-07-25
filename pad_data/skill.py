@@ -356,6 +356,13 @@ _LS_EFFECT_MAP = {
     193: Map(LS.LShape, orbs=orb_list, atk=int, rcv=int, dr=int),
     194: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int,
              combo_increase=int),
+    197: Map(LS.PoisonImmune),
+    # 回復ドロップでx以上回復すると、ダメージを半減
+    198: Map(LS.HealAbove, threshold=int, unused=Unused(0), dr=int),
+    # x色以上同時攻撃で固定yダメージ
+    199: Map(LS.Rainbow, orbs=orb_list, color_min=int, fixed_extra_attack=int),
+    # ドロップをx個以上つなげて消すと固定yダメージ
+    200: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, fixed_extra_attack=int),
 }
 
 # special case:
