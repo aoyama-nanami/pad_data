@@ -18,6 +18,7 @@ class BaseStatBoost:
     move_time_extend: int = 0 # unit is 1/100 sec
     combo_increase: int = 0
     fixed_extra_attack: int = 0
+    awoken_bind: int = 0
 
     ALL_ELEM: ClassVar[common.Orb] = [
         common.Orb.FIRE, common.Orb.WATER, common.Orb.WOOD,
