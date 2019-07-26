@@ -172,7 +172,7 @@ _LS_EFFECT_MAP = {
     13: Map(LS.ExtraHeal, rcv=int),
     # 根性, unused = proc rate?
     14: Map(LS.Resolve, hp_threshold=int, unused=Unused(100)),
-    15: Map(LS.StatBoost, move_time_extend=int),
+    15: Map(LS.ExtendedBoost, move_time_extend=int),
     16: Map(LS.StatBoost, dr_elements=LS.BaseStatBoost.ALL_ELEM, dr=int),
     17: Map(LS.StatBoost, dr_elements=[Orb], dr=int),
     22: Map(LS.StatBoost, elements=[], types=[Type], atk=int),
@@ -345,7 +345,7 @@ _LS_EFFECT_MAP = {
     183: Map(LS.hp_cond_183, elements=orb_list, types=type_list,
              hp_above=int, atk_above=int, rcv_above=int,
              hp_below=int, atk_below=int, rcv_below=int),
-    185: Map(LS.StatBoost, move_time_extend=int, elements=orb_list,
+    185: Map(LS.ExtendedBoost, move_time_extend=int, elements=orb_list,
              types=type_list, hp=int, atk=int, rcv=int),
     186: Map(LS.Board7x6, elements=orb_list, types=type_list, hp=int, atk=int,
              rcv=int),

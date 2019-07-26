@@ -10,15 +10,9 @@ class BaseStatBoost:
     hp: int = 0
     atk: int = 0
     rcv: int = 0
-    atk_step: int = 0
-    rcv_step: int = 0
 
     dr_elements: List[common.Orb] = field(default_factory=list)
     dr: int = 0
-    move_time_extend: int = 0 # unit is 1/100 sec
-    combo_increase: int = 0
-    fixed_extra_attack: int = 0
-    awoken_bind: int = 0
 
     ALL_ELEM: ClassVar[common.Orb] = [
         common.Orb.FIRE, common.Orb.WATER, common.Orb.WOOD,
@@ -33,6 +27,11 @@ class BaseStatBoost:
     def calculate_atk(self, combos, trigger=False, hp=100):
         raise NotImplementedError
 
+@dataclass
+class SteppedStatBoost(BaseStatBoost):
+    atk_step: int = 0
+    rcv_step: int = 0
+
 def by_stat_id(cls):
     def func(stat_id_list, percentage, **kwargs):
         for stat_id in stat_id_list:
@@ -44,10 +43,21 @@ def by_stat_id(cls):
         return cls(**kwargs)
     return func
 
+@dataclass
+class ExtraBuff:
+    move_time_extend: int = 0 # unit is 1/100 sec
+    combo_increase: int = 0
+    fixed_extra_attack: int = 0
+    awoken_bind: int = 0
+
 # conditions
 
 @dataclass
 class StatBoost(BaseStatBoost):
+    pass
+
+@dataclass
+class ExtendedBoost(BaseStatBoost, ExtraBuff):
     pass
 
 @dataclass
@@ -61,7 +71,7 @@ class HpBelow(BaseStatBoost):
     hp_below: int = 0
 
 @dataclass
-class Combo(BaseStatBoost):
+class Combo(SteppedStatBoost):
     combo: int = 0
     combo_max: int = 0
 
@@ -81,7 +91,7 @@ class ComboExact(BaseStatBoost):
     combo: int = 0
 
 @dataclass
-class Rainbow(BaseStatBoost):
+class Rainbow(SteppedStatBoost, ExtraBuff):
     orbs: List[common.Orb] = field(default_factory=list)
     color_min: int = 0
     color_max: int = field(init=False)
@@ -98,7 +108,7 @@ class Rainbow(BaseStatBoost):
             self.color_max = min(self.color_min + color_step, len(self.orbs))
 
 @dataclass
-class ElementCombo(BaseStatBoost):
+class ElementCombo(SteppedStatBoost):
     combos: List[List[common.Orb]] = field(default_factory=list)
     combo_min: int = 0
 
@@ -112,7 +122,7 @@ class ElementCombo(BaseStatBoost):
         assert len(self.combos) >= self.combo_min
 
 @dataclass
-class ConnectedOrbs(BaseStatBoost):
+class ConnectedOrbs(SteppedStatBoost, ExtraBuff):
     # xyzをn個以上つなげて消す
     # triggers if any matched
     orbs: List[common.Orb] = field(default_factory=list)
@@ -120,7 +130,7 @@ class ConnectedOrbs(BaseStatBoost):
     size_max: int = 0
 
 @dataclass
-class ConnectedOrbsAll(BaseStatBoost):
+class ConnectedOrbsAll(BaseStatBoost, ExtraBuff):
     # xyzを"同時"にn個以上つなげて消す
     # triggers if all matched
     orbs: List[common.Orb] = field(default_factory=list)
@@ -144,7 +154,7 @@ class MultiplayerGame(BaseStatBoost):
     pass
 
 @dataclass
-class NoSkyfall(BaseStatBoost):
+class NoSkyfall(SteppedStatBoost):
     pass
 
 @dataclass
@@ -184,7 +194,7 @@ class CollaboTeamStatBoost(BaseStatBoost):
     collabo_ids: List[int] = field(default_factory=list)
 
 @dataclass
-class HealAbove(BaseStatBoost):
+class HealAbove(BaseStatBoost, ExtraBuff):
     threshold: int = 0
 
 # end condition
