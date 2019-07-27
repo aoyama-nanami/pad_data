@@ -122,7 +122,7 @@ class TestSkillData(unittest.TestCase):
         # ドット・クラウド
         self.assert_skill_equal(
             3808,
-            LS.StatBoost(types=[Type.PHYSICAL, Type.ATTACK], hp=200, atk=200),
+            LS.StatBoost(types=[Type.PHYSICAL, Type.ATTACK], hp=200, atk=300),
             LS.ConnectedOrbs(orbs=[Orb.LIGHT], size=6, size_max=9, atk=350,
                              atk_step=50))
 
