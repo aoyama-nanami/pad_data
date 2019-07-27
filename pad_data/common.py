@@ -83,6 +83,13 @@ class Awakening(enum.IntEnum):
     REDUCE_ATK = 66
     REDUCE_RCV = 67
 
+    RESIST_DARK_PLUS = 68
+    RESIST_JAMMERS_PLUS = 69
+    RESIST_POISON_PLUS = 70
+
+    JAMMERS_ORBS_BLESSING = 71
+    POISON_ORBS_BLESSING = 72
+
     @property
     def damage_multiplier(self):
         # pylint: disable=no-member
