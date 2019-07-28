@@ -78,6 +78,13 @@ export const Awakening = {
   REDUCE_HP: 65,
   REDUCE_ATK: 66,
   REDUCE_RCV: 67,
+
+  RESIST_DARK_PLUS: 68,
+  RESIST_JAMMERS_PLUS: 69,
+  RESIST_POISON_PLUS: 70,
+
+  JAMMERS_ORBS_BLESSING: 71,
+  POISON_ORBS_BLESSING: 72,
 };
 
 const _AWAKENING_DAMAGE_MAP = new Map([
@@ -89,6 +96,8 @@ const _AWAKENING_DAMAGE_MAP = new Map([
   [Awakening.ENHANCED_COMBO, 2],
   [Awakening.SUPER_BONUS_ATTACK, 2],
   [Awakening.FIFTY_HP_ENHANCED, 2],
+  [Awakening.JAMMERS_ORBS_BLESSING, 2],
+  [Awakening.POISON_ORBS_BLESSING, 2],
 
   [Awakening.VOID_DAMAGE_PIERCER, 2.5],
 

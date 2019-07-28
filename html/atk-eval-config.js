@@ -266,7 +266,7 @@ class AtkEvalConfig extends LitElement {
     const awakenings = [
       27, 30, /* two way, multi boost */
       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, /* killers */
-      43, 48, 50, 57, 58, 60, 61,
+      43, 48, 50, 57, 58, 60, 61, 71, 72,
     ];
     return html`
       <link rel="stylesheet" type="text/css" href="style.css">

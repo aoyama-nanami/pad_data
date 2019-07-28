@@ -108,6 +108,8 @@ _AWAKENING_DAMAGE_MAP = {
     Awakening.ENHANCED_COMBO: 2,
     Awakening.SUPER_BONUS_ATTACK: 2,
     Awakening.FIFTY_HP_ENHANCED: 2,
+    Awakening.JAMMERS_ORBS_BLESSING: 2
+    Awakening.POISON_ORBS_BLESSING: 2
 
     Awakening.VOID_DAMAGE_PIERCER: 2.5,
 
