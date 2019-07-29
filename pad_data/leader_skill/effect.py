@@ -27,10 +27,21 @@ class BaseStatBoost:
     def calculate_atk(self, combos, trigger=False, hp=100):
         raise NotImplementedError
 
+    def effective_hp(self):
+        ret = 1
+        if self.dr:
+            ret /= (1 - self.dr / 100)
+        if self.hp:
+            ret *= self.hp / 100
+        return ret
+
 @dataclass
 class SteppedStatBoost(BaseStatBoost):
     atk_step: int = 0
     rcv_step: int = 0
+
+    def max_step(self):
+        raise NotImplementedError
 
 def by_stat_id(cls):
     def func(stat_id_list, percentage, **kwargs):
@@ -86,6 +97,9 @@ class Combo(SteppedStatBoost):
             return None
         return self.atk + (self.combo_max - c) * self.atk_step
 
+    def max_step(self):
+        return self.combo_max - self.combo
+
 @dataclass
 class ComboExact(BaseStatBoost):
     combo: int = 0
@@ -107,6 +121,9 @@ class Rainbow(SteppedStatBoost, ExtraBuff):
         else:
             self.color_max = min(self.color_min + color_step, len(self.orbs))
 
+    def max_step(self):
+        return self.color_max - self.color_min
+
 @dataclass
 class ElementCombo(SteppedStatBoost):
     combos: List[List[common.Orb]] = field(default_factory=list)
@@ -121,6 +138,9 @@ class ElementCombo(SteppedStatBoost):
         # pylint: disable=not-an-iterable
         assert len(self.combos) >= self.combo_min
 
+    def max_step(self):
+        return len(self.combos) - self.combo_min
+
 @dataclass
 class ConnectedOrbs(SteppedStatBoost, ExtraBuff):
     # xyzをn個以上つなげて消す
@@ -128,6 +148,9 @@ class ConnectedOrbs(SteppedStatBoost, ExtraBuff):
     orbs: List[common.Orb] = field(default_factory=list)
     size: int = 0
     size_max: int = 0
+
+    def max_step(self):
+        return self.size_max - self.size
 
 @dataclass
 class ConnectedOrbsAll(BaseStatBoost, ExtraBuff):
@@ -154,7 +177,7 @@ class MultiplayerGame(BaseStatBoost):
     pass
 
 @dataclass
-class NoSkyfall(SteppedStatBoost):
+class NoSkyfall(BaseStatBoost):
     pass
 
 @dataclass
@@ -165,6 +188,7 @@ class MatchFourOrAbove(BaseStatBoost):
 @dataclass
 class LShape(BaseStatBoost):
     orbs: List[common.Orb] = field(default_factory=list)
+
     def calculate_atk(self, combos, trigger=False, hp=100):
         for c in combos:
             if c.shape == common.Shape.L and c.orb in self.orbs:
@@ -176,9 +200,12 @@ class Board7x6(BaseStatBoost):
     pass
 
 @dataclass
-class OrbRemaining(NoSkyfall):
+class OrbRemaining(NoSkyfall, SteppedStatBoost):
     # パズル後の残りドロップ数がn個以下
     threshold: int = 0
+
+    def max_step(self):
+        return self.threshold
 
 @dataclass
 class FixedMovementTime(BaseStatBoost):
