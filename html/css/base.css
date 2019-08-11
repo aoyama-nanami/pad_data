@@ -1,6 +1,5 @@
 body {
   font-family:'メイリオ',Meiryo,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',sans-serif;
-  margin: 15px 15px 15px 15px;
   background-color: black;
   color: #DDD;
   min-height: 100vh;
@@ -96,16 +95,6 @@ a {
 
 #main {
   min-height: 100vh;
-}
-
-.grid-two-col {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: max-content max-content 100fr;
-  width: 1600px;
-  overflow: hidden;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .icon24x24 {

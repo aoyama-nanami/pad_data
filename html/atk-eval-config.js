@@ -269,7 +269,7 @@ class AtkEvalConfig extends LitElement {
       43, 48, 50, 57, 58, 60, 61, 71, 72,
     ];
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/base.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet">
       <div class="card-title">

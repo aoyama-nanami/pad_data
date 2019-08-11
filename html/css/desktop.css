@@ -1,0 +1,22 @@
+#main {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: max-content max-content 100fr;
+  width: 1600px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#result {
+  grid-column-end: span 2;
+}
+
+body {
+  margin: 15px 15px 15px 15px;
+}
+
+filter-result {
+  --grid-columns: max-content 270px 50px 80px 50px 270px 30px 30px
+                  repeat(7, 1px) auto;
+}

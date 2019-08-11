@@ -244,7 +244,7 @@ class FilterDropdown extends LitElement {
   render() {
     const v = this.value || '';
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/base.css">
       <div class="dropdown"
            @focusin="${() => this.opened = true}"
            @focusout="${() => this.opened = false}">

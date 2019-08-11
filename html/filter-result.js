@@ -41,9 +41,9 @@ class FilterResult extends LitElement {
   static get styles() {
     return [
       css`
-        .grid {
+        :host {
           display: grid;
-          grid-template-columns: max-content 270px 50px 80px 50px 270px 30px 30px auto;
+          grid-template-columns: var(--grid-columns);
           line-height: 24px;
         }
 
@@ -76,6 +76,12 @@ class FilterResult extends LitElement {
         }
 
         .skill-desc {
+          grid-column-end: span 8;
+          padding-left: var(--skill-desc-padding-left, inherit);
+          border-bottom: var(--skill-desc-border-bottom, inherit) !important;
+        }
+
+        .skill-desc > pre {
           font-family: inherit;
           font-size: inherit;
           display: inline;
@@ -92,6 +98,7 @@ class FilterResult extends LitElement {
           padding-top: 3px;
           padding-left: 9px;
           line-height: 24px;
+          grid-column: 1 / -1;
         }
 
         .pagination > button {
@@ -111,11 +118,11 @@ class FilterResult extends LitElement {
       const begin = (page - 1) * RESULTS_PER_PAGE;
       const data = this.data.slice(begin, begin + RESULTS_PER_PAGE);
       return html`
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="css/base.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
               rel="stylesheet">
         ${this._paginationSection()}
-        <div class="grid">${data.map((x) => this._renderRow(x))}</div>
+        ${data.map((x) => this._renderRow(x))}
       `;
     }
     return html``;
@@ -178,8 +185,8 @@ class FilterResult extends LitElement {
             ${card.inheritable ? 'check' : ''}
           </div>
         </div>
-        <div class="grid-cell">
-          <pre class="skill-desc">${card.skill.description}</pre>
+        <div class="grid-cell skill-desc">
+          <pre>${card.skill.description}</pre>
         </div>
       </a>
     `;

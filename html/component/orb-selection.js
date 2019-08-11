@@ -29,7 +29,7 @@ class OrbSelection extends LitElement {
 
   render() {
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/base.css">
       <div class="icon-list">
         ${this.value.map((_, i) => this.orbCheckbox_(i))}
       </div>`;

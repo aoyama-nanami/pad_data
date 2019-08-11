@@ -154,7 +154,7 @@ class CardFilter extends LitElement {
 
   render() {
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/base.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet">
       <div class="card-title">Filter</div>

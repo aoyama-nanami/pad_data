@@ -7,7 +7,7 @@ export class FilterBase extends LitElement {
 
   get commonCss() {
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/base.css">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet">
       `;

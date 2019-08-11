@@ -39,7 +39,7 @@ class IconCheckbox extends LitElement {
   render() {
     const value = this.override ? this.overrideChecked : this.checked;
     return html`
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/base.css">
       <label class="icon-checkbox">
         <input type="checkbox"
                .checked="${value}"

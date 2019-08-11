@@ -13,17 +13,23 @@
     <script src="component/orb-selection.js" type="module"></script>
     <script src="component/type-selection.js" type="module"></script>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="util/theme-selector.js" type="module"></script>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/desktop.css"
+          title="Desktop">
+    <link rel="stylesheet alternate" type="text/css" href="css/mobile.css"
+          title="Mobile">
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
     <title></title>
   </head>
   <body>
     <div id="loading">loading...</div>
-    <div class="grid-two-col" id="main" style="display: none">
+    <div id="main" style="display: none">
       <atk-eval-config class="card"></atk-eval-config>
       <card-filter class="card"></card-filter>
-      <filter-result id="result" class="card" style="grid-column-end: span 2"></filter-result>
+      <filter-result id="result" class="card"></filter-result>
     </div>
   </body>
 </html>
