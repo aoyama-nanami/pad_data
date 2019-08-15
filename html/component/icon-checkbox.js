@@ -13,6 +13,10 @@ class IconCheckbox extends LitElement {
 
   static get styles() {
     return css`
+      :host {
+        display: inline-block;
+      }
+
       .icon-checkbox > input {
         display: none;
       }

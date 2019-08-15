@@ -44,7 +44,6 @@ class FilterResult extends LitElement {
         :host {
           display: grid;
           grid-template-columns: var(--grid-columns);
-          line-height: 24px;
         }
 
         .grid-row {
@@ -75,13 +74,18 @@ class FilterResult extends LitElement {
           padding-right: 5px;
         }
 
-        .skill-desc {
-          grid-column-end: span 8;
+        .awakenings-cell {
+          grid-column: awakenings-start / span awakenings-end;
+        }
+
+        .skill-desc-cell {
+          grid-column-start: skill-desc-start;
+          grid-column-end: -1;
           padding-left: var(--skill-desc-padding-left, inherit);
           border-bottom: var(--skill-desc-border-bottom, inherit) !important;
         }
 
-        .skill-desc > pre {
+        .skill-desc-cell > pre {
           font-family: inherit;
           font-size: inherit;
           display: inline;
@@ -97,12 +101,10 @@ class FilterResult extends LitElement {
         .pagination {
           padding-top: 3px;
           padding-left: 9px;
-          line-height: 24px;
           grid-column: 1 / -1;
         }
 
         .pagination > button {
-          font-size: 1rem;
           padding: 0;
           border: none;
           background: none;
@@ -166,7 +168,7 @@ class FilterResult extends LitElement {
         <div class="grid-cell numeric-cell">${result.hp}</div>
         <div class="grid-cell numeric-cell">${result.atk}</div>
         <div class="grid-cell numeric-cell">${result.rcv}</div>
-        <div class="grid-cell two-row-icons"">
+        <div class="grid-cell two-row-icons awakenings-cell">
           <div class="icon-list" style="margin-bottom: 3px">
             ${card.awakenings.map((a) => icon('a' + a))}
           </div>
@@ -185,7 +187,7 @@ class FilterResult extends LitElement {
             ${card.inheritable ? 'check' : ''}
           </div>
         </div>
-        <div class="grid-cell skill-desc">
+        <div class="grid-cell skill-desc-cell">
           <pre>${card.skill.description}</pre>
         </div>
       </a>

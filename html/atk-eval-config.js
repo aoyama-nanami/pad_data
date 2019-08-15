@@ -61,6 +61,10 @@ class AtkEvalConfig extends LitElement {
       legend:hover {
         text-decoration: underline;
       }
+      .flex-awakenings-list {
+        flex-wrap: wrap;
+        height: auto !important;
+      }
     `;
   }
 
@@ -276,7 +280,7 @@ class AtkEvalConfig extends LitElement {
         Damage Parameters
       </div>
       <div class="card-body">
-        <div id="awakenings" class="row icon-list">
+        <div id="awakenings" class="row icon-list flex-awakenings-list">
           ${awakenings.map((i) => this.awakeningCheckBox_(i))}
         </div>
         <div class="row">

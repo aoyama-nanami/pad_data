@@ -16,7 +16,12 @@ body {
   margin: 15px 15px 15px 15px;
 }
 
+.card {
+  margin: 6px 6px 6px 6px;
+}
+
 filter-result {
-  --grid-columns: max-content 270px 50px 80px 50px 270px 30px 30px
-                  repeat(7, 1px) auto;
+  --grid-columns: 93px 270px 50px 80px 50px 
+                  [awakenings-start] 270px [awakenings-end] 30px 30px
+                  [skill-desc-start] auto;
 }

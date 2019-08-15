@@ -23,7 +23,6 @@ class CardFilter extends LitElement {
           display: grid;
           grid-template-columns: 22px 30px max-content auto;
           grid-auto-rows: 28px;
-          line-height: 24px;
         }
 
         .grid-cell {
