@@ -83,6 +83,14 @@ export const FILTERS = [
       },
     },
     {
+      desc: '追打',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.BONUS_ATTACK, 1]],
+        count: 1,
+      },
+    },
+    {
       desc: '技能 CD',
       cls: FilterSkillCd,
     },
