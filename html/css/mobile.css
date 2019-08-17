@@ -1,3 +1,7 @@
+:root {
+  --zoom: 2.4;
+}
+
 #main {
   display: grid;
   grid-template-columns: 100%;
@@ -9,18 +13,24 @@
 
 body {
   margin: 0 0 0 0;
-  transform: scale(1.6);
+  transform: scale(var(--zoom));
   transform-origin: 0 0;
-  width: calc(100% / 1.6);
+  width: calc(100% / var(--zoom));
 }
 
 .card {
   margin: 6px 0 6px 0;
-  width: 100%;
 }
 
 filter-result {
-  --grid-columns: [awakenings-start skill-desc-start] 93px 270px [awakenings-end] 50px 80px 50px;
-  --skill-desc-padding-left: 9px;
-  --skill-desc-border-bottom: 2px double rgb(85, 85, 85);
+  --grid-columns: 33px 30px 30px 270px 50px 80px 50px 120px auto 1fr;
+  --grid-rows: 30px 30px 60px;
+  --grid-areas:
+      "elem elem elem name hp  atk rcv  ."
+      "type type type   aw sa   sa  sa sa"
+      "turn  inh    .   sk sk   sk  sk sk";
+
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
 }

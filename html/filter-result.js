@@ -41,30 +41,28 @@ class FilterResult extends LitElement {
   static get styles() {
     return [
       css`
-        :host {
+        .grid {
           display: grid;
+          min-width: 100%;
+          width: max-content;
           grid-template-columns: var(--grid-columns);
+          grid-template-rows: var(--grid-rows);
+          grid-template-areas: var(--grid-areas);
+          border-bottom: 1px solid rgb(85, 85, 85);
         }
 
-        .grid-row {
+        .result-row {
           display: contents;
         }
 
-        .grid-row:hover .grid-cell {
+        .result-row:hover > .grid {
           background-color: rgba(161, 194, 250, 0.2);
         }
 
         .grid-cell {
           padding: 3px 3px 0 3px;
-          height: 54px;
           display: inline-block;
           vertical-align: baseline;
-          border-bottom: 1px solid rgb(85, 85, 85);
-          border-top: 1px solid rgb(85, 85, 85);
-        }
-
-        .grid-cell:first-child {
-          padding-left: 9px;
         }
 
         .numeric-cell {
@@ -74,18 +72,55 @@ class FilterResult extends LitElement {
           padding-right: 5px;
         }
 
-        .awakenings-cell {
-          grid-column: awakenings-start / span awakenings-end;
+        .grid-cell#elem {
+          grid-area: elem;
+          padding-left: 9px;
         }
 
-        .skill-desc-cell {
-          grid-column-start: skill-desc-start;
-          grid-column-end: -1;
-          padding-left: var(--skill-desc-padding-left, inherit);
-          border-bottom: var(--skill-desc-border-bottom, inherit) !important;
+        .grid-cell#type {
+          grid-area: type;
+          padding-left: 9px;
         }
 
-        .skill-desc-cell > pre {
+        .grid-cell#hp {
+          grid-area: hp;
+        }
+
+        .grid-cell#atk {
+          grid-area: atk;
+        }
+
+        .grid-cell#rcv{
+          grid-area: rcv;
+        }
+
+        .grid-cell#name {
+          grid-area: name;
+          overflow: hidden;
+        }
+
+        .grid-cell#awakenings {
+          grid-area: aw;
+        }
+
+        .grid-cell#super-awakenings {
+          grid-area: sa;
+        }
+
+        .grid-cell#turn-min {
+          grid-area: turn;
+        }
+
+        .grid-cell#inheritable {
+          grid-area: inh;
+          text-align: middle;
+        }
+
+        .grid-cell#skill-desc {
+          grid-area: sk;
+        }
+
+        .grid-cell#skill-desc > pre {
           font-family: inherit;
           font-size: inherit;
           display: inline;
@@ -93,15 +128,10 @@ class FilterResult extends LitElement {
           padding-top: 3px;
         }
 
-        .two-row-icons {
-          display: flex;
-          flex-direction: column;
-        }
-
         .pagination {
           padding-top: 3px;
           padding-left: 9px;
-          grid-column: 1 / -1;
+          border-bottom: 1px solid rgb(85, 85, 85);
         }
 
         .pagination > button {
@@ -125,6 +155,7 @@ class FilterResult extends LitElement {
               rel="stylesheet">
         ${this._paginationSection()}
         ${data.map((x) => this._renderRow(x))}
+        ${this._paginationSection()}
       `;
     }
     return html``;
@@ -152,43 +183,40 @@ class FilterResult extends LitElement {
   _renderRow(row) {
     const [card, result] = row;
     return html`
-      <a class="grid-row" href="http://pad.skyozora.com/pets/${card.card_id}"
-         target="_blank">
-        <div class="grid-cell two-row-icons">
-          <div class="icon-list" style="margin-bottom: 3px">
+      <a href="http://pad.skyozora.com/pets/${card.card_id}" target="_blank" class="result-row">
+        <div class="grid">
+          <div class="grid-cell icon-list" id="elem" style="margin-bottom: 3px">
             ${icon('orb' + card.attr_id)}
             ${icon('orb' + card.sub_attr_id)}
             ${icon('')}
           </div>
-          <div class="icon-list">
+          <div class="grid-cell icon-list" id="type">
             ${card.type.map((i) => icon('t' + i))}
           </div>
-        </div>
-        <div class="grid-cell">${card.name}</div>
-        <div class="grid-cell numeric-cell">${result.hp}</div>
-        <div class="grid-cell numeric-cell">${result.atk}</div>
-        <div class="grid-cell numeric-cell">${result.rcv}</div>
-        <div class="grid-cell two-row-icons awakenings-cell">
-          <div class="icon-list" style="margin-bottom: 3px">
+          <div class="grid-cell" id="name">${card.name}</div>
+          <div class="grid-cell numeric-cell" id="hp">${result.hp}</div>
+          <div class="grid-cell numeric-cell" id="atk">${result.atk}</div>
+          <div class="grid-cell numeric-cell" id="rcv">${result.rcv}</div>
+          <div class="grid-cell icon-list" id="awakenings" style="margin-bottom: 3px">
             ${card.awakenings.map((a) => icon('a' + a))}
           </div>
-          <div class="icon-list">
+          <div class="grid-cell icon-list" id="super-awakenings">
             ${card.super_awakenings.map(
               (a, i) => {
                 const grayscale = (i == result.superAwakeningIndex) ? undefined : 'grayscale';
                 return icon('a' + a, grayscale);
               })}
           </div>
-        </div>
-        <div class="grid-cell numeric-cell">${card.skill.turn_min}</div>
-        <div class="grid-cell">
-          <div class="material-icons"
-            style="font-size: 1rem">
-            ${card.inheritable ? 'check' : ''}
+          <div class="grid-cell numeric-cell" id="turn-min">${card.skill.turn_min}</div>
+          <div class="grid-cell" id="inheritable">
+            <div class="material-icons"
+              style="font-size: 1rem">
+              ${card.inheritable ? 'check' : ''}
+            </div>
           </div>
-        </div>
-        <div class="grid-cell skill-desc-cell">
-          <pre>${card.skill.description}</pre>
+          <div class="grid-cell" id="skill-desc">
+            <pre>${card.skill.description}</pre>
+          </div>
         </div>
       </a>
     `;
