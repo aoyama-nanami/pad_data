@@ -51,22 +51,9 @@ class TeamElementAtkNuke(Nuke):
 class TeamHpNuke(Nuke):
     pass
 
-# an extra zero in type 86 and 87
-@dataclass
-class FixedValueNuke(AtkNuke):
-    unused: InitVar[int] = None
-    # pylint: disable=arguments-differ
-    def __post_init__(self, unused):
-        super().__post_init__()
-        assert unused == 0
-
 @dataclass
 class RemainingHpNuke(Nuke):
-    unused: InitVar[int] = None
-    # pylint: disable=arguments-differ
-    def __post_init__(self, unused):
-        super().__post_init__()
-        assert unused == 300
+    pass
 
 @dataclass
 class BaseBuff:
@@ -131,9 +118,6 @@ class DoubleOrbChange:
 @dataclass
 class OrbEnhance:
     orbs: List[Orb]
-    unused: InitVar[int]
-    def __post_init__(self, unused):
-        assert unused == 6
 
 @dataclass
 class RandomOrbSpawn:
@@ -264,10 +248,7 @@ class NoSkyfall(BaseBuff):
 @dataclass
 class IgnoreAbsorb(BaseBuff):
     element_absorb: bool
-    unused: InitVar[int]
     damage_absorb: bool
-    def __post_init__(self, unused):
-        assert unused == 0
 
 @dataclass
 class ReduceCooldown:
@@ -286,10 +267,6 @@ class SelfElementChange(BaseBuff):
 @dataclass
 class EnemyElementChange:
     element: Orb
-    unused: InitVar[int]
-
-    def __post_init__(self, unused):
-        assert unused == 1
 
 @dataclass
 class ComboIncrease(BaseBuff):

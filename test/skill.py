@@ -111,7 +111,7 @@ class TestSkillData(unittest.TestCase):
         # 水の精霊王・ザパン
         self.assert_skill_equal(
             4353,
-            effect.OrbEnhance([Orb.WATER], unused=6),
+            effect.OrbEnhance([Orb.WATER]),
             effect.SkyfallEnhancedOrbs(6, 50))
 
         # 転生アルレシャ
@@ -120,7 +120,7 @@ class TestSkillData(unittest.TestCase):
             effect.OrbChange(
                 from_=[Orb.HEART, Orb.JAMMER, Orb.POISON, Orb.MORTAL_POISON],
                 to=[Orb.WATER]),
-            effect.OrbEnhance([Orb.WATER], unused=6),
+            effect.OrbEnhance([Orb.WATER]),
             effect.ReduceCooldown([1, 1]))
 
         # 浄雷の赤龍契士・ガディウス
