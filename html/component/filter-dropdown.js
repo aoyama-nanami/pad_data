@@ -13,6 +13,7 @@ import {FilterCombo} from '../filters/combo.js';
 import {FilterDelayEnemyAttack} from '../filters/delay-enemy-attack.js';
 import {FilterDefenseReduction} from '../filters/defense-reduction.js';
 import {FilterDmgBuff} from '../filters/dmg-buff.js';
+import {FilterFixedValueNuke} from '../filters/fixed-value-nuke.js';
 import {FilterGravity} from '../filters/gravity.js';
 import {FilterLowHpNuke} from '../filters/low-hp-nuke.js';
 import {FilterNuke} from '../filters/nuke.js';
@@ -110,6 +111,10 @@ export const FILTERS = [
     {
       desc: '低血砲',
       cls: FilterLowHpNuke,
+    },
+    {
+      desc: '固定傷害',
+      cls: FilterFixedValueNuke,
     },
     {
       desc: '自殘',
