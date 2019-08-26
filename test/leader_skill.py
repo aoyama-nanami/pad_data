@@ -212,6 +212,12 @@ class TestSkillData(unittest.TestCase):
             LS.ElementCombo(combos=[[Orb.FIRE], [Orb.LIGHT], [Orb.LIGHT]],
                             combo_min=2, atk=300))
 
+        # イヴェルカーナ
+        self.assert_skill_equal(
+            5525,
+            LS.StatBoost(elements=[Orb.WATER], hp=200),
+            LS.Combo(combo=4, combo_max=10, atk=800, atk_step=200),
+            LS.HealAbove(threshold=100000, dr=35))
 
 if __name__ == '__main__':
     unittest.main()

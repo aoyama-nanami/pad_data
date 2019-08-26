@@ -358,7 +358,9 @@ _LS_EFFECT_MAP = {
              combo_increase=int),
     197: Map(LS.PoisonImmune),
     # 回復ドロップでx以上回復すると、ダメージを半減
-    198: Map(LS.HealAbove, threshold=int, atk=int, dr=int, awoken_bind=int),
+    # dr in this type is expressed as 100 - dr
+    198: Map(LS.HealAbove, threshold=int, atk=int, dr=lambda x: 100 - int(x),
+             awoken_bind=int),
     # x色以上同時攻撃で固定yダメージ
     199: Map(LS.Rainbow, orbs=orb_list, color_min=int, fixed_extra_attack=int),
     # ドロップをx個以上つなげて消すと固定yダメージ
