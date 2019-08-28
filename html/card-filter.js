@@ -30,6 +30,13 @@ class CardFilter extends LitElement {
           display: inline-block;
           vertical-align: baseline;
           border-bottom: 1px solid rgb(85, 85, 85);
+          height: 28px;
+        }
+
+        .filter-cell {
+          overflow-x: scroll;
+          scrollbar-width: none;
+          white-space: nowrap;
         }
 
         .remove-btn {
@@ -120,7 +127,7 @@ class CardFilter extends LitElement {
           @change="${(ev) => this.changeFilterId_(i, ev)}">
         </filter-dropdown>
       </div>
-      <div class="grid-cell">
+      <div class="grid-cell filter-cell">
         ${this.createFilter(id, args, i, enabled)}
       </div>
     `;
@@ -140,7 +147,7 @@ class CardFilter extends LitElement {
       <div class="grid-cell">
         無效貫通
       </div>
-      <div class="grid-cell">
+      <div class="grid-cell filter-cell">
         ${this.createFilter(v, FilterById(v).init, -1, true)}
       </div>
     `;
