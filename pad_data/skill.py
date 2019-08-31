@@ -359,7 +359,8 @@ _LS_EFFECT_MAP = {
     197: Map(LS.PoisonImmune),
     # 回復ドロップでx以上回復すると、ダメージを半減
     # dr in this type is expressed as 100 - dr
-    198: Map(LS.HealAbove, threshold=int, atk=int, dr=lambda x: 100 - int(x),
+    198: Map(LS.HealAbove, threshold=int, atk=int,
+             dr=lambda x: 100 - int(x) if x else 0,
              awoken_bind=int),
     # x色以上同時攻撃で固定yダメージ
     199: Map(LS.Rainbow, orbs=orb_list, color_min=int, fixed_extra_attack=int),
