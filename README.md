@@ -2,6 +2,14 @@
 
 A tool for [Puzzle and Dragons](https://pad.gungho.jp/member/) to search pets and sort by various attributes.
 
+## Install
+
+### Dependencies
+
+* [Google Cloud SDK](https://cloud.google.com/storage/docs/gsutil_install)
+* python3.7-venv
+* everything in requirements.txt
+
 ## Web UI
 
 Requires Chrome 65+, Firefox 63+.
