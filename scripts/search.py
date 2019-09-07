@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+import path_common
+
 from pad_data import common, database, filters, util
 from pad_data.leader_skill import effect as ls_effect
 from pad_data.active_skill import effect as as_effect

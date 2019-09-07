@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+import path_common
+
 import collections
 import dataclasses
 from typing import ClassVar, Mapping, Set

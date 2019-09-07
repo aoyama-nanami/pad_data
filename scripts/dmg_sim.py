@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+import path_common
+
 from dataclasses import dataclass
 import decimal
 import itertools
