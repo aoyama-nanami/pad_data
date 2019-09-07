@@ -1,5 +1,6 @@
 import functools
 import json
+import os.path
 
 from pad_data import active_skill, card, common, leader_skill, skill
 
@@ -19,14 +20,16 @@ class Database:
     def __init__(self, raw_cards_json='data/processed/jp_raw_cards.json',
                  skills_json='data/processed/jp_skills.json',
                  enemy_skills_json='data/processed/jp_enemy_skills.json'):
-        with open(raw_cards_json, 'r') as f:
+        project_root = os.path.join(os.path.dirname(__file__), '..')
+
+        with open(os.path.join(project_root, raw_cards_json), 'r') as f:
             self._cards = dict(
                 (c['card_id'], card.Card(c)) for c in json.load(f))
 
-        with open(skills_json, 'r') as f:
+        with open(os.path.join(project_root, skills_json), 'r') as f:
             self._skills = dict((s['skill_id'], s) for s in json.load(f))
 
-        with open(enemy_skills_json, 'r') as f:
+        with open(os.path.join(project_root, enemy_skills_json), 'r') as f:
             enemy_skills = dict((s['enemy_skill_id'], s) for s in json.load(f))
 
         for c in self._cards.values():
