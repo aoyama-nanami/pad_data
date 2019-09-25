@@ -39,7 +39,7 @@ class TestCardData(unittest.TestCase):
 
     def test_awakening(self):
         self.assertSequenceEqual(
-            self._db.card(1).awakenings, [])
+            self._db.card(1).awakenings, [SKILL_BOOST, SKILL_BOOST])
 
         self.assertSequenceEqual(
             self._db.card(651).awakenings,
