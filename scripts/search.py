@@ -26,7 +26,7 @@ def ehp(c):
 
 def atk(c):
     ret = 1
-    for e in c.leader_skill.ls_effects:
+    for e in c.leader_skill.effects:
         if not isinstance(e, ls_effect.BaseStatBoost):
             continue
         if isinstance(e, (ls_effect.HpAbove, ls_effect.HpBelow)):
@@ -48,7 +48,12 @@ def main():
 
     # cards = list(filter(lambda c: ehp(c) >= 1.5 and board7x6(c), cards))
 
-    cards = list(filter(filters.Skill(as_effect.AtkNuke, '_.value >= 100000'), cards))
+    # cards = list(filter(filters.Skill(as_effect.AtkNuke, '_.value >= 100000'), cards))
+    cards = list(filter(
+        lambda c: (
+            filters.LeaderSkill(ls_effect.ExtraBuff,
+                                '_.move_time_extend >= 200')(c)
+            and atk(c) >= 10), cards))
 
     # cards = list(filter(
     #     filters.Skill(
@@ -57,7 +62,7 @@ def main():
     #         'len(_.orbs) <= 4'),
     #     cards))
     for c in cards:
-        c.dump(print_leader_skill=0, print_active_skill=1)
+        c.dump(print_leader_skill=1, print_active_skill=0)
 
 if __name__ == '__main__':
     main()
