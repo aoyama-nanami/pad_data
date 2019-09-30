@@ -365,17 +365,23 @@ _LS_EFFECT_MAP = {
     200: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, fixed_extra_attack=int),
 }
 
-# known special cases:
-#   type=129, arg=[8, 0, 100] => モンスター経験値アップ
-#   type=48, arg=[3, 100] => たまドラ
-#   type=121, arg=[] => ぷれドラ
 def parse(skill_type, args, is_active_skill):
     if is_active_skill:
         return _AS_EFFECT_MAP[skill_type](*args)
 
-    # pylint: disable=too-many-boolean-expressions
-    if ((skill_type == 129 and args == [8, 0, 100]) or
-            (skill_type == 48 and args == [3, 100]) or
-            (skill_type == 121 and args == [])):
+    if skill_type == 129 and args == [8, 0, 100]:
+        # This is the most common dummy type, includes:
+        # モンスター経験値アップ
+        # 売却
+        # 潜在覚醒
+        # 交換用
+        # 希石
         return LS.Dummy()
+    if skill_type == 48 and args == [3, 100]:
+        # 能力覚醒
+        return LS.Dummy()
+    if skill_type == 121 and args == []:
+        # スキルレベルアップ
+        return LS.Dummy()
+
     return _LS_EFFECT_MAP[skill_type](*args)
