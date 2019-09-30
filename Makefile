@@ -1,7 +1,7 @@
 .PHONY: lint test
 
 lint:
-	pylint *.py pad_data test
+	pylint pad_data test scripts
 
 test:
 	python -m unittest test.card

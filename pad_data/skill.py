@@ -148,8 +148,8 @@ _AS_EFFECT_MAP = {
     160: Map(AS.ComboIncrease, duration=int, combo=int),
     161: Map(AS.TrueGravity, percentage=int),
     172: Map(AS.Unlock),
-    173: Map(AS.IgnoreAbsorb, duration=int, element_absorb=bool, unused=Unused(0),
-             damage_absorb=int),
+    173: Map(AS.IgnoreAbsorb, duration=int, element_absorb=bool,
+             unused=Unused(0), damage_absorb=int),
     176: Map(AS.BoardChange, rows=[int, int, int, int, int], orb=Orb),
     179: Map(AS.HealOverTime, duration=int, unused=int, hp_percentage=int,
              bind=int, awoken_bind=int, rcv_percentage=0, hp_value=0),
@@ -365,7 +365,7 @@ _LS_EFFECT_MAP = {
     200: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, fixed_extra_attack=int),
 }
 
-# special case:
+# known special cases:
 #   type=129, arg=[8, 0, 100] => モンスター経験値アップ
 #   type=48, arg=[3, 100] => たまドラ
 #   type=121, arg=[] => ぷれドラ
@@ -373,6 +373,7 @@ def parse(skill_type, args, is_active_skill):
     if is_active_skill:
         return _AS_EFFECT_MAP[skill_type](*args)
 
+    # pylint: disable=too-many-boolean-expressions
     if ((skill_type == 129 and args == [8, 0, 100]) or
             (skill_type == 48 and args == [3, 100]) or
             (skill_type == 121 and args == [])):

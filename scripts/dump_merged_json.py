@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
 
-import path_common
-
-import itertools
 import json
+
+import path_common # pylint: disable=import-error,unused-import
+
 from pad_data import database
 
 JSON_PATH = 'html/data/jp_cards_merged.json'
@@ -40,10 +40,7 @@ def zip_by_card_id(list_new, list_old):
             i_new += 1
 
 def maybe_remove_newline(x):
-    if isinstance(x, str):
-        return x.replace('\n', '')
-    else:
-        return x
+    return x.replace('\n', '') if isinstance(x, str) else x
 
 def diff_one(new, old, indent_level):
     if new is None:

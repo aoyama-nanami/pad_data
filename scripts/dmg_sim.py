@@ -1,13 +1,13 @@
 #! /usr/bin/env python3
 
-import path_common
-
 from dataclasses import dataclass
 import decimal
 import itertools
 import math
 from typing import List, Optional
 import wcwidth
+
+import path_common # pylint: disable=import-error,unused-import
 
 from pad_data import database, util
 from pad_data.common import Awakening, Combo, Orb, Shape, Type
@@ -101,6 +101,10 @@ def member_spec(base, assist):
         awakenings=awakenings
     )
 
+def awaken_mult(card, awaken):
+    return (decimal.Decimal(awaken.damage_multiplier) **
+            card.awakenings.count(awaken))
+
 # pylint: disable=undefined-variable
 def main():
     members = [member_spec(TEAM[i], ASSIST[i]) for i in range(len(TEAM))]
@@ -121,7 +125,6 @@ def main():
                     any(t in ls.types for t in m.types)):
                 ls_mult *= mult / 100
 
-        awaken_mult = lambda a: decimal.Decimal(a.damage_multiplier) ** m.awakenings.count(a)
         for c in COMBOS:
             if c.orb != m.element and c.orb != m.sub_element:
                 continue
@@ -129,11 +132,11 @@ def main():
             dmg = math.ceil(m.atk * (1 + 0.25 * (c.size - 3)))
 
             if c.size == 4:
-                dmg = round(dmg * awaken_mult(TWO_WAY), 0)
+                dmg = round(dmg * awaken_mult(m, TWO_WAY), 0)
             elif c.shape == Shape.L:
-                dmg = round(dmg * awaken_mult(L_ATTACK), 0)
+                dmg = round(dmg * awaken_mult(m, L_ATTACK), 0)
             elif c.shape == Shape.SQUARE:
-                dmg = round(dmg * awaken_mult(VOID_DAMAGE_PIERCER), 0)
+                dmg = round(dmg * awaken_mult(m, VOID_DAMAGE_PIERCER), 0)
 
             if c.orb == m.element:
                 main_dmg += dmg
@@ -152,9 +155,9 @@ def main():
         # TODO: check if this should happen in earlier phase
         extra_mult = 1
         if HP >= 80:
-            extra_mult *= awaken_mult(EIGHTY_HP_ENHANCED)
+            extra_mult *= awaken_mult(m, EIGHTY_HP_ENHANCED)
         if HP <= 50:
-            extra_mult *= awaken_mult(FIFTY_HP_ENHANCED)
+            extra_mult *= awaken_mult(m, FIFTY_HP_ENHANCED)
         # TODO: add row attack multiplier
 
         main_dmg = round(main_dmg * extra_mult, 0)
@@ -162,9 +165,9 @@ def main():
 
         combo_enh_mult = 1
         if len(COMBOS) >= 7:
-            combo_enh_mult *= awaken_mult(ENHANCED_COMBO)
+            combo_enh_mult *= awaken_mult(m, ENHANCED_COMBO)
         if len(COMBOS) >= 10:
-            combo_enh_mult *= awaken_mult(ENHANCED_10_COMBO)
+            combo_enh_mult *= awaken_mult(m, ENHANCED_10_COMBO)
 
         main_dmg = round(main_dmg * decimal.Decimal(combo_enh_mult), 0)
         sub_dmg = round(sub_dmg * decimal.Decimal(combo_enh_mult), 0)

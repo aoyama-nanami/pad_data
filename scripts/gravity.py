@@ -2,11 +2,11 @@
 
 '''A tool to calculate best combination of 100% gravity'''
 
-import path_common
-
 import collections
 
-from pad_data import common, database, filters, util
+import path_common # pylint: disable=import-error,unused-import
+
+from pad_data import database, filters
 from pad_data.active_skill import effect as as_effect
 
 class Item:
@@ -31,11 +31,9 @@ def killable(team, cards, turn):
     gravity = 1
     true_gravity = 0
 
-    for i in range(len(team)):
-        cd = team[i] + cards[i].turn
+    for (t, c) in zip(team, cards):
+        cd = t + c.turn
         cast = turn // cd
-
-        c = cards[i]
         gravity *= (1 - c.gravity / 100) ** cast
         true_gravity += c.true_gravity / 100 * cast
 
@@ -55,7 +53,7 @@ def optimize(cards, team, current):
             return 9999, []
         return turn, current.copy()
 
-    last_cd = 9999 if len(current) == 0 else current[-1].turn
+    last_cd = current[-1].turn if current else 9999
     best_turn, best_assists = 9999, []
     for c in cards:
         if c.turn > last_cd:
@@ -82,19 +80,14 @@ def main():
     db = database.Database()
     cards = db.get_all_released_cards()
 
-    cards = filter(
-        lambda c: ((filters.Skill(as_effect.Gravity, '1')(c) or
-                    filters.Skill(as_effect.TrueGravity, '1')(c)) and
-                   c.inheritable),
-        cards)
-
+    cards = filter((filters.Skill(as_effect.Gravity, '1') |
+                    filters.Skill(as_effect.TrueGravity, '1')) &
+                   filters.INHERITABLE,
+                   cards)
     cards = {c.skill.name: Item(c) for c in cards}
     cards = {c.name: c for c in cards.values()}
     box_override(cards)
 
-    team = [
-        cards['鏖砲イヴァン'],
-    ]
     turn, assists = optimize(cards.values(), [0, 0, 0, 15, 16], [])
     print(f'turn = {turn}')
     for c in assists:

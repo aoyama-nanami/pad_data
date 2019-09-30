@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import path_common
+import path_common # pylint: disable=import-error,unused-import
 
 from pad_data import common, database, filters, util
 from pad_data.leader_skill import effect as ls_effect
