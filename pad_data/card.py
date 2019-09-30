@@ -136,7 +136,7 @@ class Card:
               end='  ')
 
         if print_active_skill:
-            print(f'{self.skill.turn_max:2}/{self.skill.turn_min:2}',
+            print(f'{self.skill.turn_max:2}/{self.skill.turn_min:2} ',
                   self.skill.clean_description,
                   sep='',
                   end='')

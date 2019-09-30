@@ -28,7 +28,7 @@ class Item:
         self.card.dump(print_leader_skill=0, print_active_skill=1)
 
 def killable(team, cards, turn):
-    gravity = 0.55
+    gravity = 1
     true_gravity = 0
 
     for i in range(len(team)):
@@ -60,6 +60,7 @@ def optimize(cards, team, current):
     for c in cards:
         if c.turn > last_cd:
             continue
+
         current.append(c)
         t, a = optimize(cards, team, current)
         current.pop()
@@ -68,10 +69,10 @@ def optimize(cards, team, current):
     return best_turn, best_assists
 
 def box_override(c):
-    c['壮絶の降魔神・降三世明王'].count = 0
-    c['転生降三世明王'].count = 0
-    c['チャンドラ・ナラー'].count = 0
-    c['夜星の神王妃・ヘラ -LUNA-'].count = 0
+    del c['壮絶の降魔神・降三世明王']
+    del c['転生降三世明王']
+    del c['双冥剣グラビティア']
+    del c['チャンドラ・ナラー']
     c['神王妃・ミニへら'].count = 1
     c['閃光の冒険野郎ヴァン・クロウ'].count = 1
     c['影ナル者'].count = 1
@@ -94,7 +95,7 @@ def main():
     team = [
         cards['鏖砲イヴァン'],
     ]
-    turn, assists = optimize(cards.values(), [0, 7, 8, 16], [])
+    turn, assists = optimize(cards.values(), [0, 0, 0, 15, 16], [])
     print(f'turn = {turn}')
     for c in assists:
         c.dump()

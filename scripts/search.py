@@ -38,31 +38,21 @@ def atk(c):
             ret *= e.atk / 100
     return ret
 
-def board7x6(c):
-    return any(isinstance(e, ls_effect.Board7x6) for e in c.leader_skill.effects)
-
-# pylint: disable=undefined-variable
 def main():
     db = database.Database()
     cards = db.get_all_released_cards()
 
-    # cards = list(filter(lambda c: ehp(c) >= 1.5 and board7x6(c), cards))
+    filter_obj = (filters.Skill(as_effect.Heal, '_.hp_percentage >= 100') &
+                  filters.INHERITABLE)
 
-    # cards = list(filter(filters.Skill(as_effect.AtkNuke, '_.value >= 100000'), cards))
-    cards = list(filter(
-        lambda c: (
-            filters.LeaderSkill(ls_effect.ExtraBuff,
-                                '_.move_time_extend >= 200')(c)
-            and atk(c) >= 10), cards))
-
-    # cards = list(filter(
-    #     filters.Skill(
-    #         effect.AllOrbChange,
-    #         '_.orbs.count(FIRE) and _.orbs.count(LIGHT) and '
-    #         'len(_.orbs) <= 4'),
-    #     cards))
+    cards = filter(filter_obj, cards)
+    if filter_obj.is_active_skill:
+        cards = sorted(cards, key=lambda c: c.skill.turn_min)
+    else:
+        cards = sorted(cards, key=atk)
     for c in cards:
-        c.dump(print_leader_skill=1, print_active_skill=0)
+        c.dump(print_leader_skill=not filter_obj.is_active_skill,
+               print_active_skill=filter_obj.is_active_skill)
 
 if __name__ == '__main__':
     main()
