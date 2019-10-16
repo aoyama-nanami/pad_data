@@ -11,6 +11,7 @@ import {FilterSkillCd} from '../filters/skill-cd.js';
 import {FilterAllOrbChange} from '../filters/all-orb-change.js';
 import {FilterBindRecovery} from '../filters/bind-recovery.js';
 import {FilterCombo} from '../filters/combo.js';
+import {FilterDamageReduction} from '../filters/damage-reduction.js';
 import {FilterDelayEnemyAttack} from '../filters/delay-enemy-attack.js';
 import {FilterDefenseReduction} from '../filters/defense-reduction.js';
 import {FilterDmgBuff} from '../filters/dmg-buff.js';
@@ -137,6 +138,10 @@ export const FILTERS = [
     {
       desc: '屬性/type 增傷',
       cls: FilterDmgBuff,
+    },
+    {
+      desc: '減傷',
+      cls: FilterDamageReduction,
     },
     {
       desc: '陣',
