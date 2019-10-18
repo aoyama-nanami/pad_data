@@ -193,7 +193,7 @@ _LS_EFFECT_MAP = {
     39: Map(LS.by_stat_id(LS.HpBelow), hp_below=int, stat_id_list=[int, int],
             percentage=int),
     40: Map(LS.StatBoost, elements=[Orb, Orb], types=[], atk=int),
-    41: Map(LS.Counter, proc_rate=int, atk=int, orb=Orb),
+    41: Map(LS.CounterLS, proc_rate=int, atk=int, orb=Orb),
     43: Map(LS.HpAbove, hp_above=int, proc_rate=int, dr=int),
     44: Map(LS.by_stat_id(LS.HpAbove), hp_above=int, stat_id_list=[int, int],
             percentage=int),
@@ -314,7 +314,7 @@ _LS_EFFECT_MAP = {
              size_max=int),
 
     162: Map(LS.Board7x6),
-    163: Map(LS.NoSkyfall, elements=orb_list, types=type_list, hp=int, atk=int,
+    163: Map(LS.NoSkyfallLS, elements=orb_list, types=type_list, hp=int, atk=int,
              rcv=int, dr_elements=orb_list, dr=int),
     # see id 124
     164: Map(LS.ElementCombo, combos=[orb_list] * 4, combo_min=int, atk=int,

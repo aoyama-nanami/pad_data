@@ -177,7 +177,7 @@ class MultiplayerGame(BaseStatBoost):
     pass
 
 @dataclass
-class NoSkyfall(BaseStatBoost):
+class NoSkyfallLS(BaseStatBoost):
     pass
 
 @dataclass
@@ -200,7 +200,7 @@ class Board7x6(BaseStatBoost):
     pass
 
 @dataclass
-class OrbRemaining(NoSkyfall, SteppedStatBoost):
+class OrbRemaining(NoSkyfallLS, SteppedStatBoost):
     # パズル後の残りドロップ数がn個以下
     threshold: int = 0
 
@@ -270,7 +270,7 @@ class Resolve: # 根性
     hp_threshold: int
 
 @dataclass
-class Counter:
+class CounterLS:
     proc_rate: int
     atk: int
     orb: common.Orb

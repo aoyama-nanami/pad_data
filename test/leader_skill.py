@@ -75,7 +75,7 @@ class TestSkillData(unittest.TestCase):
         # 神理の裁断者・メタトロン
         self.assert_skill_equal(
             3535,
-            LS.NoSkyfall(types=[Type.GOD], hp=150, atk=150, rcv=150),
+            LS.NoSkyfallLS(types=[Type.GOD], hp=150, atk=150, rcv=150),
             LS.HpBelow(hp_below=80, types=[Type.GOD], atk=600))
 
         # 虹石龍・オリハルコン
@@ -203,7 +203,7 @@ class TestSkillData(unittest.TestCase):
         # アパンダ
         self.assert_skill_equal(
             462,
-            LS.Counter(proc_rate=50, atk=500, orb=Orb.FIRE))
+            LS.CounterLS(proc_rate=50, atk=500, orb=Orb.FIRE))
 
         # 聖天使・アリエル
         self.assert_skill_equal(
