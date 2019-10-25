@@ -20,6 +20,9 @@ def _atk(card):
             continue
         if isinstance(e, (ls_effect.HpAbove, ls_effect.HpBelow)):
             continue
+        # some skill type does not fill in atk field
+        if e.atk == 0:
+            continue
 
         if isinstance(e, ls_effect.SteppedStatBoost) and e.atk_step > 0:
             ret *= (e.atk + e.max_step() * e.atk_step) / 100
