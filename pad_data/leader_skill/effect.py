@@ -125,7 +125,7 @@ class Rainbow(SteppedStatBoost, ExtraBuff):
         return self.color_max - self.color_min
 
 @dataclass
-class ElementCombo(SteppedStatBoost):
+class ElementCombo(SteppedStatBoost, ExtraBuff):
     combos: List[List[common.Orb]] = field(default_factory=list)
     combo_min: int = 0
 
@@ -278,10 +278,6 @@ class CounterLS:
 @dataclass
 class ExtraAttack:
     atk: int
-
-@dataclass
-class FixedValueExtraAttack:
-    value: int = 0
 
 @dataclass
 class ExtraHeal:

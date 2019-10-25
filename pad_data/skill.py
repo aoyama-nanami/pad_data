@@ -362,6 +362,10 @@ _LS_EFFECT_MAP = {
     199: Map(LS.Rainbow, orbs=orb_list, color_min=int, fixed_extra_attack=int),
     # ドロップをx個以上つなげて消すと固定yダメージ
     200: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, fixed_extra_attack=int),
+    # [1, 1, 1, 0, 3, 1000000] -> 火の3コンボ以上で固定100万ダメージ
+    # TODO: need more use case
+    201: Map(LS.ElementCombo, combos=[orb_list] * 3, _=Unused(0), combo_min=int,
+             fixed_extra_attack=int),
 }
 
 def parse(skill_type, args, is_active_skill):
