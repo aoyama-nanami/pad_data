@@ -58,8 +58,17 @@ class BaseEvaluator(ast.NodeVisitor):
 
     # pylint: disable=invalid-name
     def visit_BoolOp(self, node):
-        op = self._bool_op(node.op)
-        return op(self.visit(node.values[0]), self.visit(node.values[1]))
+        if isinstance(node.op, ast.And):
+            for x in node.values:
+                if not self.visit(x):
+                    return False
+            return True
+
+        # ast.Or
+        for x in node.values:
+            if self.visit(x):
+                return True
+        return False
 
     # pylint: disable=invalid-name
     def visit_Compare(self, node):
@@ -82,13 +91,6 @@ class BaseEvaluator(ast.NodeVisitor):
     def visit_Call(self, node):
         f = self.visit(node.func)
         return f(*map(self.visit, node.args))
-
-    def _bool_op(self, op):
-        if isinstance(op, ast.And):
-            return operator.and_
-        if isinstance(op, ast.Or):
-            return operator.or_
-        raise RuntimeError(f'Unknown operator {op}')
 
     _COMP_OP_MAP = [
         (ast.Eq, operator.eq),
