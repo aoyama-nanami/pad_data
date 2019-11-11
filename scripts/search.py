@@ -153,6 +153,7 @@ class RootEvaluator(BaseEvaluator):
             'ehp': self._ehp,
             'atk': self._atk,
             'dr': self._dr,
+            'cd': self._cd,
         }
 
     # pylint: disable=invalid-name
@@ -193,6 +194,9 @@ class RootEvaluator(BaseEvaluator):
                 continue
             ret *= (1 - e.dr / 100)
         return (1 - ret) * 100
+
+    def _cd(self):
+        return self._card.skill.turn_min
 
 
 HELP = f'''
