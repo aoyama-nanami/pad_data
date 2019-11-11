@@ -147,6 +147,10 @@ _AS_EFFECT_MAP = {
              mode=int, percentage=int),
     160: Map(AS.ComboIncrease, duration=int, combo=int),
     161: Map(AS.TrueGravity, percentage=int),
+    # Need verify
+    168: Map(AS.DamageBuffByAwakening, duration=int, awakenings=[int, int, int],
+             unused1=Unused(0), unused2=Unused(0), unused3=Unused(0),
+             percentage=int),
     172: Map(AS.Unlock),
     173: Map(AS.IgnoreAbsorb, duration=int, element_absorb=bool,
              unused=Unused(0), damage_absorb=int),
@@ -162,6 +166,8 @@ _AS_EFFECT_MAP = {
     191: Map(AS.VoidDamagePiercer, duration=int),
     195: Map(AS.Sacrifice, hp_remain=int),
     196: Map(AS.UnmatchableRecover, turn=int),
+    # 変身
+    202: Map(AS.Transform, to=int),
 }
 
 _LS_EFFECT_MAP = {

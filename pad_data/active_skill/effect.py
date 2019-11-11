@@ -82,6 +82,9 @@ class DefenseBuffByAwakening(BaseBuff):
 @dataclass
 class HealByAwakening:
     # heal amount = awakening count * self rcv * percentage
+    # TODO: verify the formula from
+    #       No. 3066 Pepper 光
+    #       No. 5682 電龍楽士・マルシス
     unused_duration: InitVar[int]
     awakenings: List[Awakening]
     percentage: int
@@ -310,3 +313,7 @@ class Sacrifice:
 class UnmatchableRecover:
     # 消せないドロップ状態をnターン回復
     turn: int
+
+@dataclass
+class Transform:
+    to: int
