@@ -26,8 +26,11 @@ class Ref:
         self.name = name
 
 class Unused:
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, *values):
+        self.values = values
+
+    def __contains__(self, x):
+        return x in self.values
 
 class Map:
     def __init__(self, cls, **kwargs):
@@ -36,7 +39,7 @@ class Map:
 
     def __call__(self, *args):
         args_iter = iter(args)
-        g = itertools.chain(args_iter, itertools.repeat(0))
+        g = itertools.chain(args_iter, itertools.repeat(0, 16))
 
         def convert(x):
             if isinstance(x, list):
@@ -46,7 +49,7 @@ class Map:
             if isinstance(x, Ref):
                 return x
             if isinstance(x, Unused):
-                assert next(g) == x.value
+                assert next(g) in x
                 return x
             if callable(x):
                 return x(next(g))
@@ -94,7 +97,7 @@ _AS_EFFECT_MAP = {
     42: Map(AS.AtkNuke, target=Orb, element=Orb, value=int),
     50: Map(AS.ElementDamageBuff, duration=int, cond=[Orb], percentage=int),
     51: Map(AS.Cleave, duration=int),
-    52: Map(AS.OrbEnhance, orbs=[Orb], unused=Unused(6)),
+    52: Map(AS.OrbEnhance, orbs=[Orb], unused=Unused(6, 100)),
     55: Map(AS.AtkNuke, target=AS.Target.ONE, element=Orb.NO_ORB,
             ignore_def=True, value=int),
     56: Map(AS.AtkNuke, target=AS.Target.ALL, element=Orb.NO_ORB,
@@ -123,6 +126,7 @@ _AS_EFFECT_MAP = {
              percentage=[int, int], unused=Unused(300)),
     115: Map(AS.AtkNuke, target=AS.Target.ONE, element=Orb, percentage=int,
              leech=int),
+    116: Map(AS.SkillSet, skill_ids=_consume_all_args(int, 0)),
     117: Map(AS.Heal, bind=int, rcv_percentage=int, hp_value=int,
              hp_percentage=int, awoken_bind=int),
     118: Map(AS.RandomSkill, unused_skill_id=_consume_all_args(int, 0)),
@@ -184,6 +188,7 @@ _LS_EFFECT_MAP = {
     22: Map(LS.StatBoost, elements=[], types=[Type], atk=int),
     23: Map(LS.StatBoost, elements=[], types=[Type], hp=int),
     24: Map(LS.StatBoost, elements=[], types=[Type], rcv=int),
+    26: Map(LS.StatBoost, atk=int),
     28: Map(LS.StatBoost, elements=[Orb], types=[], atk=int, rcv=Ref('atk')),
     29: Map(LS.StatBoost, elements=[Orb], types=[], hp=int, atk=Ref('hp'),
             rcv=Ref('hp')),
@@ -297,6 +302,7 @@ _LS_EFFECT_MAP = {
     137: Map(LS.double_stat_boost,
              params_0=[[], type_list, int, int, int],
              params_1=[[], type_list, int, int, int]),
+    138: Map(LS.SkillSetLS, skill_ids=_consume_all_args(int, 0)),
     # e.g.
     #   HP満タンか50％以下で木属性の攻撃力が4倍。
     #   = [4, 0, 100, 0, 400, 50, 1, 400]
@@ -320,8 +326,8 @@ _LS_EFFECT_MAP = {
              size_max=int),
 
     162: Map(LS.Board7x6),
-    163: Map(LS.NoSkyfallLS, elements=orb_list, types=type_list, hp=int, atk=int,
-             rcv=int, dr_elements=orb_list, dr=int),
+    163: Map(LS.NoSkyfallLS, elements=orb_list, types=type_list, hp=int,
+             atk=int, rcv=int, dr_elements=orb_list, dr=int),
     # see id 124
     164: Map(LS.ElementCombo, combos=[orb_list] * 4, combo_min=int, atk=int,
              rcv=int, atk_step=int, rcv_step=Ref('atk_step')),
@@ -374,10 +380,7 @@ _LS_EFFECT_MAP = {
              fixed_extra_attack=int),
 }
 
-def parse(skill_type, args, is_active_skill):
-    if is_active_skill:
-        return _AS_EFFECT_MAP[skill_type](*args)
-
+def parse(skill_type, args):
     if skill_type == 129 and args == [8, 0, 100]:
         # This is the most common dummy type, includes:
         # モンスター経験値アップ
@@ -393,4 +396,6 @@ def parse(skill_type, args, is_active_skill):
         # スキルレベルアップ
         return LS.Dummy()
 
+    if skill_type in _AS_EFFECT_MAP:
+        return _AS_EFFECT_MAP[skill_type](*args)
     return _LS_EFFECT_MAP[skill_type](*args)

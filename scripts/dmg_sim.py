@@ -84,7 +84,7 @@ def member_spec(base, assist):
         assist_card = DB.card(assist.card_id)
         if AWOKEN_ASSIST in assist_card.awakenings:
             awakenings += assist_card.awakenings[1:]
-        if card.element == assist_card.element:
+        if card.attr_id == assist_card.attr_id:
             assist_atk = (assist_card.atk_at_level(assist.lv)
                           + assist_card.atk_plus * 5)
             atk += round(assist_atk * 0.05)
@@ -94,8 +94,8 @@ def member_spec(base, assist):
 
     return MemberSpec(
         name=card.name,
-        element=card.element,
-        sub_element=card.sub_element,
+        element=card.attr_id,
+        sub_element=card.sub_attr_id,
         types=card.type,
         atk=atk,
         awakenings=awakenings

@@ -140,7 +140,7 @@ class ColumnChange:
     pos2: int
     orb2: List[Orb]
     def __post_init__(self):
-        assert len(self.orb1) == 1
+        assert len(self.orb1) == (0 if self.pos1 == 0 else 1)
         assert len(self.orb2) == (0 if self.pos2 == 0 else 1)
 
 @dataclass
@@ -151,7 +151,7 @@ class RowChange:
     pos2: int
     orb2: List[Orb]
     def __post_init__(self):
-        assert len(self.orb1) == 1
+        assert len(self.orb1) == (0 if self.pos1 == 0 else 1)
         assert len(self.orb2) == (0 if self.pos2 == 0 else 1)
 
 @dataclass
@@ -317,3 +317,7 @@ class UnmatchableRecover:
 @dataclass
 class Transform:
     to: int
+
+@dataclass
+class SkillSet:
+    skill_ids: List[int]

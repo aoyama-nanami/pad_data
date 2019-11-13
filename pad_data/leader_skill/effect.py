@@ -307,3 +307,7 @@ class TreasureLootUp:
 @dataclass
 class PoisonImmune:
     pass
+
+@dataclass
+class SkillSetLS:
+    skill_ids: List[int]
