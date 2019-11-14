@@ -4,6 +4,7 @@ import itertools
 
 from pad_data.common import Orb, Type
 from pad_data.active_skill import effect as AS
+from pad_data.enemy_skill import effect as ES
 from pad_data.leader_skill import effect as LS
 
 # special skill type for combined skill effect
@@ -20,6 +21,9 @@ def orb_list(bit_mask):
 
 def type_list(bit_mask):
     return [Type(i) for i in range(32) if (1 << i) & bit_mask]
+
+def int_or_none(arg):
+    return 0 if arg is None else int(arg)
 
 class Ref:
     def __init__(self, name):
@@ -64,8 +68,9 @@ class Map:
         obj = self._cls(**kwargs)
 
         try:
-            next(args_iter)
-            assert False, 'args not fully consumed!'
+            if self._cls.__module__ != 'pad_data.enemy_skill.effect':
+                next(args_iter)
+                assert False, 'args not fully consumed!'
         except StopIteration:
             pass
 
@@ -380,6 +385,14 @@ _LS_EFFECT_MAP = {
              fixed_extra_attack=int),
 }
 
+_ES_EFFECT_MAP = {
+    71: Map(ES.VoidDamageShield, duration=int, unused=Unused(31, 1055),
+            threshold=int),
+    72: Map(ES.ElementDamageReduction, elements=orb_list, dr=int),
+    83: Map(ES.SkillSetES, skill_ids=[int_or_none] * 10),
+    118: Map(ES.TypeDamageReduction, types=type_list, dr=int),
+}
+
 def parse(skill_type, args):
     if skill_type == 129 and args == [8, 0, 100]:
         # This is the most common dummy type, includes:
@@ -399,3 +412,6 @@ def parse(skill_type, args):
     if skill_type in _AS_EFFECT_MAP:
         return _AS_EFFECT_MAP[skill_type](*args)
     return _LS_EFFECT_MAP[skill_type](*args)
+
+def parse_enemy_skill(skill_type, args):
+    return _ES_EFFECT_MAP[skill_type](*args)

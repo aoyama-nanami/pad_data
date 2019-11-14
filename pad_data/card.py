@@ -18,14 +18,6 @@ class Skill:
         return self.description.replace('\n', '')
 
 @dataclasses.dataclass
-class EnemyPassiveResist:
-    enemy_skill_id: int
-    name: str
-    skill_type: int  # 72: element resist, 118: type resist
-    skill_name: str
-    param: List[int]
-
-@dataclasses.dataclass
 class EnemySkillRef:
     enemy_skill_id: int
     enemy_ai: int
@@ -206,17 +198,17 @@ class Card:
             'description': self.skill.description,
             'turn_max': self.skill.turn_max,
             'turn_min': self.skill.turn_min,
-            'effects': (list(map(lambda e: [type(e).__name__, e.__dict__],
-                                 self.skill.effects))),
+            'effects': self.skill.effects,
         }
         obj['leader_skill'] = {
             'name': self.leader_skill.name,
             'description': self.leader_skill.description,
-            'effects': (list(map(lambda e: [type(e).__name__, e.__dict__],
-                                 self.leader_skill.effects))),
+            'effects': self.leader_skill.effects,
         }
-        obj['enemy_passive_resist'] = (
-            list(e.__dict__ for e in self.enemy_passive_resist.values()))
+        obj['enemy_passive_resist'] = [
+            {'name': s.name, 'effects': s.effects}
+            for s in self.enemy_passive_resist.values()
+        ]
         return dict((k, v) for k, v in obj.items()
                     if k in Card._FIELD_WHITELIST)
 

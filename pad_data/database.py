@@ -1,13 +1,7 @@
 import json
 import os.path
 
-from pad_data import active_skill, card, common, leader_skill, skill
-
-RESISTS = [common.EnemySkill.VOID_SHIELD,
-           common.EnemySkill.ELEMENT_RESIST,
-           common.EnemySkill.TYPE_RESIST]
-
-SKILL_SET_ID = [skill.ACTIVE_SKILL_SET, skill.LEADER_SKILL_SET]
+from pad_data import active_skill, card, enemy_skill, leader_skill, skill
 
 class UnknownSkillEffect(Exception):
     def __init__(self, desc, effects):
@@ -60,36 +54,25 @@ class Database:
             enemy_skills = self._parse_enemy_skill_json(f)
 
         for c in self._cards.values():
-            try:
-                c.skill = self._process_skill(c.active_skill_id, True)
-                c.leader_skill = self._process_skill(c.leader_skill_id, False)
-            except UnknownSkillEffect as e:
-                print(c.card_id, c.name)
-                print(e.desc)
-                print(e.effects)
-                raise
+            c.skill = self._process_skill(c.active_skill_id, True)
+            c.leader_skill = self._process_skill(c.leader_skill_id, False)
 
         for c in self._cards.values():
             card_id = c.card_id % 100000
-            skills = []
+            passives = {}
             for ref in c.enemy_skill_refs:
+                if ref.enemy_skill_id not in enemy_skills:
+                    continue
                 s = enemy_skills[ref.enemy_skill_id]
-                skills.append(s)
-                if s['type'] == common.EnemySkill.SKILL_SET:
-                    for skill_id in filter(bool, s['params']):
-                        skills.append(enemy_skills[skill_id])
+                if isinstance(s.effects[0], enemy_skill.effect.SkillSetES):
+                    for sub_skill_id in s.effects[0].skill_ids:
+                        if sub_skill_id in enemy_skills:
+                            passives[sub_skill_id] = enemy_skills[sub_skill_id]
+                else:
+                    passives[ref.enemy_skill_id] = s
 
-            for s in filter(lambda s: s['type'] in RESISTS, skills):
-                skill_id = s['skill_id']
-                combined_skill_data = card.EnemyPassiveResist(
-                    skill_id,
-                    c.name,
-                    s['type'],
-                    s['name'],
-                    s['params'],
-                )
-                self._cards[card_id].enemy_passive_resist[skill_id] = \
-                        combined_skill_data
+            if card_id in self._cards:
+                self._cards[card_id].enemy_passive_resist.update(passives)
 
     def card(self, card_id):
         return self._cards[card_id]
@@ -123,7 +106,6 @@ class Database:
         for i, raw in enumerate(obj['skill']):
             if i in self.KNOWN_BAD_SKILLS:
                 continue
-            s = {}
             name = raw[0]
             description = raw[1]
             skill_type = int(raw[2])
@@ -134,8 +116,7 @@ class Database:
             try:
                 effect = [skill.parse(skill_type, params)]
             except Exception:
-                print(s)
-                raise
+                raise UnknownSkillEffect(name, params)
             skills[i] = card.Skill(name, description, effect, turn_max,
                                    turn_min)
         skills[0] = card.Skill('', '', [], 0, 0)
@@ -148,11 +129,10 @@ class Database:
         for raw in parse_csv(obj['enemy_skills']):
             if raw[0] == 'c':
                 continue
-            s = {}
             try:
-                s['skill_id'] = int(raw[0])
-                s['name'] = raw[1]
-                s['type'] = int(raw[2])
+                skill_id = int(raw[0])
+                name = raw[1]
+                skill_type = int(raw[2])
                 flags = int(raw[3], 16)
                 params = [None] * 16
                 offset = 0
@@ -167,9 +147,17 @@ class Database:
                         p_idx += 1
                     offset += 1
                     flags >>= 1
-                s['description'] = params[0]
-                s['params'] = params[1:]
-                enemy_skills[s['skill_id']] = s
+                description = params[0]
+                params = params[1:]
+                try:
+                    e = skill.parse_enemy_skill(skill_type, params)
+                    enemy_skills[skill_id] = card.Skill(
+                        name, description, [e], 0, 0)
+                except KeyError:
+                    # ignore unhandled skill types
+                    pass
+                except Exception:
+                    raise UnknownSkillEffect(name, params)
             except Exception:
                 print('failed to parse enemy skill csv, error at:')
                 print(raw)

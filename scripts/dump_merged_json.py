@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import dataclasses
 import json
 
 import path_common # pylint: disable=import-error,unused-import
@@ -84,17 +85,22 @@ def diff(list_new, list_old):
             diff_one(new, old, 1)
             print_common('}')
 
+def encode_dataclass(o):
+    if dataclasses.is_dataclass(o):
+        return [type(o).__name__, o.__dict__]
+    raise TypeError
+
 def main():
     db = database.Database()
     cards = db.get_all_released_cards()
     new = list(map(lambda c: c.merged_json, cards))
-    new = json.loads(json.dumps(new))
+    new = json.loads(json.dumps(new, default=encode_dataclass))
     with open(JSON_PATH, 'r') as f:
         old = json.load(f)
     diff(new, old)
     with open(JSON_PATH, 'w') as f:
         json.dump(list(map(lambda c: c.merged_json, cards)), f,
-                  separators=(',', ':'),
+                  separators=(',', ':'), default=encode_dataclass,
                   ensure_ascii=False)
 
 if __name__ == '__main__':
