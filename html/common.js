@@ -76,7 +76,6 @@ export function statEval(card, config) {
       /*
        * Otherwise, pick the highest damage option.
        */
-      let max = Math.max(atk80, atk50);
       let [vMax, iMax] = card.super_awakenings.map(a => {
         if (config.awakenings.has(a)) {
           let m = awakeningDamageMultiplier(a);
@@ -94,7 +93,7 @@ export function statEval(card, config) {
         if (vCur > vMax)
           return [vCur, iCur];
         return [vMax, iMax];
-      }, [1, -1]);
+      }, [Math.max(atk80, atk50), -1]);
 
       atk *= vMax;
       result.superAwakeningIndex = iMax;
