@@ -44,9 +44,9 @@ export class FilterDmgBuff extends FilterBase {
       }
 
       if (type == 'ElementDamageBuff') {
-        return effect.cond.every((x) => this.condElement[x]);
+        return effect.cond.some((x) => this.condElement[x]);
       } else {
-        return effect.cond.every((x) => this.condType[x]);
+        return effect.cond.some((x) => this.condType[x]);
       }
 
       return true;
