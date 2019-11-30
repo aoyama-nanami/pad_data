@@ -233,7 +233,8 @@ class CrossAtkBoost:
     def __post_init__(self, args):
         self.atk_table = [0] * 10
         for (o, atk) in args:
-            self.atk_table[o] = atk
+            if atk:
+                self.atk_table[o] = atk
 
 def hp_cond_139(elements, types, spec):
     # tuple[0]: hp condition
