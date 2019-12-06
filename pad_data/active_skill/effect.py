@@ -73,11 +73,15 @@ class TypeDamageBuff(BaseBuff):
 class DamageBuffByAwakening(BaseBuff):
     awakenings: List[Awakening]
     percentage: int
+    def __post_init__(self):
+        self.awakenings = [Awakening(x) for x in self.awakenings if x != 0]
 
 @dataclass
 class DefenseBuffByAwakening(BaseBuff):
     awakenings: List[Awakening]
     percentage: int
+    def __post_init__(self):
+        self.awakenings = [Awakening(x) for x in self.awakenings if x != 0]
 
 @dataclass
 class HealByAwakening:
@@ -90,11 +94,13 @@ class HealByAwakening:
     percentage: int
     def __post_init__(self, unused_duration):
         assert unused_duration == 0
+        self.awakenings = [Awakening(x) for x in self.awakenings if x != 0]
 
 def awakening_based_skill(duration, awakenings, mode, percentage):
-    awakenings = [Awakening(x) for x in awakenings if x != 0]
-    cls = [None, HealByAwakening, DefenseBuffByAwakening, DamageBuffByAwakening]
-    return cls[mode](duration, mode, percentage)
+    cls = [None, HealByAwakening, DamageBuffByAwakening, DefenseBuffByAwakening]
+    if mode == 2:
+        percentage -= 100
+    return cls[mode](duration, awakenings, percentage)
 
 @dataclass
 class OrbRefresh:

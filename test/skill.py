@@ -160,6 +160,18 @@ class TestSkillData(unittest.TestCase):
                 count=5, orb=[Orb.LIGHT, Orb.DARK],
                 exclude=[Orb.LIGHT, Orb.DARK]))
 
+        # 仮面ライダーゼロワン シャイニングホッパー
+        self.assert_skill_equal(
+            5766,
+            effect.DefenseBuffByAwakening(
+                duration=1,
+                awakenings=[21],
+                percentage=3),
+            effect.DamageBuffByAwakening(
+                duration=1,
+                awakenings=[21],
+                percentage=10))
+
 
 if __name__ == '__main__':
     unittest.main()
