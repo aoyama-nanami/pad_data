@@ -172,6 +172,17 @@ class TestSkillData(unittest.TestCase):
                 awakenings=[21],
                 percentage=10))
 
+        # ビクトリーム&モヒカン・エース
+        self.assert_skill_equal(
+            5539,
+            effect.AtkNuke(
+                element=Orb.LIGHT,
+                target=effect.Target.ALL,
+                percentage=[15000, 15000],
+                hp_remain=50),
+            effect.BoardChange(
+                rows=[0x3F, 0x21, 0x21, 0x21, 0x3F],
+                orb=Orb.WOOD))
 
 if __name__ == '__main__':
     unittest.main()

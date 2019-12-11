@@ -115,7 +115,7 @@ _AS_EFFECT_MAP = {
     71: Map(AS.AllOrbChange, orbs=_consume_all_args(Orb, -1)),
     84: Map(AS.AtkNuke, target=AS.Target.ONE, element=Orb,
             percentage=[int, int], hp_remain=int),
-    85: Map(AS.AtkNuke, target=AS.Target.ONE, element=Orb,
+    85: Map(AS.AtkNuke, target=AS.Target.ALL, element=Orb,
             percentage=[int, int], hp_remain=int),
     86: Map(AS.AtkNuke, element=Orb, value=int, unused=Unused(0),
             hp_remain=int, target=AS.Target.ONE),
