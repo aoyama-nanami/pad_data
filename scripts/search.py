@@ -92,6 +92,14 @@ class BaseEvaluator(ast.NodeVisitor):
         f = self.visit(node.func)
         return f(*map(self.visit, node.args))
 
+    def visit_Subscript(self, node):
+        v = self.visit(node.value)
+        i = self.visit(node.slice)
+        return v[i]
+
+    def visit_Index(self, node):
+        return self.visit(node.value)
+
     _COMP_OP_MAP = [
         (ast.Eq, operator.eq),
         (ast.NotEq, operator.ne),
