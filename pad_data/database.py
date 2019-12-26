@@ -37,6 +37,24 @@ def parse_csv(raw):
                 line = []
             i += 1
 
+def skill_debug(skills, skill_id, name, description, skill_type, params):
+    # find the skill set containing this skill_id:
+    for s in skills.values():
+        if not s.effects:
+            continue
+        if isinstance(s.effects[0],
+                      (active_skill.effect.SkillSet,
+                       leader_skill.effect.SkillSetLS)):
+            if skill_id in s.effects[0].skill_ids:
+                name = s.name
+                description = s.description
+                break
+    print(f'Failed:')
+    print(f'name="{name}" description="{description}"')
+    print(f'skill_type={skill_type}')
+    print(f'params={params}')
+    print('=' * 30)
+
 class Database:
     def __init__(self, card_json='data/raw/jp/download_card_data.json',
                  skill_json='data/raw/jp/download_skill_data.json',
@@ -103,6 +121,7 @@ class Database:
         obj = json.load(f)
         self._check_file_version('skill json', obj['v'], 1220)
         skills = {}
+        failed = False
         for i, raw in enumerate(obj['skill']):
             if i in self.KNOWN_BAD_SKILLS:
                 continue
@@ -116,10 +135,13 @@ class Database:
             try:
                 effect = [skill.parse(skill_type, params)]
             except Exception:
-                raise UnknownSkillEffect(name, params)
+                skill_debug(skills, i, name, description, skill_type, params)
+                failed = True
             skills[i] = card.Skill(name, description, effect, turn_max,
                                    turn_min)
         skills[0] = card.Skill('', '', [], 0, 0)
+        if failed:
+            raise Exception('parse_skill_json failed')
         return skills
 
     def _parse_enemy_skill_json(self, f):
