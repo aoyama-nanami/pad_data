@@ -137,8 +137,9 @@ class Database:
             except Exception:
                 skill_debug(skills, i, name, description, skill_type, params)
                 failed = True
-            skills[i] = card.Skill(name, description, effect, turn_max,
-                                   turn_min)
+            else:
+                skills[i] = card.Skill(name, description, effect, turn_max,
+                                       turn_min)
         skills[0] = card.Skill('', '', [], 0, 0)
         if failed:
             raise Exception('parse_skill_json failed')

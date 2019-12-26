@@ -204,6 +204,14 @@ class OrbRemaining(NoSkyfallLS, SteppedStatBoost):
     # パズル後の残りドロップ数がn個以下
     threshold: int = 0
 
+    atk_non_step: InitVar[int] = 0
+
+    def __post_init__(self, atk_non_step):
+        super().__post_init__()
+        if atk_non_step > 0:
+            assert self.atk == 0 and self.atk_step == 0
+            self.atk = atk_non_step
+
     def max_step(self):
         return self.threshold
 
