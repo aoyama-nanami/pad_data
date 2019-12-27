@@ -219,5 +219,15 @@ class TestSkillData(unittest.TestCase):
             LS.Combo(combo=4, combo_max=10, atk=800, atk_step=200),
             LS.HealAbove(threshold=100000, dr=35))
 
+        # 超新龍・トラゴン
+        self.assert_skill_equal(
+            5316,
+            LS.Rainbow(orbs=[Orb.FIRE, Orb.WATER, Orb.WOOD, Orb.LIGHT,
+                             Orb.DARK],
+                       color_min=4,
+                       atk=400,
+                       combo_increase=2),
+            LS.CrossAtkBoost(args=[(i, 300) for i in range(5)]))
+
 if __name__ == '__main__':
     unittest.main()

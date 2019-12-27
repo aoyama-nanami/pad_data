@@ -17,7 +17,7 @@ def post_process(effects):
                 if not a:
                     continue
                 if merged.atk_table[i] == 0:
-                    merged.atk_table[i] *= a
+                    merged.atk_table[i] = a
                 else:
                     merged.atk_table[i] = merged.atk_table[i] * a / 100
         out.append(merged)
