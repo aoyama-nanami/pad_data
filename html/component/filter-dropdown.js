@@ -65,7 +65,8 @@ export const FILTERS = [
       desc: '操作時間延長',
       cls: FilterAwakening,
       init: {
-        awakenings: [[Awakening.EXTEND_TIME, 1], [Awakening.EXTEND_TIME_PLUS, 2]],
+        awakenings: [
+          [Awakening.EXTEND_TIME, 1], [Awakening.EXTEND_TIME_PLUS, 2]],
         canEdit: true,
       },
     },
@@ -73,7 +74,8 @@ export const FILTERS = [
       desc: 'Skill Boost',
       cls: FilterAwakening,
       init: {
-        awakenings: [[Awakening.SKILL_BOOST, 1], [Awakening.SKILL_BOOST_PLUS, 2]],
+        awakenings: [
+          [Awakening.SKILL_BOOST, 1], [Awakening.SKILL_BOOST_PLUS, 2]],
         canEdit: true,
       },
     },
@@ -100,6 +102,33 @@ export const FILTERS = [
     {
       desc: '稀有度',
       cls: FilterRarity,
+    },
+    {
+      desc: '暗闇耐性',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [
+          [Awakening.RESIST_DARK, 2], [Awakening.RESIST_DARK_PLUS, 5]],
+        canEdit: true,
+      }
+    },
+    {
+      desc: '邪魔耐性',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [
+          [Awakening.RESIST_JAMMERS, 1], [Awakening.RESIST_JAMMERS_PLUS, 5]],
+        canEdit: true,
+      }
+    },
+    {
+      desc: '毒耐性',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [
+          [Awakening.RESIST_POISON, 1], [Awakening.RESIST_POISON_PLUS, 5]],
+        canEdit: true,
+      }
     },
   ],
   [
