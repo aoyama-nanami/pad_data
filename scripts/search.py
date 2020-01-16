@@ -71,6 +71,16 @@ class BaseEvaluator(ast.NodeVisitor):
         return False
 
     # pylint: disable=invalid-name
+    def visit_BinOp(self, node):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+
+        for cls, func in self._BIN_OP_MAP:
+            if isinstance(node.op, cls):
+                return func(left, right)
+        raise RuntimeError(f'Unknown operator {node.op}')
+
+    # pylint: disable=invalid-name
     def visit_Compare(self, node):
         left = self.visit(node.left)
         for op_node, right_node in zip(node.ops, node.comparators):
@@ -115,6 +125,22 @@ class BaseEvaluator(ast.NodeVisitor):
             if isinstance(op, cls):
                 return func
         raise RuntimeError(f'Unknown operator {op}')
+
+    _BIN_OP_MAP = [
+        (ast.Add, operator.add),
+        (ast.Sub, operator.sub),
+        (ast.Mult, operator.mul),
+        (ast.MatMult, operator.matmul),
+        (ast.Div, operator.truediv),
+        (ast.Mod, operator.mod),
+        (ast.Pow, operator.pow),
+        (ast.LShift, operator.lshift),
+        (ast.RShift, operator.rshift),
+        (ast.BitOr, operator.or_),
+        (ast.BitXor, operator.xor),
+        (ast.BitAnd, operator.and_),
+        (ast.FloorDiv, operator.floordiv),
+    ]
 
 
 class SkillEvaluator(BaseEvaluator):
