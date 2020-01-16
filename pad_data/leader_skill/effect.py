@@ -228,6 +228,11 @@ class TeamStatBoost(BaseStatBoost):
 class CollaboTeamStatBoost(BaseStatBoost):
     collabo_ids: List[int] = field(default_factory=list)
 
+# ドット進化のみでチーム
+@dataclass
+class PixelTeamStatBoost(BaseStatBoost):
+    pass
+
 @dataclass
 class HealAbove(BaseStatBoost, ExtraBuff):
     threshold: int = 0

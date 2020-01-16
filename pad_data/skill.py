@@ -383,6 +383,8 @@ _LS_EFFECT_MAP = {
     # TODO: need more use case
     201: Map(LS.ElementCombo, combos=[orb_list] * 3, _=Unused(0), combo_min=int,
              fixed_extra_attack=int),
+    # ドット進化のみでチーム
+    203: Map(LS.PixelTeamStatBoost, _=Unused(0), hp=int, atk=int, rcv=int),
 }
 
 _ES_EFFECT_MAP = {
