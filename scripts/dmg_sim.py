@@ -10,12 +10,13 @@ import wcwidth
 import path_common # pylint: disable=import-error,unused-import
 
 from pad_data import database, util
-from pad_data.common import Awakening, Combo, Orb, Shape, Type
+from pad_data.common import Awakening, Combo, Latent, Orb, Shape, Type
 from pad_data.leader_skill import effect as LS
 
 util.import_enum_members(Awakening, globals())
 util.import_enum_members(Orb, globals())
 util.import_enum_members(Type, globals())
+util.import_enum_members(Latent, globals())
 
 decimal.getcontext().rounding = decimal.ROUND_HALF_UP
 
@@ -28,38 +29,43 @@ class Team:
     awakening_count: int = 9
     atk_plus: int = 99
     super_awakening: Optional[Awakening] = None
+    latent: Optional[List[Latent]] = None
+
+# BEGIN CONFIG
 
 # pylint: disable=undefined-variable
 TEAM = [
-    Team(card_id=5331, lv=101, super_awakening=L_ATTACK),
-    Team(card_id=5331, lv=110, super_awakening=L_ATTACK),
-    Team(card_id=3713, lv=99),
-    Team(card_id=5139, lv=101, super_awakening=BONUS_ATTACK),
-    Team(card_id=4283, lv=99),
-    Team(card_id=3885, lv=110, super_awakening=EXTEND_TIME_PLUS),
+    Team(card_id=4016, lv=110, super_awakening=ENHANCED_COMBO,
+         latent=[LATENT_MACHINE_KILLER] * 3),
+    Team(card_id=5792, lv=110, super_awakening=L_ATTACK,
+         latent=[LATENT_MACHINE_KILLER] * 3),
+    Team(card_id=2568, lv=110),
+    Team(card_id=5634, lv=101),
+    Team(card_id=3945, lv=110),
+    Team(card_id=5631, lv=99, latent=[LATENT_MACHINE_KILLER] * 3),
 ]
 ASSIST = [
     None,
-    Team(card_id=5190, lv=1, atk_plus=0),
-    Team(card_id=4970, lv=1, atk_plus=0),
+    Team(card_id=5813, lv=1, atk_plus=0),
+    None,
     None,
     None,
     None,
 ]
 # pylint: disable=undefined-variable
 COMBOS = [
-    Combo(WOOD),
-    Combo(FIRE),
-    Combo(LIGHT),
-    Combo(DARK, 5, Shape.L),
-    Combo(LIGHT),
-    Combo(WATER, 5, Shape.L),
-    Combo(WATER, 4),
-    Combo(WOOD, 5),
+    Combo(FIRE, 5, Shape.L),
     Combo(WATER),
+    Combo(WOOD),
+    Combo(LIGHT),
+    Combo(DARK),
+    Combo(HEART),
 ]
 TRIGGER = False
 HP = 100
+ENEMY_ID = 1091
+
+# END CONFIG
 
 @dataclass
 class MemberSpec:
@@ -69,6 +75,7 @@ class MemberSpec:
     types: List[Type]
     atk: int
     awakenings: List[Awakening]
+    latent: List[Latent]
 
 # pylint: disable=undefined-variable
 def member_spec(base, assist):
@@ -98,18 +105,43 @@ def member_spec(base, assist):
         sub_element=card.sub_attr_id,
         types=card.type,
         atk=atk,
-        awakenings=awakenings
+        awakenings=awakenings,
+        latent=base.latent if base.latent else [],
     )
 
 def awaken_mult(card, awaken):
     return (decimal.Decimal(awaken.damage_multiplier) **
             card.awakenings.count(awaken))
 
+def element_mult(self_element, target_element):
+    assert self_element <= DARK
+    assert target_element <= DARK
+    assert target_element != NO_ORB
+
+    if self_element == NO_ORB:
+        return 0
+    if self_element <= 2:  # fire/water/wood
+        if target_element == (self_element + 2) % 3:
+            return 2
+        if target_element == (self_element + 1) % 3:
+            return decimal.Decimal(0.5)
+        return 1
+    # light/dark
+    if self_element == LIGHT and target_element == DARK:
+        return 2
+    if self_element == DARK and target_element == LIGHT:
+        return 2
+    return 1
+
 # pylint: disable=undefined-variable
 def main():
     members = [member_spec(TEAM[i], ASSIST[i]) for i in range(len(TEAM))]
+    enemy = DB.card(ENEMY_ID) if ENEMY_ID else None
+
     for ls in DB.card(TEAM[0].card_id).leader_skill.effects:
         print(ls)
+
+    total_dmg = 0
     for m in members:
         ls_mult = 1
         main_dmg, sub_dmg = 0, 0
@@ -150,8 +182,6 @@ def main():
         main_dmg = math.ceil(main_dmg * combo_mult)
         sub_dmg = math.ceil(sub_dmg * combo_mult)
 
-        print(main_dmg, sub_dmg)
-
         # TODO: check if this should happen in earlier phase
         extra_mult = 1
         if HP >= 80:
@@ -175,10 +205,29 @@ def main():
         main_dmg = round(main_dmg * decimal.Decimal(ls_mult), 0)
         sub_dmg = round(sub_dmg * decimal.Decimal(ls_mult), 0)
 
+        if enemy:
+            main_dmg *= element_mult(m.element, enemy.attr_id)
+            sub_dmg *= element_mult(m.sub_element, enemy.attr_id)
+
+            for t in enemy.type:
+                if t == NO_TYPE:
+                    continue
+                a = getattr(Awakening, f'{t.name}_KILLER', None)
+                if a:
+                    main_dmg *= awaken_mult(m, a)
+                    sub_dmg *= awaken_mult(m, a)
+                l = getattr(Latent, f'LATENT_{t.name}_KILLER', None)
+                if l:
+                    main_dmg *= decimal.Decimal(1.5) ** m.latent.count(l)
+                    sub_dmg *= decimal.Decimal(1.5) ** m.latent.count(l)
+
+        total_dmg += main_dmg + sub_dmg
         print(m.name, ' ' * (50 - wcwidth.wcswidth(m.name)),
               util.element_to_color(m.element), f'{int(main_dmg):>13,d}',
               util.element_to_color(m.sub_element), f'{int(sub_dmg):>13,d}',
               util.element_to_color(NO_ORB))
+    print('')
+    print(' ' * 60, f'Total: {int(total_dmg):>13,d}')
 
 if __name__ == '__main__':
     main()

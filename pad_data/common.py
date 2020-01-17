@@ -168,3 +168,14 @@ class Combo:
     orb: Orb
     size: int = 3
     shape: Shape = Shape.OTHER
+
+@enum.unique
+class Latent(enum.Enum):
+    LATENT_GOD_KILLER = enum.auto()
+    LATENT_DRAGON_KILLER = enum.auto()
+    LATENT_DEMON_KILLER = enum.auto()
+    LATENT_MACHINE_KILLER = enum.auto()
+    LATENT_BALANCE_KILLER = enum.auto()
+    LATENT_ATTACK_KILLER = enum.auto()
+    LATENT_PHYSICAL_KILLER = enum.auto()
+    LATENT_HEALER_KILLER = enum.auto()

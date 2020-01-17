@@ -69,7 +69,8 @@ class StatBoost(BaseStatBoost):
 
 @dataclass
 class ExtendedBoost(BaseStatBoost, ExtraBuff):
-    pass
+    def calculate_atk(self, combos, trigger=False, hp=100):
+        return self.atk
 
 @dataclass
 class HpAbove(BaseStatBoost):
@@ -123,6 +124,14 @@ class Rainbow(SteppedStatBoost, ExtraBuff):
 
     def max_step(self):
         return self.color_max - self.color_min
+
+    def calculate_atk(self, combos, trigger=False, hp=100):
+        combo_colors = set(c.orb for c in combos)
+        color_matched = len(combo_colors.intersection(set(self.orbs)))
+        color_matched = min(color_matched, self.color_max)
+        if color_matched < self.color_min:
+            return None
+        return self.atk + (color_matched - self.color_min) * self.atk_step
 
 @dataclass
 class ElementCombo(SteppedStatBoost, ExtraBuff):
