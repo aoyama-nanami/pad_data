@@ -7,7 +7,7 @@ A tool for [Puzzle and Dragons](https://pad.gungho.jp/member/) to search pets an
 ### Dependencies
 
 * [Google Cloud SDK](https://cloud.google.com/storage/docs/gsutil_install)
-* python3.7-venv
+* python3.8-venv
 * everything in requirements.txt
 
 ## Web UI
@@ -19,6 +19,14 @@ Requires Chrome 65+, Firefox 63+.
 ## Code Review
 
 [Gerrithub](https://review.gerrithub.io/q/project:p9n%252Fpad_data)
+
+## Environment setup
+
+```
+python3.8 -m venv env/
+. env/bin/activate`
+pip install -r requirements.txt
+```
 
 ## Reference
 
