@@ -3,7 +3,7 @@ import dataclasses
 from typing import Any, List
 import wcwidth
 
-from pad_data import common, util
+from pad_data import common
 
 @dataclasses.dataclass
 class Skill:
@@ -227,9 +227,9 @@ class Card:
 
     def dump(self, atk_eval=atk_at_level, rcv_eval=rcv_at_level,
              print_active_skill=True, print_leader_skill=False):
-        print(util.element_to_color(self.attr_id),
+        print(self.attr_id.color_code(),
               self.name,
-              util.element_to_color(common.Orb.NO_ORB),
+              common.Orb.NO_ORB.color_code(),
               ' ' * (50 - wcwidth.wcswidth(self.name)),
               f'{self.hp_at_level():8}',
               f'{atk_eval(self):8}',

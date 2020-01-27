@@ -9,14 +9,11 @@ import wcwidth
 
 import path_common # pylint: disable=import-error,unused-import
 
-from pad_data import database, util
+from pad_data import database
 from pad_data.common import Awakening, Combo, Latent, Orb, Shape, Type
 from pad_data.leader_skill import effect as LS
-
-util.import_enum_members(Awakening, globals())
-util.import_enum_members(Orb, globals())
-util.import_enum_members(Type, globals())
-util.import_enum_members(Latent, globals())
+# pylint: disable=wildcard-import,unused-wildcard-import
+from pad_data.util.global_enums import *
 
 decimal.getcontext().rounding = decimal.ROUND_HALF_UP
 
@@ -33,7 +30,6 @@ class Team:
 
 # BEGIN CONFIG
 
-# pylint: disable=undefined-variable
 TEAM = [
     Team(card_id=4016, lv=110, super_awakening=ENHANCED_COMBO,
          latent=[LATENT_MACHINE_KILLER] * 3),
@@ -52,7 +48,6 @@ ASSIST = [
     None,
     None,
 ]
-# pylint: disable=undefined-variable
 COMBOS = [
     Combo(FIRE, 5, Shape.L),
     Combo(WATER),
@@ -77,7 +72,6 @@ class MemberSpec:
     awakenings: List[Awakening]
     latent: List[Latent]
 
-# pylint: disable=undefined-variable
 def member_spec(base, assist):
     card = DB.card(base.card_id)
     atk = card.atk_at_level(base.lv) + base.atk_plus * 5
@@ -134,7 +128,6 @@ def element_mult(self_element, target_element):
 
     return 1
 
-# pylint: disable=undefined-variable
 def main():
     members = [member_spec(TEAM[i], ASSIST[i]) for i in range(len(TEAM))]
     enemy = DB.card(ENEMY_ID) if ENEMY_ID else None
@@ -224,9 +217,9 @@ def main():
 
         total_dmg += main_dmg + sub_dmg
         print(m.name, ' ' * (50 - wcwidth.wcswidth(m.name)),
-              util.element_to_color(m.element), f'{int(main_dmg):>13,d}',
-              util.element_to_color(m.sub_element), f'{int(sub_dmg):>13,d}',
-              util.element_to_color(NO_ORB))
+              m.element.color_code(), f'{int(main_dmg):>13,d}',
+              m.sub_element.color_code(), f'{int(sub_dmg):>13,d}',
+              NO_ORB.color_code())
     print('')
     print(' ' * 60, f'Total: {int(total_dmg):>13,d}')
 

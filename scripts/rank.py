@@ -6,17 +6,11 @@ from typing import Mapping, Set
 
 import path_common # pylint: disable=import-error,unused-import
 
-from pad_data import card, common, database, util
+from pad_data import card, database
+from pad_data.common import Awakening, Orb, Type
+# pylint: disable=wildcard-import,unused-wildcard-import
+from pad_data.util.global_enums import *
 
-util.import_enum_members(common.Awakening, globals())
-util.import_enum_members(common.Orb, globals())
-util.import_enum_members(common.Type, globals())
-
-Type = common.Type
-Orb = common.Orb
-Awakening = common.Awakening
-
-# pylint: disable=undefined-variable
 LATENT_KILLER = {
     'GOD': set((BALANCE, DEMON, MACHINE)),
     'DRAGON': set((BALANCE, HEALER)),
@@ -103,7 +97,6 @@ class AtkEvaluator:
 
         return round(atk)
 
-# pylint: disable=undefined-variable
 def main():
     db = database.Database()
     cards = db.get_all_released_cards()

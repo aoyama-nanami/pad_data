@@ -75,7 +75,6 @@ def box_override(c):
     c['閃光の冒険野郎ヴァン・クロウ'].count = 1
     c['影ナル者'].count = 1
 
-# pylint: disable=undefined-variable
 def main():
     db = database.Database()
     cards = db.get_all_released_cards()

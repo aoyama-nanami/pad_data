@@ -129,6 +129,18 @@ class Orb(enum.IntEnum):
     MORTAL_POISON = 8
     BOMB = 9
 
+    def color_code(self):
+        color_map = {
+            Orb.NO_ORB: '',
+            Orb.FIRE: '1;31',
+            Orb.WATER: '1;36',
+            Orb.WOOD: '1;32',
+            Orb.LIGHT: '1;33',
+            Orb.DARK: '1;35'
+        }
+
+        return f'\x1b[{color_map[self]}m'
+
 @enum.unique
 class Type(enum.IntEnum):
     NO_TYPE = -1

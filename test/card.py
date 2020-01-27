@@ -1,13 +1,10 @@
 #! /usr/bin/env python3
 
 import unittest
-from pad_data import common, database, util
+from pad_data import database
+# pylint: disable=wildcard-import,unused-wildcard-import
+from pad_data.util.global_enums import *
 
-util.import_enum_members(common.Awakening, globals())
-util.import_enum_members(common.Orb, globals())
-util.import_enum_members(common.Type, globals())
-
-# pylint: disable=undefined-variable
 class TestCardData(unittest.TestCase):
     def setUp(self):
         self._db = database.Database()
