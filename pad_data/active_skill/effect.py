@@ -280,8 +280,8 @@ class NoSkyfall(BaseBuff):
 
 @dataclass
 class IgnoreAbsorb(BaseBuff):
-    element_absorb: bool
-    damage_absorb: bool
+    element: bool
+    damage: bool
 
 @dataclass
 class ReduceCooldown:
