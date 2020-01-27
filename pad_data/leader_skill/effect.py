@@ -14,7 +14,7 @@ class BaseStatBoost:
     dr_elements: List[common.Orb] = field(default_factory=list)
     dr: int = 0
 
-    ALL_ELEM: ClassVar[common.Orb] = [
+    ALL_ELEM: ClassVar[List[common.Orb]] = [
         common.Orb.FIRE, common.Orb.WATER, common.Orb.WOOD,
         common.Orb.LIGHT, common.Orb.DARK]
 
