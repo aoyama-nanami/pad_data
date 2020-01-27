@@ -139,34 +139,58 @@ class AllOrbChange:
     orbs: List[Orb]
 
 @dataclass
-class ColumnChange:
+class BaseBoardChange:
+    def orb_count(self):
+        raise NotImplementedError
+
+    @staticmethod
+    def _popcount(x):
+        ret = 0
+        while x > 0:
+            ret += 1
+            x &= x - 1
+        return ret
+
+@dataclass
+class ColumnChange(BaseBoardChange):
     # pos: for 6x5, bit0 = left most column, bit5 = right most
     pos1: int
     orb1: List[Orb]
     pos2: int
     orb2: List[Orb]
+
     def __post_init__(self):
         assert len(self.orb1) == (0 if self.pos1 == 0 else 1)
         assert len(self.orb2) == (0 if self.pos2 == 0 else 1)
 
+    def orb_count(self):
+        return self._popcount(self.pos1) + self._popcount(self.pos2)
+
 @dataclass
-class RowChange:
+class RowChange(BaseBoardChange):
     # pos: for 6x5, bit0 = top row, bit4 = bottom row
     pos1: int
     orb1: List[Orb]
     pos2: int
     orb2: List[Orb]
+
     def __post_init__(self):
         assert len(self.orb1) == (0 if self.pos1 == 0 else 1)
         assert len(self.orb2) == (0 if self.pos2 == 0 else 1)
 
+    def orb_count(self):
+        return self._popcount(self.pos1) + self._popcount(self.pos2)
+
 @dataclass
-class BoardChange:
+class BoardChange(BaseBoardChange):
     # 十字 / L字 etc 生成
     # row is a 5-element array representing top row to bottom row
     # for each element in row array, bit0 = left most column, bit5 = right most
     rows: List[int]
     orb: Orb
+
+    def orb_count(self):
+        return sum(self._popcount(x) for x in self.rows)
 
 @dataclass
 class DefenseReduction(BaseBuff):
