@@ -11,5 +11,7 @@ gsutil -m rsync -r -c -x '(?!jp_).*' \
 
 scripts/dump_merged_json.py
 
-git commit -m "data: $(date +%Y%m%d) update" -- html/data/jp_cards_merged.json
-# TODO: determine if it's better to have auto push
+if ! git diff --quiet html/data/jp_cards_merged.json; then
+  make test &&
+  git commit -m "data: $(date +%Y%m%d) update" -- html/data/jp_cards_merged.json
+fi

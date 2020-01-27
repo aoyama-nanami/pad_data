@@ -82,7 +82,8 @@ class TestCardData(unittest.TestCase):
         self.assertSequenceEqual(
             self._db.card(3870).awakenings,
             [AUTO_RECOVER, AUTO_RECOVER, RECOVER_BIND,
-             RESIST_BIND, RESIST_BIND, VOID_DAMAGE_PIERCER])
+             RESIST_BIND, RESIST_BIND, VOID_DAMAGE_PIERCER,
+             ENHANCED_HEART_ORB, ENHANCED_HEART_ORB])
 
         self.assertSequenceEqual(
             self._db.card(3268).awakenings,
