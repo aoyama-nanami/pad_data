@@ -95,7 +95,8 @@ class Database:
     def card(self, card_id):
         return self._cards[card_id]
 
-    def _check_file_version(self, name, new, old):
+    @staticmethod
+    def _check_file_version(name, new, old):
         if new != old:
             print(f'\x1b[1;33mWARNING: {name} version changed: ' +
                   f'{old} -> {new}\x1b[m')
@@ -134,7 +135,7 @@ class Database:
             params = list(map(int, raw[6:]))
             try:
                 effect = [skill.parse(skill_type, params)]
-            except Exception:
+            except RuntimeError:
                 skill_debug(skills, i, name, description, skill_type, params)
                 failed = True
             else:

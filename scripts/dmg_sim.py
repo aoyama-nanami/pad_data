@@ -120,17 +120,18 @@ def element_mult(self_element, target_element):
 
     if self_element == NO_ORB:
         return 0
-    if self_element <= 2:  # fire/water/wood
+
+    # fire/water/wood
+    if self_element <= 2:
         if target_element == (self_element + 2) % 3:
             return 2
         if target_element == (self_element + 1) % 3:
             return decimal.Decimal(0.5)
-        return 1
+
     # light/dark
-    if self_element == LIGHT and target_element == DARK:
+    if set([self_element, target_element]) == set([LIGHT, DARK]):
         return 2
-    if self_element == DARK and target_element == LIGHT:
-        return 2
+
     return 1
 
 # pylint: disable=undefined-variable

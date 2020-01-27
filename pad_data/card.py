@@ -47,6 +47,7 @@ def _unflatten(raw, idx, width, replace):
     if replace:
         raw[idx] = data
 
+# pylint: disable=too-many-instance-attributes
 class Card:
     def __init__(self, raw_data):
         self._raw_data = raw_data

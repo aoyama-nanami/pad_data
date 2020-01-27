@@ -2,7 +2,7 @@
 
 import collections
 import dataclasses
-from typing import ClassVar, Mapping, Set
+from typing import Mapping, Set
 
 import path_common # pylint: disable=import-error,unused-import
 
@@ -17,18 +17,19 @@ Orb = common.Orb
 Awakening = common.Awakening
 
 # pylint: disable=undefined-variable
+LATENT_KILLER = {
+    'GOD': set((BALANCE, DEMON, MACHINE)),
+    'DRAGON': set((BALANCE, HEALER)),
+    'DEMON': set((BALANCE, GOD, ATTACK)),
+    'MACHINE': set((BALANCE, PHYSICAL, DRAGON)),
+    'BALANCE': set((BALANCE, MACHINE)),
+    'ATTACK': set((BALANCE, HEALER)),
+    'PHYSICAL': set((BALANCE, ATTACK)),
+    'HEALER': set((BALANCE, DRAGON, PHYSICAL)),
+}
+
 @dataclasses.dataclass
 class AtkEvaluator:
-    LATENT_GOD_KILLER: ClassVar[Set[Type]] = set((BALANCE, DEMON, MACHINE))
-    LATENT_DRAGON_KILLER: ClassVar[Set[Type]] = set((BALANCE, HEALER))
-    LATENT_DEMON_KILLER: ClassVar[Set[Type]] = set((BALANCE, GOD, ATTACK))
-    LATENT_MACHINE_KILLER: ClassVar[Set[Type]] = \
-        set((BALANCE, PHYSICAL, DRAGON))
-    LATENT_BALANCE_KILLER: ClassVar[Set[Type]] = set((BALANCE, MACHINE))
-    LATENT_ATTACK_KILLER: ClassVar[Set[Type]] = set((BALANCE, HEALER))
-    LATENT_PHYSICAL_KILLER: ClassVar[Set[Type]] = set((BALANCE, ATTACK))
-    LATENT_HEALER_KILLER: ClassVar[Set[Type]] = set((BALANCE, DRAGON, PHYSICAL))
-
     awakenings: Set[Awakening] = dataclasses.field(default_factory=set)
     multi: bool = False
     elements: Mapping[Orb, float] = \
@@ -49,7 +50,7 @@ class AtkEvaluator:
             lambda: 1, self.types)
 
         if target_enemy is not None:
-            e = target_enemy.element
+            e = target_enemy.attr_id
             if e == FIRE:
                 self.elements[WATER] *= 2
                 self.elements[WOOD] *= 0.5
@@ -79,8 +80,7 @@ class AtkEvaluator:
                         latent_types |= set(Type)
                         latent_types.remove(NO_TYPE)
                     else:
-                        latent_types |= \
-                            getattr(AtkEvaluator, f'LATENT_{t.name}_KILLER')
+                        latent_types |= LATENT_KILLER[t.name]
                 for t in latent_types:
                     self.types[t] *= 1.5 ** 3
 
@@ -98,7 +98,7 @@ class AtkEvaluator:
                     key=lambda a: a.damage_multiplier)
             atk *= a.damage_multiplier
 
-        atk *= self.elements[c.element]
+        atk *= self.elements[c.attr_id]
         atk *= max(self.types[t] for t in c.type)
 
         return round(atk)
@@ -113,7 +113,7 @@ def main():
         target_enemy=db.card(631),
         latent=True,
         )
-    # cards = filter(lambda c: c.element in (FIRE, LIGHT), cards)
+    # cards = filter(lambda c: c.attr_id in (FIRE, LIGHT), cards)
     cards = sorted(cards, key=atk_eval, reverse=True)
     cards = list(cards)
     for i in range(30):

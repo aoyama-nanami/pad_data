@@ -38,11 +38,11 @@ class BaseEvaluator(ast.NodeVisitor):
     def visit_Expression(self, node):
         return self.visit(node.body)
 
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name,no-self-use
     def visit_NameConstant(self, node):
         return node.value
 
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name,no-self-use
     def visit_Num(self, node):
         return node.n
 
@@ -152,10 +152,10 @@ class SkillEvaluator(BaseEvaluator):
         effects = (card.skill.effects
                    if self._cls.__module__ == as_effect.__name__
                    else card.leader_skill.effects)
-        for e in effects:
-            if not isinstance(e, self._cls):
+        for effect in effects:
+            if not isinstance(effect, self._cls):
                 continue
-            self._effect = e
+            self._effect = effect
             if self.visit(expr):
                 return True
         return False

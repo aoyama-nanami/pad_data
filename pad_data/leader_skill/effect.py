@@ -215,6 +215,7 @@ class OrbRemaining(NoSkyfallLS, SteppedStatBoost):
 
     atk_non_step: InitVar[int] = 0
 
+    # pylint: disable=arguments-differ
     def __post_init__(self, atk_non_step):
         super().__post_init__()
         if atk_non_step > 0:

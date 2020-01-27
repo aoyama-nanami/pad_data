@@ -313,6 +313,8 @@ class Unlock:
 class Lock:
     orbs: List[Orb]
     unused: InitVar[int]
+
+    # pylint: disable=no-self-use
     def __post_init__(self, unused):
         assert unused == 42 or unused == 99
 

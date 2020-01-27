@@ -156,7 +156,7 @@ _AS_EFFECT_MAP = {
              mode=int, percentage=int),
     160: Map(AS.ComboIncrease, duration=int, combo=int),
     161: Map(AS.TrueGravity, percentage=int),
-    # Need verify
+    # TODO: Need verify
     168: Map(AS.DamageBuffByAwakening, duration=int, awakenings=[int, int, int],
              unused1=Unused(0), unused2=Unused(0), unused3=Unused(0),
              percentage=int),
