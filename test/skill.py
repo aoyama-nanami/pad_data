@@ -1,20 +1,21 @@
 #! /usr/bin/env python3
 
+from typing import Any
 import unittest
-from pad_data.common import Orb, Type
+from pad_data.common import Awakening, Orb, Type
 from pad_data import database
 from pad_data.active_skill import effect
 
 # random selected golden data
 class TestSkillData(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self._db = database.Database()
 
-    def assert_skill_equal(self, card_id, *effects):
+    def assert_skill_equal(self, card_id: int, *effects: Any) -> None:
         self.assertSequenceEqual(
             self._db.card(card_id).skill.effects, effects)
 
-    def test_skill_effect(self):
+    def test_skill_effect(self) -> None:
         # 隠密御庭番衆御頭・四乃森蒼紫
         self.assert_skill_equal(
             3029,
@@ -165,11 +166,11 @@ class TestSkillData(unittest.TestCase):
             5766,
             effect.DefenseBuffByAwakening(
                 duration=1,
-                awakenings=[21],
+                awakenings=[Awakening.SKILL_BOOST],
                 percentage=3),
             effect.DamageBuffByAwakening(
                 duration=1,
-                awakenings=[21],
+                awakenings=[Awakening.SKILL_BOOST],
                 percentage=10))
 
         # ビクトリーム&モヒカン・エース

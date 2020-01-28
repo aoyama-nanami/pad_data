@@ -2,7 +2,7 @@
 
 import collections
 import dataclasses
-from typing import Mapping, Set
+from typing import Final, Mapping, Set
 
 import path_common # pylint: disable=import-error,unused-import
 
@@ -11,7 +11,7 @@ from pad_data.common import Awakening, Orb, Type
 # pylint: disable=wildcard-import,unused-wildcard-import
 from pad_data.util.global_enums import *
 
-LATENT_KILLER = {
+LATENT_KILLER: Final = {
     'GOD': set((BALANCE, DEMON, MACHINE)),
     'DRAGON': set((BALANCE, HEALER)),
     'DEMON': set((BALANCE, GOD, ATTACK)),
@@ -34,7 +34,7 @@ class AtkEvaluator:
     target_enemy: dataclasses.InitVar[card.Card] = None
     latent: dataclasses.InitVar[bool] = False
 
-    def __post_init__(self, target_enemy, latent):
+    def __post_init__(self, target_enemy: card.Card, latent: bool) -> None:
         self.awakenings = set(self.awakenings)
         if self.multi:
             self.awakenings.add(MULTI_BOOST)
@@ -66,7 +66,7 @@ class AtkEvaluator:
                 self.awakenings.add(Awakening[killer])
 
             if latent:
-                latent_types = set()
+                latent_types: Set[Type] = set()
                 for t in target_enemy.type:
                     if t == NO_TYPE:
                         continue
@@ -79,8 +79,8 @@ class AtkEvaluator:
                     self.types[t] *= 1.5 ** 3
 
 
-    def __call__(self, c):
-        atk = c.atk_at_level() + 495
+    def __call__(self, c: card.Card) -> int:
+        atk: float = c.atk_at_level() + 495
         atk += c.awakenings.count(ENHANCED_ATK) * 100
 
         for a in self.awakenings:
@@ -97,12 +97,12 @@ class AtkEvaluator:
 
         return round(atk)
 
-def main():
+def main() -> None:
     db = database.Database()
     cards = db.get_all_released_cards()
 
     atk_eval = AtkEvaluator(
-        awakenings=[TWO_WAY, ENHANCED_COMBO, L_ATTACK],
+        awakenings=set([TWO_WAY, ENHANCED_COMBO, L_ATTACK]),
         target_enemy=db.card(631),
         latent=True,
         )

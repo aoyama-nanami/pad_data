@@ -2,25 +2,32 @@
 
 import dataclasses
 import json
+from typing import Any, Iterable, List, Mapping, Optional, Tuple
+from typing import TypeVar
 
 import path_common # pylint: disable=import-error,unused-import
 
 from pad_data import database
 
+T = TypeVar('T')
+
+JSON = Mapping[str, Any]
+
 JSON_PATH = 'html/data/jp_cards_merged.json'
 
-def print_old(s, do_print):
+def print_old(s: str, do_print: bool) -> None:
     if do_print:
         print(f'\x1b[31m{s}\x1b[m')
 
-def print_new(s, do_print):
+def print_new(s: str, do_print: bool) -> None:
     if do_print:
         print(f'\x1b[32m{s}\x1b[m')
 
-def print_common(s):
+def print_common(s: str) -> None:
     print(f'\x1b[33m{s}\x1b[m')
 
-def zip_by_card_id(list_new, list_old):
+def zip_by_card_id(list_new: List[JSON], list_old: List[JSON]
+                   )-> Iterable[Tuple[Optional[JSON], Optional[JSON]]]:
     i_new, i_old = 0, 0
     while i_new < len(list_new) or i_old < len(list_old):
         if i_new >= len(list_new):
@@ -40,10 +47,13 @@ def zip_by_card_id(list_new, list_old):
             i_old += 1
             i_new += 1
 
-def maybe_remove_newline(x):
-    return x.replace('\n', '') if isinstance(x, str) else x
+def maybe_remove_newline(x: T) -> T:
+    if isinstance(x, str):
+        x.replace('\n', '')
+    return x
 
-def diff_one(new, old, indent_level):
+def diff_one(new: Optional[JSON], old: Optional[JSON], indent_level: int
+             ) -> None:
     if new is None:
         new = {}
     if old is None:
@@ -78,19 +88,19 @@ def diff_one(new, old, indent_level):
                 print_new(f'{indent}"{k}": {maybe_remove_newline(v_new)}',
                           v_new)
 
-def diff(list_new, list_old):
+def diff(list_new: List[JSON], list_old: List[JSON]) -> None:
     for (new, old) in zip_by_card_id(list_new, list_old):
         if new != old:
             print_common('{')
             diff_one(new, old, 1)
             print_common('}')
 
-def encode_dataclass(o):
+def encode_dataclass(o: Any) -> Tuple[str, JSON]:
     if dataclasses.is_dataclass(o):
-        return [type(o).__name__, o.__dict__]
+        return (type(o).__name__, o.__dict__)
     raise TypeError
 
-def main():
+def main() -> None:
     db = database.Database()
     cards = db.get_all_released_cards()
     new = list(map(lambda c: c.merged_json, cards))

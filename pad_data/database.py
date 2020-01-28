@@ -1,15 +1,19 @@
 import json
 import os.path
+from typing import Any, Iterable, List, Mapping, MutableMapping, Optional
+from typing import TextIO
 
-from pad_data import active_skill, card, enemy_skill, leader_skill, skill
+from pad_data import active_skill, enemy_skill, leader_skill, skill
+from pad_data.card import Card, Skill
+from pad_data.util.typing_protocol import IsSkillEffect
 
 class UnknownSkillEffect(Exception):
-    def __init__(self, desc, effects):
+    def __init__(self, desc: str, effects: List[IsSkillEffect]):
         super().__init__()
         self.desc = desc
         self.effects = effects
 
-def parse_csv(raw):
+def parse_csv(raw: str) -> Iterable[List[str]]:
     i = 0
     line = []
     while i < len(raw):
@@ -37,7 +41,8 @@ def parse_csv(raw):
                 line = []
             i += 1
 
-def skill_debug(skills, skill_id, name, description, skill_type, params):
+def skill_debug(skills: Mapping[int, Skill], skill_id: int, name: str,
+                description: str, skill_type: int, params: List[int]) -> None:
     # find the skill set containing this skill_id:
     for s in skills.values():
         if not s.effects:
@@ -56,10 +61,11 @@ def skill_debug(skills, skill_id, name, description, skill_type, params):
     print('=' * 30)
 
 class Database:
-    def __init__(self, card_json='data/raw/jp/download_card_data.json',
-                 skill_json='data/raw/jp/download_skill_data.json',
-                 enemy_skill_json='data/raw/jp/download_enemy_skill_data.json'
-                 ):
+    def __init__(self, card_json: str='data/raw/jp/download_card_data.json',
+                 skill_json: str='data/raw/jp/download_skill_data.json',
+                 enemy_skill_json: str
+                    ='data/raw/jp/download_enemy_skill_data.json'
+                 ) -> None:
         project_root = os.path.join(os.path.dirname(__file__), '..')
 
         with open(os.path.join(project_root, card_json), 'r') as f:
@@ -92,19 +98,19 @@ class Database:
             if card_id in self._cards:
                 self._cards[card_id].enemy_passive_resist.update(passives)
 
-    def card(self, card_id):
+    def card(self, card_id: int) -> Card:
         return self._cards[card_id]
 
     @staticmethod
-    def _check_file_version(name, new, old):
+    def _check_file_version(name: str, new: int, old: int) -> None:
         if new != old:
             print(f'\x1b[1;33mWARNING: {name} version changed: ' +
                   f'{old} -> {new}\x1b[m')
 
-    def _parse_card_json(self, f):
+    def _parse_card_json(self, f: TextIO) -> Mapping[int, Card]:
         obj = json.load(f)
         self._check_file_version('card json', obj['v'], 1800)
-        return dict((c[0], card.Card(c)) for c in obj['card'])
+        return dict((c[0], Card(c)) for c in obj['card'])
 
     KNOWN_BAD_SKILLS = frozenset([
         494,   # type=2, params=[1, 50, 50000]
@@ -118,10 +124,10 @@ class Database:
         13267, # type=151, params=[0, 300, 50]
     ])
 
-    def _parse_skill_json(self, f):
+    def _parse_skill_json(self, f: TextIO) -> Mapping[int, Skill]:
         obj = json.load(f)
         self._check_file_version('skill json', obj['v'], 1220)
-        skills = {}
+        skills: MutableMapping[int, Skill] = {}
         failed = False
         for i, raw in enumerate(obj['skill']):
             if i in self.KNOWN_BAD_SKILLS:
@@ -130,8 +136,11 @@ class Database:
             description = raw[1]
             skill_type = int(raw[2])
             levels = int(raw[3])
-            turn_max = int(raw[4]) if levels else None
-            turn_min = (turn_max - levels + 1 if levels else None)
+            turn_max: Optional[int] = None
+            turn_min: Optional[int] = None
+            if levels:
+                turn_max = int(raw[4])
+                turn_min = turn_max - levels + 1
             params = list(map(int, raw[6:]))
             try:
                 effect = [skill.parse(skill_type, params)]
@@ -139,14 +148,13 @@ class Database:
                 skill_debug(skills, i, name, description, skill_type, params)
                 failed = True
             else:
-                skills[i] = card.Skill(name, description, effect, turn_max,
-                                       turn_min)
-        skills[0] = card.Skill('', '', [], 0, 0)
+                skills[i] = Skill(name, description, effect, turn_max, turn_min)
+        skills[0] = Skill('', '', [], 0, 0)
         if failed:
             raise Exception('parse_skill_json failed')
         return skills
 
-    def _parse_enemy_skill_json(self, f):
+    def _parse_enemy_skill_json(self, f: TextIO) -> Mapping[int, Skill]:
         obj = json.load(f)
         self._check_file_version('skill json', obj['v'], 2)
         enemy_skills = {}
@@ -158,7 +166,7 @@ class Database:
                 name = raw[1]
                 skill_type = int(raw[2])
                 flags = int(raw[3], 16)
-                params = [None] * 16
+                params: List[Any] = [None] * 16
                 offset = 0
                 p_idx = 4
                 while flags > 0:
@@ -175,8 +183,7 @@ class Database:
                 params = params[1:]
                 try:
                     e = skill.parse_enemy_skill(skill_type, params)
-                    enemy_skills[skill_id] = card.Skill(
-                        name, description, [e], 0, 0)
+                    enemy_skills[skill_id] = Skill(name, description, [e], 0, 0)
                 except KeyError:
                     # ignore unhandled skill types
                     pass
@@ -188,7 +195,7 @@ class Database:
                 raise
         return enemy_skills
 
-    def _process_skill(self, skill_id, is_active_skill):
+    def _process_skill(self, skill_id: int, is_active_skill: bool) -> Skill:
         effects = self._expand_skill(skill_id)
         s = self._skills[skill_id]
         if is_active_skill:
@@ -199,11 +206,10 @@ class Database:
             effects = leader_skill.post_process(effects)
             assert all(e.__module__ == 'pad_data.leader_skill.effect'
                        for e in effects)
-        return card.Skill(
-            s.name, s.description, effects, s.turn_max, s.turn_min)
+        return Skill(s.name, s.description, effects, s.turn_max, s.turn_min)
 
-    def _expand_skill(self, skill_id):
-        expanded = []
+    def _expand_skill(self, skill_id: int) -> List[IsSkillEffect]:
+        expanded: List[IsSkillEffect] = []
         s = self._skills[skill_id]
 
         for e in s.effects:
@@ -215,7 +221,7 @@ class Database:
                 expanded.append(e)
         return expanded
 
-    def get_all_released_cards(self):
+    def get_all_released_cards(self) -> List[Card]:
         return list(filter(
             lambda c: c.card_id <= 10000 and c.released_status,
             self._cards.values()))

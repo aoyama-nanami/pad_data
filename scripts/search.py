@@ -4,17 +4,20 @@ import argparse
 import ast
 import inspect
 import operator
+from typing import Any, NoReturn, Optional, Type
 
 import path_common # pylint: disable=import-error,unused-import
 
 from pad_data import database
-from pad_data.leader_skill import effect as ls_effect
 from pad_data.active_skill import effect as as_effect
+from pad_data.card import Card
 from pad_data.common import Orb
+from pad_data.leader_skill import effect as ls_effect
+from pad_data.util.typing_protocol import IsSkillEffect
 
 
-def _atk(card):
-    ret = 1
+def _atk(card: Card) -> int:
+    ret: float = 1
     for e in card.leader_skill.effects:
         if not isinstance(e, ls_effect.BaseStatBoost):
             continue
@@ -28,26 +31,26 @@ def _atk(card):
             ret *= (e.atk + e.max_step() * e.atk_step) / 100
         else:
             ret *= e.atk / 100
-    return ret
+    return int(ret)
 
 class BaseEvaluator(ast.NodeVisitor):
-    def generic_visit(self, node):
+    def generic_visit(self, node: Any) -> NoReturn:
         raise Exception(f'Unknown node type: {node}')
 
     # pylint: disable=invalid-name
-    def visit_Expression(self, node):
+    def visit_Expression(self, node: ast.Expression) -> Any:
         return self.visit(node.body)
 
     # pylint: disable=invalid-name,no-self-use
-    def visit_NameConstant(self, node):
+    def visit_NameConstant(self, node: ast.NameConstant) -> Any:
         return node.value
 
     # pylint: disable=invalid-name,no-self-use
-    def visit_Num(self, node):
+    def visit_Num(self, node: ast.Num) -> Any:
         return node.n
 
     # pylint: disable=invalid-name
-    def visit_Attribute(self, node):
+    def visit_Attribute(self, node: ast.Attribute) -> Any:
         expr = self.visit(node.value)
         if isinstance(node.ctx, ast.Load):
             if isinstance(expr, dict):
@@ -57,7 +60,7 @@ class BaseEvaluator(ast.NodeVisitor):
             f'Attribute: context {node.ctx} not implemented')
 
     # pylint: disable=invalid-name
-    def visit_BoolOp(self, node):
+    def visit_BoolOp(self, node: ast.BoolOp) -> bool:
         if isinstance(node.op, ast.And):
             for x in node.values:
                 if not self.visit(x):
@@ -71,7 +74,7 @@ class BaseEvaluator(ast.NodeVisitor):
         return False
 
     # pylint: disable=invalid-name
-    def visit_BinOp(self, node):
+    def visit_BinOp(self, node: ast.BinOp) -> Any:
         left = self.visit(node.left)
         right = self.visit(node.right)
 
@@ -81,7 +84,7 @@ class BaseEvaluator(ast.NodeVisitor):
         raise RuntimeError(f'Unknown operator {node.op}')
 
     # pylint: disable=invalid-name
-    def visit_Compare(self, node):
+    def visit_Compare(self, node: ast.Compare) -> Any:
         left = self.visit(node.left)
         for op_node, right_node in zip(node.ops, node.comparators):
             right = self.visit(right_node)
@@ -92,22 +95,22 @@ class BaseEvaluator(ast.NodeVisitor):
         return True
 
     # pylint: disable=invalid-name
-    def visit_UnaryOp(self, node):
+    def visit_UnaryOp(self, node: ast.UnaryOp) -> Any:
         if isinstance(node.op, ast.Not):
             return not self.visit(node.operand)
         raise RuntimeError(f'Unknown operator {node.op}')
 
     # pylint: disable=invalid-name
-    def visit_Call(self, node):
+    def visit_Call(self, node: ast.Call) -> Any:
         f = self.visit(node.func)
         return f(*map(self.visit, node.args))
 
-    def visit_Subscript(self, node):
+    def visit_Subscript(self, node: ast.Subscript) -> Any:
         v = self.visit(node.value)
         i = self.visit(node.slice)
         return v[i]
 
-    def visit_Index(self, node):
+    def visit_Index(self, node: ast.Index) -> Any:
         return self.visit(node.value)
 
     _COMP_OP_MAP = [
@@ -120,7 +123,7 @@ class BaseEvaluator(ast.NodeVisitor):
         (ast.In, lambda x, y: operator.contains(y, x)),
     ]
 
-    def _comp_op(self, op):
+    def _comp_op(self, op: Any) -> Any:
         for cls, func in self._COMP_OP_MAP:
             if isinstance(op, cls):
                 return func
@@ -144,11 +147,11 @@ class BaseEvaluator(ast.NodeVisitor):
 
 
 class SkillEvaluator(BaseEvaluator):
-    def __init__(self, cls):
+    def __init__(self, cls: Type):
         self._cls = cls
-        self._effect = None
+        self._effect: Optional[IsSkillEffect] = None
 
-    def __call__(self, expr, card):
+    def __call__(self, expr: ast.AST, card: Card) -> bool:
         effects = (card.skill.effects
                    if self._cls.__module__ == as_effect.__name__
                    else card.leader_skill.effects)
@@ -161,7 +164,7 @@ class SkillEvaluator(BaseEvaluator):
         return False
 
     # pylint: disable=invalid-name
-    def visit_Name(self, node):
+    def visit_Name(self, node: ast.Name) -> Any:
         if node.id.isupper():
             return Orb[node.id]
         if node.id == 'len':
@@ -180,7 +183,7 @@ class RootEvaluator(BaseEvaluator):
         assert name not in _GLOBALS
         _GLOBALS[name] = SkillEvaluator(cls)
 
-    def __init__(self, card):
+    def __init__(self, card: Card):
         self._card = card
         self._locals = {
             'inheritable': lambda: self._card.inheritable,
@@ -191,7 +194,7 @@ class RootEvaluator(BaseEvaluator):
         }
 
     # pylint: disable=invalid-name
-    def visit_Call(self, node):
+    def visit_Call(self, node: ast.Call) -> bool:
         f = self.visit(node.func)
         if isinstance(f, SkillEvaluator):
             if node.args:
@@ -200,14 +203,14 @@ class RootEvaluator(BaseEvaluator):
         return super().visit_Call(node)
 
     # pylint: disable=invalid-name
-    def visit_Name(self, node):
+    def visit_Name(self, node: ast.Name) -> Any:
         value = self._locals.get(node.id)
         if value:
             return value()
         return self._GLOBALS[node.id]
 
-    def _ehp(self):
-        ret = 1
+    def _ehp(self) -> float:
+        ret: float = 1
         for e in self._card.leader_skill.effects:
             if not isinstance(e, ls_effect.BaseStatBoost):
                 continue
@@ -216,11 +219,11 @@ class RootEvaluator(BaseEvaluator):
             ret *= e.effective_hp()
         return ret
 
-    def _atk(self):
+    def _atk(self) -> float:
         return _atk(self._card)
 
-    def _dr(self):
-        ret = 1
+    def _dr(self) -> float:
+        ret: float = 1
         for e in self._card.leader_skill.effects:
             if not isinstance(e, ls_effect.BaseStatBoost):
                 continue
@@ -229,8 +232,10 @@ class RootEvaluator(BaseEvaluator):
             ret *= (1 - e.dr / 100)
         return (1 - ret) * 100
 
-    def _cd(self):
-        return self._card.skill.turn_min
+    def _cd(self) -> int:
+        if self._card.skill.turn_min is not None:
+            return self._card.skill.turn_min
+        raise TypeError
 
 
 HELP = f'''
@@ -246,7 +251,7 @@ examples of filter expression:
     special keywords: inheritable, atk, dr, and ehp
 '''
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         epilog=HELP,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -260,7 +265,7 @@ def main():
     cards = db.get_all_released_cards()
     tree = ast.parse(args.expr[0].replace('\n', ' ').strip(), mode='eval')
 
-    cards = filter(lambda c: RootEvaluator(c).visit(tree), cards)
+    cards = list(filter(lambda c: RootEvaluator(c).visit(tree), cards))
     if args.print_leader_skill:
         cards = sorted(cards, key=_atk)
     else:

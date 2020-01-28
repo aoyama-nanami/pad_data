@@ -1,8 +1,12 @@
+from typing import List
+
+from pad_data.util.typing_protocol import IsSkillEffect
+
 from . import effect
 
-def post_process(effects):
+def post_process(effects: List[IsSkillEffect]) -> List[IsSkillEffect]:
     out = []
-    cross = []
+    cross: List[effect.CrossAtkBoost] = []
     for e in effects:
         if isinstance(e, list):
             out += e

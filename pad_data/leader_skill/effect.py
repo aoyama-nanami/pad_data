@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, InitVar
-from typing import ClassVar, List
+from typing import Any, Callable, ClassVar, List, Tuple
 
 from pad_data import common
 
@@ -24,10 +24,12 @@ class BaseStatBoost:
         if self.dr > 0 and self.dr_elements == []:
             self.dr_elements = BaseStatBoost.ALL_ELEM
 
-    def calculate_atk(self, combos, trigger=False, hp=100):
+    # return value in unit 1/100
+    def calculate_atk(self, combos: List[common.Combo], trigger: bool=False,
+                      hp: int=100) -> int:
         raise NotImplementedError
 
-    def effective_hp(self):
+    def effective_hp(self) -> float:
         ret = 1
         if self.dr:
             ret /= (1 - self.dr / 100)
@@ -40,11 +42,11 @@ class SteppedStatBoost(BaseStatBoost):
     atk_step: int = 0
     rcv_step: int = 0
 
-    def max_step(self):
+    def max_step(self) -> int:
         raise NotImplementedError
 
-def by_stat_id(cls):
-    def func(stat_id_list, percentage, **kwargs):
+def by_stat_id(cls: Callable) -> Callable:
+    def func(stat_id_list: List[int], percentage: int, **kwargs: Any):
         for stat_id in stat_id_list:
             assert 0 <= stat_id <= 2
             if stat_id == 1:
@@ -122,7 +124,7 @@ class Rainbow(SteppedStatBoost, ExtraBuff):
         else:
             self.color_max = min(self.color_min + color_step, len(self.orbs))
 
-    def max_step(self):
+    def max_step(self) -> int:
         return self.color_max - self.color_min
 
     def calculate_atk(self, combos, trigger=False, hp=100):
@@ -147,7 +149,7 @@ class ElementCombo(SteppedStatBoost, ExtraBuff):
         # pylint: disable=not-an-iterable
         assert len(self.combos) >= self.combo_min
 
-    def max_step(self):
+    def max_step(self) -> int:
         return len(self.combos) - self.combo_min
 
 @dataclass
@@ -158,7 +160,7 @@ class ConnectedOrbs(SteppedStatBoost, ExtraBuff):
     size: int = 0
     size_max: int = 0
 
-    def max_step(self):
+    def max_step(self) -> int:
         return self.size_max - self.size
 
 @dataclass
@@ -222,7 +224,7 @@ class OrbRemaining(NoSkyfallLS, SteppedStatBoost):
             assert self.atk == 0 and self.atk_step == 0
             self.atk = atk_non_step
 
-    def max_step(self):
+    def max_step(self) -> int:
         return self.threshold
 
 @dataclass
@@ -251,7 +253,7 @@ class HealAbove(BaseStatBoost, ExtraBuff):
 
 @dataclass
 class CrossAtkBoost:
-    args: InitVar[List[int]]
+    args: InitVar[List[Tuple[common.Orb, int]]]
     atk_table: List[int] = field(init=False)
     def __post_init__(self, args):
         self.atk_table = [0] * 10

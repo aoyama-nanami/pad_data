@@ -91,7 +91,7 @@ class Awakening(enum.IntEnum):
     POISON_ORBS_BLESSING = 72
 
     @property
-    def damage_multiplier(self):
+    def damage_multiplier(self) -> float:
         # pylint: disable=no-member
         # pylint can't detect the type of enum name/value
         # https://github.com/PyCQA/pylint/issues/533
@@ -129,7 +129,7 @@ class Orb(enum.IntEnum):
     MORTAL_POISON = 8
     BOMB = 9
 
-    def color_code(self):
+    def color_code(self) -> str:
         color_map = {
             Orb.NO_ORB: '',
             Orb.FIRE: '1;31',

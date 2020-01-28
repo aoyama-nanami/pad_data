@@ -1,6 +1,6 @@
 import copy
 import dataclasses
-from typing import Any, List
+from typing import Any, Callable, List, Mapping, MutableMapping, Optional
 import wcwidth
 
 from pad_data import common
@@ -10,11 +10,11 @@ class Skill:
     name: str
     description: str
     effects: List[Any]
-    turn_max: int
-    turn_min: int
+    turn_max: Optional[int]
+    turn_min: Optional[int]
 
     @property
-    def clean_description(self):
+    def clean_description(self) -> str:
         return self.description.replace('\n', '')
 
 @dataclasses.dataclass
@@ -23,7 +23,7 @@ class EnemySkillRef:
     enemy_ai: int
     enemy_rnd: int
 
-def _unflatten(raw, idx, width, replace):
+def _unflatten(raw: List[Any], idx: int, width: int, replace: bool) -> None:
     """Unflatten a card array.
 
     Index is the slot containing the item count.
@@ -49,17 +49,17 @@ def _unflatten(raw, idx, width, replace):
 
 # pylint: disable=too-many-instance-attributes
 class Card:
-    def __init__(self, raw_data):
+    def __init__(self, raw_data: List[str]):
         self._raw_data = raw_data
         self._parse_raw_data()
-        self.skill = None
-        self.leader_skill = None
-        self.enemy_passive_resist = {}
+        self.skill = Skill('', '', [], 0, 0)
+        self.leader_skill = Skill('', '', [], 0, 0)
+        self.enemy_passive_resist: MutableMapping[int, Skill] = {}
 
     # Copied from
     # https://github.com/nachoapps/dadguide-data/blob/master/etl/pad/raw/card.py
     # and removed some fields for faster processing
-    def _parse_raw_data(self):
+    def _parse_raw_data(self) -> None:
         raw = self._raw_data
 
         _unflatten(raw, 57, 3, replace=True)
@@ -72,7 +72,7 @@ class Card:
         # 4: is_ult
         self.type = [common.Type(int(raw[5])),
                      common.Type(int(raw[6])),
-                     -1]
+                     common.Type.NO_TYPE]
         self.rarity = int(raw[7])
         self.cost = int(raw[8])
 
@@ -158,7 +158,7 @@ class Card:
 
         self.other_fields = raw[71:]
 
-    def _stat_at_level(self, st, lv):
+    def _stat_at_level(self, st: str, lv: Optional[int]) -> int:
         max_lv = self.max_level
         max_v = getattr(self, f'max_{st}')
         min_v = getattr(self, f'min_{st}')
@@ -192,7 +192,7 @@ class Card:
     ])
 
     @property
-    def merged_json(self):
+    def merged_json(self) -> Mapping[str, Any]:
         obj = copy.deepcopy(self.__dict__)
         obj['skill'] = {
             'name': self.skill.name,
@@ -213,20 +213,22 @@ class Card:
         return dict((k, v) for k, v in obj.items()
                     if k in Card._FIELD_WHITELIST)
 
-    def atk_at_level(self, level=None):
+    def atk_at_level(self, level: Optional[int]=None) -> int:
         return self._stat_at_level('atk', level)
 
-    def hp_at_level(self, level=None):
+    def hp_at_level(self, level: Optional[int]=None) -> int:
         return self._stat_at_level('hp', level)
 
-    def rcv_at_level(self, level=None):
+    def rcv_at_level(self, level: Optional[int]=None) -> int:
         return self._stat_at_level('rcv', level)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self.__dict__)
 
-    def dump(self, atk_eval=atk_at_level, rcv_eval=rcv_at_level,
-             print_active_skill=True, print_leader_skill=False):
+    def dump(self, atk_eval: Callable[['Card'], int]=atk_at_level,
+             rcv_eval: Callable[['Card'], int]=rcv_at_level,
+             print_active_skill: bool=True, print_leader_skill: bool=False
+             ) -> None:
         print(self.attr_id.color_code(),
               self.name,
               common.Orb.NO_ORB.color_code(),

@@ -1,51 +1,58 @@
 import copy
 import functools
 import itertools
+from typing import Any, Callable, Generic, Iterator, List, Optional, TypeVar
 
-from pad_data.common import Orb, Type
 from pad_data.active_skill import effect as AS
+from pad_data.common import Orb, Type
 from pad_data.enemy_skill import effect as ES
 from pad_data.leader_skill import effect as LS
+from pad_data.util.typing_protocol import IsSkillEffect
 
 # special skill type for combined skill effect
 ACTIVE_SKILL_SET = 116
 LEADER_SKILL_SET = 138
 
-def _consume_all_args(func, end):
-    def inner(func, end, it):
+T = TypeVar('T')
+
+def _consume_all_args(func: Callable[[int], T], end: int
+                      ) -> Callable[[Iterator[int]], List[T]]:
+    def inner(func: Callable[[int], T], end: int, it: Iterator[int]
+              ) -> List[Any]:
         return [func(x) for x in itertools.takewhile(lambda x: x > end, it)]
     return functools.partial(inner, func, end)
 
-def orb_list(bit_mask):
+def orb_list(bit_mask: int) -> List[Orb]:
     return [Orb(i) for i in range(32) if (1 << i) & bit_mask]
 
-def type_list(bit_mask):
+def type_list(bit_mask: int) -> List[Type]:
     return [Type(i) for i in range(32) if (1 << i) & bit_mask]
 
-def int_or_none(arg):
+def int_or_none(arg: Optional[int]) -> int:
     return 0 if arg is None else int(arg)
 
 class Ref:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
 
-class Unused:
-    def __init__(self, *values):
+class Unused(Generic[T]):
+    def __init__(self, *values: T):
         self.values = values
 
-    def __contains__(self, x):
+    def __contains__(self, x: T) -> bool:
         return x in self.values
 
 class Map:
-    def __init__(self, cls, **kwargs):
+    # TODO: type this 'Any'
+    def __init__(self, cls: Callable, **kwargs: Any):
         self._cls = cls
         self._kwargs = kwargs
 
-    def __call__(self, *args):
+    def __call__(self, *args: int) -> IsSkillEffect:
         args_iter = iter(args)
         g = itertools.chain(args_iter, itertools.repeat(0, 16))
 
-        def convert(x):
+        def convert(x: Any) -> Any:
             if isinstance(x, list):
                 return list(map(convert, x))
             if isinstance(x, functools.partial):
@@ -323,7 +330,7 @@ _LS_EFFECT_MAP = {
              atk=int, rcv=int),
     # 5個十字消し1個につき攻撃力がn倍
     # arg is a list of 2-tuple: (orb, atk)
-    157: Map(LS.CrossAtkBoost, args=[[int, int]] * 5),
+    157: Map(LS.CrossAtkBoost, args=[[Orb, int]] * 5),
     # ドロップをn個以下で消せない
     158: Map(LS.MatchFourOrAbove, match=int, elements=orb_list, types=type_list,
              atk=int, hp=int, rcv=int),
@@ -395,7 +402,7 @@ _ES_EFFECT_MAP = {
     118: Map(ES.TypeDamageReduction, types=type_list, dr=int),
 }
 
-def parse(skill_type, args):
+def parse(skill_type: int, args: List[int]) -> IsSkillEffect:
     if skill_type == 129 and args == [8, 0, 100]:
         # This is the most common dummy type, includes:
         # モンスター経験値アップ
@@ -415,5 +422,5 @@ def parse(skill_type, args):
         return _AS_EFFECT_MAP[skill_type](*args)
     return _LS_EFFECT_MAP[skill_type](*args)
 
-def parse_enemy_skill(skill_type, args):
+def parse_enemy_skill(skill_type: int, args: List[int]) -> IsSkillEffect:
     return _ES_EFFECT_MAP[skill_type](*args)

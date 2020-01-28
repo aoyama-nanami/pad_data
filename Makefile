@@ -10,4 +10,4 @@ test:
 
 .PHONY: mypy
 mypy:
-	MYPYPATH=./stub mypy --namespace-packages pad_data test scripts
+	MYPYPATH=./stub mypy pad_data test scripts

@@ -6,10 +6,10 @@ from pad_data import database
 from pad_data.util.global_enums import *
 
 class TestCardData(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self._db = database.Database()
 
-    def test_stat_calculation_1(self):
+    def test_stat_calculation_1(self) -> None:
         # 蒼刻の魔導姫・アルス＝パウリナ
         card = self._db.card(1752)
         self.assertEqual(card.atk_at_level(1), 787)
@@ -18,7 +18,7 @@ class TestCardData(unittest.TestCase):
         with self.assertRaises(ValueError):
             card.atk_at_level(110)
 
-    def test_stat_calculation_2(self):
+    def test_stat_calculation_2(self) -> None:
         # 転生イシス
         card = self._db.card(3383)
         self.assertEqual(card.hp_at_level(1), 1719)
@@ -27,14 +27,14 @@ class TestCardData(unittest.TestCase):
         self.assertEqual(card.hp_at_level(103), 4185)
         self.assertEqual(card.hp_at_level(110), 4442)
 
-    def test_stat_calculation_3(self):
+    def test_stat_calculation_3(self) -> None:
         # 炎の番人
         card = self._db.card(147)
         self.assertEqual(card.hp_at_level(), 1031)
         self.assertEqual(card.atk_at_level(), 331)
         self.assertEqual(card.rcv_at_level(), 83)
 
-    def test_awakening(self):
+    def test_awakening(self) -> None:
         self.assertSequenceEqual(
             self._db.card(1).awakenings, [SKILL_BOOST, SKILL_BOOST])
 
@@ -106,7 +106,7 @@ class TestCardData(unittest.TestCase):
              FIFTY_HP_ENHANCED, FIFTY_HP_ENHANCED, BONUS_ATTACK,
              EXTEND_TIME_PLUS, SKILL_VOICE])
 
-    def test_type(self):
+    def test_type(self) -> None:
         self.assertSequenceEqual(self._db.card(4831).type,
                                  (DRAGON, DEMON, NO_TYPE))
         self.assertSequenceEqual(self._db.card(232).type,

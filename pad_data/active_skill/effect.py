@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, InitVar
 import enum
-from typing import List, Tuple
+from typing import List
 
 from pad_data.common import Awakening, Orb, Type
 
@@ -278,7 +278,7 @@ class IgnoreAbsorb(BaseBuff):
 
 @dataclass
 class ReduceCooldown:
-    turn: Tuple[int, int]
+    turn: List[int]
     def __post_init__(self):
         assert self.turn[0] <= self.turn[1]
 

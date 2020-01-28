@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+from typing import Any
 import unittest
 from pad_data.common import Orb, Type
 from pad_data import database
@@ -10,16 +11,16 @@ _SIX_COLOR = _FIVE_COLOR + [Orb.HEART]
 
 # random selected golden data
 class TestSkillData(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self._db = database.Database()
         # pylint: disable=invalid-name
         self.maxDiff = None
 
-    def assert_skill_equal(self, card_id, *effects):
+    def assert_skill_equal(self, card_id: int, *effects: Any) -> None:
         self.assertSequenceEqual(
             self._db.card(card_id).leader_skill.effects, effects)
 
-    def test_skill_effect(self):
+    def test_skill_effect(self) -> None:
         # 黃角的天鬼姬・雷神
         self.assert_skill_equal(
             3416,
@@ -63,7 +64,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             4003,
             LS.StatBoost(types=[Type.BALANCE], atk=300),
-            LS.CrossAtkBoost(args=[[Orb.LIGHT, 200]]))
+            LS.CrossAtkBoost(args=[(Orb.LIGHT, 200)]))
 
         # セイレーン
         self.assert_skill_equal(91, LS.ExtraHeal(100))
@@ -227,7 +228,7 @@ class TestSkillData(unittest.TestCase):
                        color_min=4,
                        atk=400,
                        combo_increase=2),
-            LS.CrossAtkBoost(args=[(i, 300) for i in range(5)]))
+            LS.CrossAtkBoost(args=[(Orb(i), 300) for i in range(5)]))
 
 if __name__ == '__main__':
     unittest.main()

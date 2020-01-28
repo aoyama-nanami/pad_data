@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import decimal
 import itertools
 import math
-from typing import List, Optional
+from typing import List, Optional, Union
 import wcwidth
 
 import path_common # pylint: disable=import-error,unused-import
@@ -16,6 +16,7 @@ from pad_data.leader_skill import effect as LS
 from pad_data.util.global_enums import *
 
 decimal.getcontext().rounding = decimal.ROUND_HALF_UP
+FixedPoint = Union[int, decimal.Decimal]
 
 DB = database.Database()
 
@@ -66,13 +67,13 @@ ENEMY_ID = 1091
 class MemberSpec:
     name: str
     element: Orb
-    sub_element: Optional[Orb]
+    sub_element: Orb
     types: List[Type]
     atk: int
     awakenings: List[Awakening]
     latent: List[Latent]
 
-def member_spec(base, assist):
+def member_spec(base: Team, assist: Optional[Team]) -> MemberSpec:
     card = DB.card(base.card_id)
     atk = card.atk_at_level(base.lv) + base.atk_plus * 5
     assert base.awakening_count == 9
@@ -87,7 +88,7 @@ def member_spec(base, assist):
             awakenings += assist_card.awakenings[1:]
         if card.attr_id == assist_card.attr_id:
             assist_atk = (assist_card.atk_at_level(assist.lv)
-                          + assist_card.atk_plus * 5)
+                          + assist.atk_plus * 5)
             atk += round(assist_atk * 0.05)
 
     atk += awakenings.count(ENHANCED_ATK) * 100
@@ -103,11 +104,11 @@ def member_spec(base, assist):
         latent=base.latent if base.latent else [],
     )
 
-def awaken_mult(card, awaken):
+def awaken_mult(card: MemberSpec, awaken: Awakening) -> decimal.Decimal:
     return (decimal.Decimal(awaken.damage_multiplier) **
             card.awakenings.count(awaken))
 
-def element_mult(self_element, target_element):
+def element_mult(self_element: Orb, target_element: Orb) -> FixedPoint:
     assert self_element <= DARK
     assert target_element <= DARK
     assert target_element != NO_ORB
@@ -128,7 +129,7 @@ def element_mult(self_element, target_element):
 
     return 1
 
-def main():
+def main() -> None:
     members = [member_spec(TEAM[i], ASSIST[i]) for i in range(len(TEAM))]
     enemy = DB.card(ENEMY_ID) if ENEMY_ID else None
 
@@ -137,8 +138,10 @@ def main():
 
     total_dmg = 0
     for m in members:
-        ls_mult = 1
-        main_dmg, sub_dmg = 0, 0
+        ls_mult: FixedPoint = 1
+        main_dmg: FixedPoint = 0
+        sub_dmg: FixedPoint = 0
+
         for ls in itertools.chain(
                 DB.card(TEAM[0].card_id).leader_skill.effects,
                 DB.card(TEAM[1].card_id).leader_skill.effects):
@@ -149,7 +152,7 @@ def main():
                     m.element in ls.elements or
                     m.sub_element in ls.elements or
                     any(t in ls.types for t in m.types)):
-                ls_mult *= mult / 100
+                ls_mult *= decimal.Decimal(mult) / 100
 
         for c in COMBOS:
             if c.orb != m.element and c.orb != m.sub_element:
@@ -158,11 +161,11 @@ def main():
             dmg = math.ceil(m.atk * (1 + 0.25 * (c.size - 3)))
 
             if c.size == 4:
-                dmg = round(dmg * awaken_mult(m, TWO_WAY), 0)
+                dmg = round(dmg * awaken_mult(m, TWO_WAY))
             elif c.shape == Shape.L:
-                dmg = round(dmg * awaken_mult(m, L_ATTACK), 0)
+                dmg = round(dmg * awaken_mult(m, L_ATTACK))
             elif c.shape == Shape.SQUARE:
-                dmg = round(dmg * awaken_mult(m, VOID_DAMAGE_PIERCER), 0)
+                dmg = round(dmg * awaken_mult(m, VOID_DAMAGE_PIERCER))
 
             if c.orb == m.element:
                 main_dmg += dmg
@@ -177,27 +180,27 @@ def main():
         sub_dmg = math.ceil(sub_dmg * combo_mult)
 
         # TODO: check if this should happen in earlier phase
-        extra_mult = 1
+        extra_mult: FixedPoint = 1
         if HP >= 80:
             extra_mult *= awaken_mult(m, EIGHTY_HP_ENHANCED)
-        if HP <= 50:
+        elif HP <= 50:
             extra_mult *= awaken_mult(m, FIFTY_HP_ENHANCED)
         # TODO: add row attack multiplier
 
-        main_dmg = round(main_dmg * extra_mult, 0)
-        sub_dmg = round(sub_dmg * extra_mult, 0)
+        main_dmg = round(main_dmg * extra_mult)
+        sub_dmg = round(sub_dmg * extra_mult)
 
-        combo_enh_mult = 1
+        combo_enh_mult: FixedPoint = 1
         if len(COMBOS) >= 7:
             combo_enh_mult *= awaken_mult(m, ENHANCED_COMBO)
         if len(COMBOS) >= 10:
             combo_enh_mult *= awaken_mult(m, ENHANCED_10_COMBO)
 
-        main_dmg = round(main_dmg * decimal.Decimal(combo_enh_mult), 0)
-        sub_dmg = round(sub_dmg * decimal.Decimal(combo_enh_mult), 0)
+        main_dmg = round(main_dmg * decimal.Decimal(combo_enh_mult))
+        sub_dmg = round(sub_dmg * decimal.Decimal(combo_enh_mult))
 
-        main_dmg = round(main_dmg * decimal.Decimal(ls_mult), 0)
-        sub_dmg = round(sub_dmg * decimal.Decimal(ls_mult), 0)
+        main_dmg = round(main_dmg * decimal.Decimal(ls_mult))
+        sub_dmg = round(sub_dmg * decimal.Decimal(ls_mult))
 
         if enemy:
             main_dmg *= element_mult(m.element, enemy.attr_id)
@@ -215,7 +218,7 @@ def main():
                     main_dmg *= decimal.Decimal(1.5) ** m.latent.count(l)
                     sub_dmg *= decimal.Decimal(1.5) ** m.latent.count(l)
 
-        total_dmg += main_dmg + sub_dmg
+        total_dmg += int(main_dmg + sub_dmg)
         print(m.name, ' ' * (50 - wcwidth.wcswidth(m.name)),
               m.element.color_code(), f'{int(main_dmg):>13,d}',
               m.sub_element.color_code(), f'{int(sub_dmg):>13,d}',
