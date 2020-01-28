@@ -19,29 +19,22 @@ class Nuke:
     element: Orb
     target: Target
     leech: int = 0
-    percentage: List[int] = field(default_factory=lambda: [0, 0])
+    percentage: int = 0
+    percentage_upper: int = 0 # upper bound for random damage
     value: int = 0
     ignore_def: bool = False
     repeat: int = 1
     def __post_init__(self):
-        if isinstance(self.percentage, int):
-            self.percentage = [self.percentage, self.percentage]
-        assert self.percentage[0] <= self.percentage[1]
-        assert self.percentage == [0, 0] or self.value == 0
+        if self.percentage_upper:
+            assert self.percentage <= self.percentage_upper
+        else:
+            self.percentage_upper = self.percentage
+        assert self.percentage == 0 or self.value == 0
         assert not (self.element != Orb.NO_ORB and self.ignore_def)
 
 @dataclass
 class AtkNuke(Nuke):
     hp_remain: int = 100
-
-@dataclass
-class AtkNukeType2(AtkNuke):
-    unused: InitVar[int] = 0
-    # pylint: disable=arguments-differ
-    def __post_init__(self, unused):
-        super().__post_init__()
-        # percentage of skill type 2 may be one or two int...
-        assert unused == 0 or unused == self.percentage[0]
 
 @dataclass
 class TeamElementAtkNuke(Nuke):

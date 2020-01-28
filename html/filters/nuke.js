@@ -30,7 +30,7 @@ export class FilterNuke extends FilterBase {
         return false;
       }
 
-      if (effect.percentage[0] < this.percentage * 100) {
+      if (effect.percentage < this.percentage * 100) {
         return false;
       }
       if (this.element >= -1 && effect.element != this.element) {

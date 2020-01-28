@@ -178,7 +178,7 @@ class TestSkillData(unittest.TestCase):
             effect.AtkNuke(
                 element=Orb.LIGHT,
                 target=effect.Target.ALL,
-                percentage=[15000, 15000],
+                percentage=15000,
                 hp_remain=50),
             effect.BoardChange(
                 rows=[0x3F, 0x21, 0x21, 0x21, 0x3F],
