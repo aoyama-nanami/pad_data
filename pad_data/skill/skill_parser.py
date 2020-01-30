@@ -1,4 +1,3 @@
-import copy
 import functools
 import itertools
 from typing import Any, Callable, Generic, Iterator, List, TypeVar
@@ -65,8 +64,7 @@ class Map:
                 return x(next(g))
             return x
 
-        kwargs = copy.deepcopy(self._kwargs)
-        kwargs = {k: convert(v) for k, v in kwargs.items()}
+        kwargs = {k: convert(v) for k, v in self._kwargs.items()}
         kwargs = {k: (kwargs[v.name] if isinstance(v, Ref) else v)
                   for k, v in kwargs.items()
                   if not isinstance(v, Unused)}

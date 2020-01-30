@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 
-import dataclasses
 import json
 from typing import Any, Iterable, List, Mapping, Optional, Tuple
 from typing import TypeVar
@@ -95,23 +94,18 @@ def diff(list_new: List[JSON], list_old: List[JSON]) -> None:
             diff_one(new, old, 1)
             print_common('}')
 
-def encode_dataclass(o: Any) -> Tuple[str, JSON]:
-    if dataclasses.is_dataclass(o):
-        return (type(o).__name__, o.__dict__)
-    raise TypeError
-
 def main() -> None:
     db = database.Database()
     cards = db.get_all_released_cards()
     new = list(map(lambda c: c.merged_json, cards))
-    new = json.loads(json.dumps(new, default=encode_dataclass))
+    out_str = json.dumps(new, separators=(',', ':'), ensure_ascii=False,
+                         sort_keys=True)
+    new = json.loads(out_str)
     with open(JSON_PATH, 'r') as f:
         old = json.load(f)
     diff(new, old)
     with open(JSON_PATH, 'w') as f:
-        json.dump(list(map(lambda c: c.merged_json, cards)), f,
-                  separators=(',', ':'), default=encode_dataclass,
-                  ensure_ascii=False)
+        f.write(out_str)
 
 if __name__ == '__main__':
     main()

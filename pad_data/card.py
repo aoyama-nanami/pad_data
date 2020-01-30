@@ -1,4 +1,3 @@
-import copy
 import dataclasses
 from typing import Any, Callable, List, Mapping, MutableMapping, Optional
 import wcwidth
@@ -173,34 +172,34 @@ class Card:
 
         raise ValueError('level out of range')
 
-    _FIELD_WHITELIST = set([
-        'attr_id', 'awakenings', 'card_id', 'enemy_passive_resist',
-        'inheritable', 'leader_skill', 'limit_mult', 'max_atk', 'max_hp',
-        'max_level', 'max_rcv', 'min_atk', 'min_hp', 'min_rcv', 'name',
-        'rarity', 'skill', 'sub_attr_id', 'super_awakenings', 'type',
+    _FIELD_WHITELIST = frozenset([
+        'attr_id', 'awakenings', 'card_id', 'inheritable', 'limit_mult',
+        'max_atk', 'max_hp', 'max_level', 'max_rcv', 'min_atk', 'min_hp',
+        'min_rcv', 'name', 'rarity', 'sub_attr_id', 'super_awakenings', 'type',
     ])
 
     @property
     def merged_json(self) -> Mapping[str, Any]:
-        obj = copy.deepcopy(self.__dict__)
+        obj: MutableMapping[str, Any] = {}
+        for k in self._FIELD_WHITELIST:
+            obj[k] = getattr(self, k)
         obj['skill'] = {
             'name': self.skill.name,
             'description': self.skill.description,
             'turn_max': self.skill.turn_max,
             'turn_min': self.skill.turn_min,
-            'effects': self.skill.effects,
+            'effects': self.skill.effects_to_tuples(),
         }
         obj['leader_skill'] = {
             'name': self.leader_skill.name,
             'description': self.leader_skill.description,
-            'effects': self.leader_skill.effects,
+            'effects': self.leader_skill.effects_to_tuples(),
         }
         obj['enemy_passive_resist'] = [
-            {'name': s.name, 'effects': s.effects}
+            {'name': s.name, 'effects': s.effects_to_tuples()}
             for s in self.enemy_passive_resist.values()
         ]
-        return dict((k, v) for k, v in obj.items()
-                    if k in Card._FIELD_WHITELIST)
+        return obj
 
     def atk_at_level(self, level: Optional[int]=None) -> int:
         return self._stat_at_level('atk', level)

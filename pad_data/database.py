@@ -1,17 +1,11 @@
 import json
 import os.path
-from typing import Iterable, List, Mapping, MutableMapping, Optional
+from typing import cast, Iterable, List, Mapping, MutableMapping, Optional
 from typing import TextIO
 
 from pad_data import active_skill, enemy_skill, leader_skill
 from pad_data.card import Card
 from pad_data.skill import Skill, SkillEffectTag, skill_parser
-
-class UnknownSkillEffect(Exception):
-    def __init__(self, desc: str, params: List[int]):
-        super().__init__()
-        self.desc = desc
-        self.params = params
 
 def parse_csv(raw: str) -> Iterable[List[str]]:
     i = 0
@@ -55,9 +49,9 @@ def skill_debug(skills: Mapping[int, Skill], skill_id: int, name: str,
                 description = s.description
                 break
     print(f'Failed:')
-    print(f'name="{name}" description="{description}"')
-    print(f'skill_type={skill_type}')
-    print(f'params={params}')
+    print(f'{name=} {description=}')
+    print(f'{skill_type=}')
+    print(f'{params=}')
     print('=' * 30)
 
 class Database:
@@ -132,6 +126,7 @@ class Database:
         for i, raw in enumerate(obj['skill']):
             if i in self.KNOWN_BAD_SKILLS:
                 continue
+            raw = cast(List[str], raw)
             name = raw[0]
             description = raw[1]
             skill_type = int(raw[2])
@@ -166,7 +161,7 @@ class Database:
                 name = raw[1]
                 skill_type = int(raw[2])
                 flags = int(raw[3], 16)
-                params: List[int] = [0] * 15
+                params = [0] * 15
                 offset = 0
                 p_idx = 4
                 description = ''
@@ -187,7 +182,11 @@ class Database:
                     # ignore unhandled skill types
                     pass
                 except Exception:
-                    raise UnknownSkillEffect(name, params)
+                    print(f'Parse enemy skill failed:')
+                    print(f'{name=} {description=}')
+                    print(f'{skill_type=}')
+                    print(f'{params=}')
+                    raise
             except Exception:
                 print('failed to parse enemy skill csv, error at:')
                 print(raw)

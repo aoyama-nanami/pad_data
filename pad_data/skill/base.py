@@ -1,6 +1,6 @@
 from abc import ABC
 import dataclasses
-from typing import List, Optional
+from typing import Any, List, Mapping, Optional, Tuple
 
 class SkillEffectTag(ABC):
     pass
@@ -20,3 +20,5 @@ class Skill:
     def clean_description(self) -> str:
         return self.description.replace('\n', '')
 
+    def effects_to_tuples(self) -> List[Tuple[str, Mapping[str, Any]]]:
+        return [(type(e).__name__, e.__dict__) for e in self.effects]
