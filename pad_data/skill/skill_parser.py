@@ -1,13 +1,13 @@
 import copy
 import functools
 import itertools
-from typing import Any, Callable, Generic, Iterator, List, Optional, TypeVar
+from typing import Any, Callable, Generic, Iterator, List, TypeVar
 
 from pad_data.active_skill import effect as AS
 from pad_data.common import Orb, Type
 from pad_data.enemy_skill import effect as ES
 from pad_data.leader_skill import effect as LS
-from pad_data.util.typing_protocol import IsSkillEffect
+from pad_data.skill import SkillEffectTag
 
 # special skill type for combined skill effect
 ACTIVE_SKILL_SET = 116
@@ -28,9 +28,6 @@ def orb_list(bit_mask: int) -> List[Orb]:
 def type_list(bit_mask: int) -> List[Type]:
     return [Type(i) for i in range(32) if (1 << i) & bit_mask]
 
-def int_or_none(arg: Optional[int]) -> int:
-    return 0 if arg is None else int(arg)
-
 class Ref:
     def __init__(self, name: str):
         self.name = name
@@ -44,17 +41,19 @@ class Unused(Generic[T]):
 
 class Map:
     # TODO: type this 'Any'
-    def __init__(self, cls: Callable, **kwargs: Any):
+    def __init__(self, cls: Callable[..., SkillEffectTag], **kwargs: Any):
         self._cls = cls
         self._kwargs = kwargs
 
-    def __call__(self, *args: int) -> IsSkillEffect:
+    def __call__(self, *args: int) -> SkillEffectTag:
         args_iter = iter(args)
         g = itertools.chain(args_iter, itertools.repeat(0, 16))
 
         def convert(x: Any) -> Any:
             if isinstance(x, list):
                 return list(map(convert, x))
+            if isinstance(x, tuple):
+                return tuple(map(convert, x))
             if isinstance(x, functools.partial):
                 return x(g)
             if isinstance(x, Ref):
@@ -156,7 +155,7 @@ _AS_EFFECT_MAP = {
              target=AS.Target, element=Orb),
     145: Map(AS.TeamRcvBasedHeal, percentage=int),
     146: Map(AS.ReduceCooldown, turn=[int, int]),
-    152: Map(AS.Lock, orbs=orb_list, unused=int),
+    152: Map(AS.Lock, orbs=orb_list, unused=Unused(42, 99)),
     153: Map(AS.EnemyElementChange, element=Orb, unused=Unused(1)),
     154: Map(AS.OrbChange, from_=orb_list, to=orb_list),
     156: Map(AS.awakening_based_skill, duration=int, awakenings=[int, int, int],
@@ -171,7 +170,7 @@ _AS_EFFECT_MAP = {
     173: Map(AS.IgnoreAbsorb, duration=int, element=bool,
              unused=Unused(0), damage=bool),
     176: Map(AS.BoardChange, rows=[int, int, int, int, int], orb=Orb),
-    179: Map(AS.HealOverTime, duration=int, unused=int, hp_percentage=int,
+    179: Map(AS.HealOverTime, duration=int, unused=Unused(0), hp_percentage=int,
              bind=int, awoken_bind=int, rcv_percentage=0, hp_value=0),
     180: Map(AS.SkyfallEnhancedOrbs, duration=int, percentage=int),
     184: Map(AS.NoSkyfall, duration=int),
@@ -309,11 +308,11 @@ _LS_EFFECT_MAP = {
     # スキル使用時
     133: Map(LS.Trigger, elements=orb_list, types=type_list, atk=int, rcv=int),
     136: Map(LS.double_stat_boost,
-             params_0=[orb_list, [], int, int, int],
-             params_1=[orb_list, [], int, int, int]),
+             params_0=(orb_list, [], int, int, int),
+             params_1=(orb_list, [], int, int, int)),
     137: Map(LS.double_stat_boost,
-             params_0=[[], type_list, int, int, int],
-             params_1=[[], type_list, int, int, int]),
+             params_0=([], type_list, int, int, int),
+             params_1=([], type_list, int, int, int)),
     138: Map(LS.SkillSetLS, skill_ids=_consume_all_args(int, 0)),
     # e.g.
     #   HP満タンか50％以下で木属性の攻撃力が4倍。
@@ -398,11 +397,11 @@ _ES_EFFECT_MAP = {
     71: Map(ES.VoidDamageShield, duration=int, unused=Unused(31, 1055),
             threshold=int),
     72: Map(ES.ElementDamageReduction, elements=orb_list, dr=int),
-    83: Map(ES.SkillSetES, skill_ids=[int_or_none] * 10),
+    83: Map(ES.SkillSetES, skill_ids=[int] * 10),
     118: Map(ES.TypeDamageReduction, types=type_list, dr=int),
 }
 
-def parse(skill_type: int, args: List[int]) -> IsSkillEffect:
+def parse(skill_type: int, args: List[int]) -> SkillEffectTag:
     if skill_type == 129 and args == [8, 0, 100]:
         # This is the most common dummy type, includes:
         # モンスター経験値アップ
@@ -422,5 +421,5 @@ def parse(skill_type: int, args: List[int]) -> IsSkillEffect:
         return _AS_EFFECT_MAP[skill_type](*args)
     return _LS_EFFECT_MAP[skill_type](*args)
 
-def parse_enemy_skill(skill_type: int, args: List[int]) -> IsSkillEffect:
+def parse_enemy_skill(skill_type: int, args: List[int]) -> SkillEffectTag:
     return _ES_EFFECT_MAP[skill_type](*args)

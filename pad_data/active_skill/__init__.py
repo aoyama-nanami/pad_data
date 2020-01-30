@@ -1,10 +1,11 @@
 import dataclasses
 from typing import List
 
-from pad_data.util.typing_protocol import IsSkillEffect
+from pad_data.skill import SkillEffectTag
+
 from . import effect
 
-def post_process(effects: List[IsSkillEffect]) -> None:
+def post_process(effects: List[SkillEffectTag]) -> None:
     # merge repeated attacks into one instance
     for i, e in enumerate(effects):
         if isinstance(e, effect.AtkNuke):

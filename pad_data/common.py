@@ -181,6 +181,9 @@ class Combo:
     size: int = 3
     shape: Shape = Shape.OTHER
 
+# TODO: rename this
+CCombo = Combo
+
 @enum.unique
 class Latent(enum.Enum):
     LATENT_GOD_KILLER = enum.auto()

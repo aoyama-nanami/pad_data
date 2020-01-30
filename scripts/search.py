@@ -13,7 +13,7 @@ from pad_data.active_skill import effect as as_effect
 from pad_data.card import Card
 from pad_data.common import Orb
 from pad_data.leader_skill import effect as ls_effect
-from pad_data.util.typing_protocol import IsSkillEffect
+from pad_data.skill import SkillEffectTag
 
 
 def _atk(card: Card) -> int:
@@ -147,9 +147,9 @@ class BaseEvaluator(ast.NodeVisitor):
 
 
 class SkillEvaluator(BaseEvaluator):
-    def __init__(self, cls: Type):
+    def __init__(self, cls: Type[SkillEffectTag]):
         self._cls = cls
-        self._effect: Optional[IsSkillEffect] = None
+        self._effect: Optional[SkillEffectTag] = None
 
     def __call__(self, expr: ast.AST, card: Card) -> bool:
         effects = (card.skill.effects
@@ -194,7 +194,7 @@ class RootEvaluator(BaseEvaluator):
         }
 
     # pylint: disable=invalid-name
-    def visit_Call(self, node: ast.Call) -> bool:
+    def visit_Call(self, node: ast.Call) -> Any:
         f = self.visit(node.func)
         if isinstance(f, SkillEvaluator):
             if node.args:

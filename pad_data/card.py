@@ -4,18 +4,7 @@ from typing import Any, Callable, List, Mapping, MutableMapping, Optional
 import wcwidth
 
 from pad_data import common
-
-@dataclasses.dataclass
-class Skill:
-    name: str
-    description: str
-    effects: List[Any]
-    turn_max: Optional[int]
-    turn_min: Optional[int]
-
-    @property
-    def clean_description(self) -> str:
-        return self.description.replace('\n', '')
+from pad_data.skill import Skill
 
 @dataclasses.dataclass
 class EnemySkillRef:
@@ -50,7 +39,7 @@ def _unflatten(raw: List[Any], idx: int, width: int, replace: bool) -> None:
 # pylint: disable=too-many-instance-attributes
 class Card:
     def __init__(self, raw_data: List[str]):
-        self._raw_data = raw_data
+        self._raw_data: List[Any] = raw_data
         self._parse_raw_data()
         self.skill = Skill('', '', [], 0, 0)
         self.leader_skill = Skill('', '', [], 0, 0)
@@ -160,9 +149,9 @@ class Card:
 
     def _stat_at_level(self, st: str, lv: Optional[int]) -> int:
         max_lv = self.max_level
-        max_v = getattr(self, f'max_{st}')
-        min_v = getattr(self, f'min_{st}')
-        scale = getattr(self, f'{st}_scale')
+        max_v: int = getattr(self, f'max_{st}')
+        min_v: int = getattr(self, f'min_{st}')
+        scale: int = getattr(self, f'{st}_scale')
         limit_mult = self.limit_mult
 
         if lv is None:

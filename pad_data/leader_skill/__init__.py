@@ -1,15 +1,15 @@
 from typing import List
 
-from pad_data.util.typing_protocol import IsSkillEffect
+from pad_data.skill import SkillEffectTag
 
 from . import effect
 
-def post_process(effects: List[IsSkillEffect]) -> List[IsSkillEffect]:
-    out = []
+def post_process(effects: List[SkillEffectTag]) -> List[SkillEffectTag]:
+    out: List[SkillEffectTag] = []
     cross: List[effect.CrossAtkBoost] = []
     for e in effects:
-        if isinstance(e, list):
-            out += e
+        if isinstance(e, effect.MultiEffect):
+            out += e.items
         elif isinstance(e, effect.CrossAtkBoost):
             cross.append(e)
         else:
@@ -20,10 +20,8 @@ def post_process(effects: List[IsSkillEffect]) -> List[IsSkillEffect]:
             for (i, a) in enumerate(e.atk_table):
                 if not a:
                     continue
-                if merged.atk_table[i] == 0:
-                    merged.atk_table[i] = a
-                else:
-                    merged.atk_table[i] = merged.atk_table[i] * a / 100
+                assert merged.atk_table[i] == 0
+                merged.atk_table[i] = a
         out.append(merged)
     else:
         out += cross

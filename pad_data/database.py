@@ -1,17 +1,17 @@
 import json
 import os.path
-from typing import Any, Iterable, List, Mapping, MutableMapping, Optional
+from typing import Iterable, List, Mapping, MutableMapping, Optional
 from typing import TextIO
 
-from pad_data import active_skill, enemy_skill, leader_skill, skill
-from pad_data.card import Card, Skill
-from pad_data.util.typing_protocol import IsSkillEffect
+from pad_data import active_skill, enemy_skill, leader_skill
+from pad_data.card import Card
+from pad_data.skill import Skill, SkillEffectTag, skill_parser
 
 class UnknownSkillEffect(Exception):
-    def __init__(self, desc: str, effects: List[IsSkillEffect]):
+    def __init__(self, desc: str, params: List[int]):
         super().__init__()
         self.desc = desc
-        self.effects = effects
+        self.params = params
 
 def parse_csv(raw: str) -> Iterable[List[str]]:
     i = 0
@@ -143,7 +143,7 @@ class Database:
                 turn_min = turn_max - levels + 1
             params = list(map(int, raw[6:]))
             try:
-                effect = [skill.parse(skill_type, params)]
+                effect = [skill_parser.parse(skill_type, params)]
             except RuntimeError:
                 skill_debug(skills, i, name, description, skill_type, params)
                 failed = True
@@ -166,23 +166,22 @@ class Database:
                 name = raw[1]
                 skill_type = int(raw[2])
                 flags = int(raw[3], 16)
-                params: List[Any] = [None] * 16
+                params: List[int] = [0] * 15
                 offset = 0
                 p_idx = 4
+                description = ''
                 while flags > 0:
                     if flags & 1:
                         p_value = raw[p_idx]
-                        try:
-                            params[offset] = int(p_value)
-                        except ValueError:
-                            params[offset] = p_value
+                        if offset == 0:
+                            description = p_value
+                        else:
+                            params[offset - 1] = int(p_value)
                         p_idx += 1
                     offset += 1
                     flags >>= 1
-                description = params[0]
-                params = params[1:]
                 try:
-                    e = skill.parse_enemy_skill(skill_type, params)
+                    e = skill_parser.parse_enemy_skill(skill_type, params)
                     enemy_skills[skill_id] = Skill(name, description, [e], 0, 0)
                 except KeyError:
                     # ignore unhandled skill types
@@ -208,8 +207,8 @@ class Database:
                        for e in effects)
         return Skill(s.name, s.description, effects, s.turn_max, s.turn_min)
 
-    def _expand_skill(self, skill_id: int) -> List[IsSkillEffect]:
-        expanded: List[IsSkillEffect] = []
+    def _expand_skill(self, skill_id: int) -> List[SkillEffectTag]:
+        expanded: List[SkillEffectTag] = []
         s = self._skills[skill_id]
 
         for e in s.effects:
