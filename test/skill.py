@@ -185,5 +185,30 @@ class TestSkillData(unittest.TestCase):
                 rows=[0x3F, 0x21, 0x21, 0x21, 0x3F],
                 orb=Orb.WOOD))
 
+        # 秘輝蛙の幻忍・児雷也
+        self.assert_skill_equal(
+            5953,
+            effect.OrbChange(
+                from_=[Orb.WATER],
+                to=[Orb.WOOD]),
+            effect.OrbChange(
+                from_=[Orb.LIGHT],
+                to=[Orb.FIRE]),
+            effect.Lock(
+                orbs=[Orb.WOOD]),
+            effect.SkyfallLockedOrbs(
+                duration=10,
+                orbs=[Orb.WOOD]))
+
+        # 雷放龍・ウルボーク
+        self.assert_skill_equal(
+            5965,
+            effect.ColumnChange(
+                pos1=0b110011,
+                orb1=[Orb.LIGHT, Orb.JAMMER],
+                pos2=0,
+                orb2=[],
+                ))
+
 if __name__ == '__main__':
     unittest.main()

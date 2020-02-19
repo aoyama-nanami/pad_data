@@ -181,6 +181,7 @@ _AS_EFFECT_MAP = {
     196: Map(AS.UnmatchableRecover, turn=int),
     # 変身
     202: Map(AS.Transform, to=int),
+    205: Map(AS.SkyfallLockedOrbs, orbs=orb_list, duration=int),
 }
 
 _LS_EFFECT_MAP = {
@@ -388,7 +389,7 @@ _LS_EFFECT_MAP = {
     201: Map(LS.ElementCombo, combos=[orb_list] * 3, _=Unused(0), combo_min=int,
              fixed_extra_attack=int),
     # ドット進化のみでチーム
-    203: Map(LS.PixelTeamStatBoost, _=Unused(0), hp=int, atk=int, rcv=int),
+    203: Map(LS.EvoTeamStatBoost, evo_flag=int, hp=int, atk=int, rcv=int),
 }
 
 _ES_EFFECT_MAP = {

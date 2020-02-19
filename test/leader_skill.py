@@ -230,5 +230,12 @@ class TestSkillData(unittest.TestCase):
                        combo_increase=2),
             LS.CrossAtkBoost(args=[(Orb(i), 300) for i in range(5)]))
 
+        # 転生ラー＝ドラゴン
+        self.assert_skill_equal(
+            5944,
+            LS.EvoTeamStatBoost(hp=200, atk=200, rcv=200, evo_flag=2),
+            LS.Rainbow(orbs=_SIX_COLOR, color_min=4, color_step=2,
+                       atk=800, atk_step=150))
+
 if __name__ == '__main__':
     unittest.main()

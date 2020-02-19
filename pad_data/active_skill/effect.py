@@ -176,8 +176,9 @@ class ColumnChange(BaseBoardChange):
     orb2: List[Orb]
 
     def __post_init__(self) -> None:
-        assert len(self.orb1) == (0 if self.pos1 == 0 else 1)
-        assert len(self.orb2) == (0 if self.pos2 == 0 else 1)
+        # orbX and posX should be both zero or both non-zero
+        assert not ((len(self.orb1) == 0) ^ (self.pos1 == 0))
+        assert not ((len(self.orb2) == 0) ^ (self.pos2 == 0))
 
     def orb_count(self) -> int:
         return self._popcount(self.pos1) + self._popcount(self.pos2)
@@ -301,6 +302,11 @@ class Skyfall(BaseBuff):
 @dataclass
 class SkyfallEnhancedOrbs(BaseBuff):
     percentage: int
+
+@skill_effect
+@dataclass
+class SkyfallLockedOrbs(BaseBuff):
+    orbs: List[Orb]
 
 @skill_effect
 @dataclass

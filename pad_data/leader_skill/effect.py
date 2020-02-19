@@ -274,11 +274,18 @@ class TeamStatBoost(BaseStatBoost):
 class CollaboTeamStatBoost(BaseStatBoost):
     collabo_ids: List[int] = field(default_factory=list)
 
-# ドット進化のみでチーム
+# xx進化のみでチーム
 @skill_effect
 @dataclass
-class PixelTeamStatBoost(BaseStatBoost):
-    pass
+class EvoTeamStatBoost(BaseStatBoost):
+    # TODO: make a list of this flag
+    # known values:
+    # 0 - ドット進化
+    # 2 - 転生/超転生進化
+    evo_flag: int = -1
+
+    def __post_init__(self) -> None:
+        assert self.evo_flag in (0, 2)
 
 @skill_effect
 @dataclass
