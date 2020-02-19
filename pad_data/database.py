@@ -139,7 +139,7 @@ class Database:
             params = list(map(int, raw[6:]))
             try:
                 effect = [skill_parser.parse(skill_type, params)]
-            except RuntimeError:
+            except (RuntimeError, KeyError, AssertionError):
                 skill_debug(skills, i, name, description, skill_type, params)
                 failed = True
             else:

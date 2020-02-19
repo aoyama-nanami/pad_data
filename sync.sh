@@ -6,8 +6,6 @@ cd "$(dirname "$0")"
 mkdir -p data/raw/jp
 mkdir -p data/processed
 gsutil -m rsync -r -c gs://mirubot-data/paddata/raw/jp data/raw/jp
-gsutil -m rsync -r -c -x '(?!jp_).*' \
-    gs://mirubot-data/paddata/processed data/processed
 
 scripts/dump_merged_json.py
 
