@@ -293,7 +293,7 @@ _LS_EFFECT_MAP = {
     # [4, 4, 4, 4, 0, 2, 600, 200] -> 木2c 6倍, 最大4c 10倍
     # [8, 8, 1, 1, 0, 3, 350, 250] -> 光光火（光火火）の3コンボで攻撃力が3.5倍、
     #                                 光光火火の4コンボ以上で攻撃力が6倍
-    124: Map(LS.ElementCombo, combos=[orb_list] * 5, combo_min=int, atk=int,
+    124: Map(LS.ElementCombo, combo_list=[orb_list] * 5, combo_min=int, atk=int,
              atk_step=int),
     # e.g. 進化後ギニュー特戦隊がチームにそろっていると
     125: Map(LS.TeamStatBoost, card_ids=[int] * 5, hp=int, atk=int, rcv=int),
@@ -339,7 +339,7 @@ _LS_EFFECT_MAP = {
     163: Map(LS.NoSkyfallLS, elements=orb_list, types=type_list, hp=int,
              atk=int, rcv=int, dr_elements=orb_list, dr=int),
     # see id 124
-    164: Map(LS.ElementCombo, combos=[orb_list] * 4, combo_min=int, atk=int,
+    164: Map(LS.ElementCombo, combo_list=[orb_list] * 4, combo_min=int, atk=int,
              rcv=int, atk_step=int, rcv_step=Ref('atk_step')),
     # n色以上同時攻撃で攻撃力と回復力が上昇、最大m倍
     165: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, rcv=int,
@@ -351,7 +351,7 @@ _LS_EFFECT_MAP = {
     169: Map(LS.Combo, combo=int, atk=int, dr=int),
     170: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, dr=int),
     # see id 124
-    171: Map(LS.ElementCombo, combos=[orb_list] * 4, combo_min=int, atk=int,
+    171: Map(LS.ElementCombo, combo_list=[orb_list] * 4, combo_min=int, atk=int,
              dr=int),
     175: Map(LS.CollaboTeamStatBoost, collabo_ids=[int] * 3, hp=int, atk=int,
              rcv=int),
@@ -386,7 +386,7 @@ _LS_EFFECT_MAP = {
     200: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, fixed_extra_attack=int),
     # [1, 1, 1, 0, 3, 1000000] -> 火の3コンボ以上で固定100万ダメージ
     # TODO: need more use case
-    201: Map(LS.ElementCombo, combos=[orb_list] * 3, _=Unused(0), combo_min=int,
+    201: Map(LS.ElementCombo, combo_list=[orb_list] * 3, _=Unused(0), combo_min=int,
              fixed_extra_attack=int),
     # ドット進化のみでチーム
     203: Map(LS.EvoTeamStatBoost, evo_flag=int, hp=int, atk=int, rcv=int),

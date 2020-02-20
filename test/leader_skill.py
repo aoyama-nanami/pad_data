@@ -87,7 +87,7 @@ class TestSkillData(unittest.TestCase):
         # キム・カッファン
         self.assert_skill_equal(
             4106,
-            LS.ElementCombo(combos=[[Orb.WOOD]] * 3, combo_min=2, atk=150,
+            LS.ElementCombo(combo_list=[[Orb.WOOD]] * 3, combo_min=2, atk=150,
                             atk_step=50),
             LS.Combo(combo=5, combo_max=7, atk=200, atk_step=100))
 
@@ -106,7 +106,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             2281,
             LS.HpAbove(hp_above=80, types=[Type.GOD], atk=350),
-            LS.ElementCombo(combos=[[Orb.LIGHT]] * 3, combo_min=2, atk=200,
+            LS.ElementCombo(combo_list=[[Orb.LIGHT]] * 3, combo_min=2, atk=200,
                             atk_step=100))
 
         # 霧沢風子
@@ -163,7 +163,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             2944,
             LS.StatBoost(elements=[Orb.WOOD], atk=200, rcv=200),
-            LS.ElementCombo(combos=[[Orb.WOOD], [Orb.WATER]], combo_min=2,
+            LS.ElementCombo(combo_list=[[Orb.WOOD], [Orb.WATER]], combo_min=2,
                             atk=300))
 
         # ヴァンパイア
@@ -210,7 +210,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             1832,
             LS.StatBoost(types=[Type.ATTACK], hp=125, atk=125),
-            LS.ElementCombo(combos=[[Orb.FIRE], [Orb.LIGHT], [Orb.LIGHT]],
+            LS.ElementCombo(combo_list=[[Orb.FIRE], [Orb.LIGHT], [Orb.LIGHT]],
                             combo_min=2, atk=300))
 
         # イヴェルカーナ

@@ -155,15 +155,17 @@ class Rainbow(SteppedStatBoost, ExtraBuff):
 @skill_effect
 @dataclass
 class ElementCombo(SteppedStatBoost, ExtraBuff):
-    combos: List[List[Orb]] = field(default_factory=list)
+    combo_list: InitVar[List[List[Orb]]] = field(default=None)
+    combos: List[Orb] = field(init=False)
     combo_min: int = 0
 
-    def __post_init__(self) -> None:
+    def __post_init__(self, # type: ignore[override]
+                      combo_list: List[List[Orb]]) -> None:
         super().__post_init__()
 
-        self.combos = list(filter(lambda x: x, self.combos))
         # pylint: disable=not-an-iterable
-        assert all(len(c) <= 1 for c in self.combos)
+        assert all(len(c) <= 1 for c in combo_list)
+        self.combos = [c[0] for c in combo_list if len(c)]
         # pylint: disable=not-an-iterable
         assert len(self.combos) >= self.combo_min
 
