@@ -15,7 +15,7 @@ def post_process(effects: List[SkillEffectTag]) -> List[SkillEffectTag]:
         else:
             out.append(e)
     if len(cross) >= 2:
-        merged = effect.CrossAtkBoost([])
+        merged = effect.CrossAtkBoost(args=[])
         for e in cross:
             for (i, a) in enumerate(e.atk_table):
                 if not a:

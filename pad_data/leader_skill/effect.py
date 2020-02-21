@@ -1,3 +1,4 @@
+from collections import Counter
 from dataclasses import dataclass, field, InitVar
 from typing import Any, Callable, ClassVar, List, Optional, Tuple, TypeVar
 
@@ -172,6 +173,15 @@ class ElementCombo(SteppedStatBoost, ExtraBuff):
     def max_step(self) -> int:
         return len(self.combos) - self.combo_min
 
+    def calculate_atk(self, combos: List[CCombo], trigger: bool=False,
+                      hp: int=100) -> Optional[int]:
+        set1 = Counter(self.combos)
+        set2 = Counter(c.orb for c in combos)
+        c = sum((set1 & set2).values())
+        if c < self.combo_min:
+            return None
+        return self.atk + self.atk_step * (c - self.combo_min)
+
 @skill_effect
 @dataclass
 class ConnectedOrbs(SteppedStatBoost, ExtraBuff):
@@ -287,6 +297,7 @@ class EvoTeamStatBoost(BaseStatBoost):
     evo_flag: int = -1
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         assert self.evo_flag in (0, 2)
 
 @skill_effect
@@ -303,14 +314,24 @@ class MultiEffect:
 
 @skill_effect
 @dataclass
-class CrossAtkBoost:
-    args: InitVar[List[Tuple[Orb, int]]]
+class CrossAtkBoost(BaseStatBoost):
+    args: InitVar[List[Tuple[Orb, int]]] = field(default=None)
     atk_table: List[int] = field(init=False)
     def __post_init__(self, args: List[Tuple[Orb, int]]) -> None:
+        super().__post_init__()
+
         self.atk_table = [0] * 10
         for (o, atk) in args:
             if atk:
                 self.atk_table[o] = atk
+
+    def calculate_atk(self, combos: List[CCombo], trigger: bool=False,
+                      hp: int=100) -> Optional[int]:
+        atk = 100
+        for c in combos:
+            if c.shape == Shape.CROSS and self.atk_table[c.orb] > 0:
+                atk = atk * self.atk_table[c.orb] // 100
+        return atk if atk != 100 else None
 
 def hp_cond_139(elements: List[Orb], types: List[Type], spec: List[List[int]]
                 ) -> MultiEffect:
