@@ -19,7 +19,7 @@ class TestSkillData(unittest.TestCase):
         # 隠密御庭番衆御頭・四乃森蒼紫
         self.assert_skill_equal(
             3029,
-            effect.Skyfall(2, [Orb.WATER], 15, 2),
+            effect.Skyfall(2, 2, [Orb.WATER], 15),
             effect.RandomOrbSpawn(6, [Orb.WATER], [Orb.WATER]))
 
         # 生徒会長・ルシファー
@@ -195,7 +195,8 @@ class TestSkillData(unittest.TestCase):
                 from_=[Orb.LIGHT],
                 to=[Orb.FIRE]),
             effect.Lock(
-                orbs=[Orb.WOOD]),
+                orbs=[Orb.WOOD],
+                count=42),
             effect.SkyfallLockedOrbs(
                 duration=10,
                 orbs=[Orb.WOOD]))

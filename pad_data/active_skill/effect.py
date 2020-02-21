@@ -62,6 +62,13 @@ class BaseBuff:
 
 @skill_effect
 @dataclass
+class RandomDurationBuff(BaseBuff):
+    duration_max: int
+    def __post_init__(self) -> None:
+        assert self.duration <= self.duration_max
+
+@skill_effect
+@dataclass
 class ElementDamageBuff(BaseBuff):
     cond: List[Orb]
     percentage: int
@@ -291,12 +298,9 @@ class TrueGravity:
 
 @skill_effect
 @dataclass
-class Skyfall(BaseBuff):
+class Skyfall(RandomDurationBuff):
     orbs: List[Orb]
     percentage: int
-    unused: InitVar[int] = None
-    def __post_init__(self, unused: int) -> None:
-        assert unused == self.duration
 
 @skill_effect
 @dataclass
@@ -355,6 +359,7 @@ class Unlock:
 @dataclass
 class Lock:
     orbs: List[Orb]
+    count: int  # number of maximum locked orbs, usually 42 or 99
 
 @skill_effect
 @dataclass
