@@ -1,6 +1,7 @@
 from collections import Counter
 from dataclasses import dataclass, field, InitVar
-from typing import Any, Callable, ClassVar, List, Optional, Tuple, TypeVar
+from typing import Any, Callable, ClassVar, final, List, Optional, Tuple
+from typing import TypeVar
 
 from pad_data.common import CCombo, Orb, Type, Shape
 from pad_data.skill import skill_effect, SkillEffectTag
@@ -73,11 +74,14 @@ class ExtraBuff:
 
 # conditions
 
+# add @final to prevent inhereint from this accidentally
+@final
 @skill_effect
 @dataclass
 class StatBoost(BaseStatBoost):
     pass
 
+@final
 @skill_effect
 @dataclass
 class ExtendedBoost(BaseStatBoost, ExtraBuff):
@@ -160,6 +164,7 @@ class ElementCombo(SteppedStatBoost, ExtraBuff):
     combos: List[Orb] = field(init=False)
     combo_min: int = 0
 
+    # pylint: disable=arguments-differ
     def __post_init__(self, # type: ignore[override]
                       combo_list: List[List[Orb]]) -> None:
         super().__post_init__()
@@ -317,7 +322,10 @@ class MultiEffect:
 class CrossAtkBoost(BaseStatBoost):
     args: InitVar[List[Tuple[Orb, int]]] = field(default=None)
     atk_table: List[int] = field(init=False)
-    def __post_init__(self, args: List[Tuple[Orb, int]]) -> None:
+
+    # pylint: disable=arguments-differ
+    def __post_init__(self, args: List[Tuple[Orb, int]] # type: ignore[override]
+                      ) -> None:
         super().__post_init__()
 
         self.atk_table = [0] * 10

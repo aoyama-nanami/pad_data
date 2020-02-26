@@ -2,9 +2,11 @@
 
 import argparse
 import ast
+from contextlib import contextmanager
+from dataclasses import asdict
 import inspect
 import operator
-from typing import Any, NoReturn, Optional, Type
+from typing import Any, Iterator, Mapping, NoReturn, Type
 
 import path_common # pylint: disable=import-error,unused-import
 
@@ -14,6 +16,7 @@ from pad_data.card import Card
 from pad_data.common import Orb
 from pad_data.leader_skill import effect as ls_effect
 from pad_data.skill import SkillEffectTag
+from pad_data.util.lazy_dict import LazyDict
 
 
 def _atk(card: Card) -> int:
@@ -34,8 +37,36 @@ def _atk(card: Card) -> int:
     return int(ret)
 
 class BaseEvaluator(ast.NodeVisitor):
+    _BUILTINS: Mapping[str, Any] = {
+         'len': len,
+         'sum': sum,
+         'min': min,
+         'max': max,
+         'set': set,
+    }
+
+    def __init__(self, *namespaces: Mapping[str, Any]):
+        self.namespaces = [self._BUILTINS] + list(namespaces)
+
+    @contextmanager
+    def _push_namespace(self, namespace: Mapping[str, Any]) -> Iterator[None]:
+        try:
+            self.namespaces.append(namespace)
+            yield
+        finally:
+            self.namespaces.pop()
+
     def generic_visit(self, node: Any) -> NoReturn:
         raise Exception(f'Unknown node type: {node}')
+
+    # pylint: disable=invalid-name
+    def visit_Name(self, node: ast.Name) -> Any:
+        key = node.id
+
+        for namespace in self.namespaces[::-1]:
+            if key in namespace:
+                return namespace[key]
+        raise KeyError(key)
 
     # pylint: disable=invalid-name
     def visit_Expression(self, node: ast.Expression) -> Any:
@@ -103,6 +134,7 @@ class BaseEvaluator(ast.NodeVisitor):
     # pylint: disable=invalid-name
     def visit_Call(self, node: ast.Call) -> Any:
         f = self.visit(node.func)
+        # TODO: implement kwargs?
         return f(*map(self.visit, node.args))
 
     def visit_Subscript(self, node: ast.Subscript) -> Any:
@@ -112,6 +144,27 @@ class BaseEvaluator(ast.NodeVisitor):
 
     def visit_Index(self, node: ast.Index) -> Any:
         return self.visit(node.value)
+
+    def visit_List(self, node: ast.List) -> Any:
+        return [self.visit(x) for x in node.elts]
+
+    def visit_Set(self, node: ast.Set) -> Any:
+        return {self.visit(x) for x in node.elts}
+
+    def visit_ListComp(self, node: ast.ListComp) -> Any:
+        assert len(node.generators) == 1
+
+        res = []
+        generator = node.generators[0]
+        # no tuple unpacking support for now
+        assert isinstance(generator.target, ast.Name)
+        name = generator.target.id
+
+        for v in self.visit(generator.iter):
+            with self._push_namespace({name: v}):
+                if all(self.visit(x) for x in generator.ifs):
+                    res.append(self.visit(node.elt))
+        return res
 
     _COMP_OP_MAP = [
         (ast.Eq, operator.eq),
@@ -148,8 +201,8 @@ class BaseEvaluator(ast.NodeVisitor):
 
 class SkillEvaluator(BaseEvaluator):
     def __init__(self, cls: Type[SkillEffectTag]):
+        super().__init__(Orb.__members__)
         self._cls = cls
-        self._effect: Optional[SkillEffectTag] = None
 
     def __call__(self, expr: ast.AST, card: Card) -> bool:
         effects = (card.skill.effects
@@ -158,40 +211,35 @@ class SkillEvaluator(BaseEvaluator):
         for effect in effects:
             if not isinstance(effect, self._cls):
                 continue
-            self._effect = effect
-            if self.visit(expr):
-                return True
+            with self._push_namespace(asdict(effect)):
+                if self.visit(expr):
+                    return True
         return False
 
-    # pylint: disable=invalid-name
-    def visit_Name(self, node: ast.Name) -> Any:
-        if node.id.isupper():
-            return Orb[node.id]
-        if node.id == 'len':
-            return len
-        return getattr(self._effect, node.id)
-
 class RootEvaluator(BaseEvaluator):
-    _GLOBALS = {}
+    _SKILL_EFFECTS = {}
     for name, cls in inspect.getmembers(as_effect, inspect.isclass):
         if cls.__module__ != as_effect.__name__:
             continue
-        _GLOBALS[name] = SkillEvaluator(cls)
+        _SKILL_EFFECTS[name] = SkillEvaluator(cls)
     for name, cls in inspect.getmembers(ls_effect, inspect.isclass):
         if cls.__module__ != ls_effect.__name__:
             continue
-        assert name not in _GLOBALS
-        _GLOBALS[name] = SkillEvaluator(cls)
+        assert name not in _SKILL_EFFECTS
+        _SKILL_EFFECTS[name] = SkillEvaluator(cls)
 
     def __init__(self, card: Card):
+        super().__init__(
+                self._SKILL_EFFECTS,
+                LazyDict({
+                    'inheritable': card.inheritable,
+                    'rarity': card.rarity,
+                    'ehp': self._ehp,
+                    'atk': self._atk,
+                    'dr': self._dr,
+                    'cd': self._cd,
+                }))
         self._card = card
-        self._locals = {
-            'inheritable': lambda: self._card.inheritable,
-            'ehp': self._ehp,
-            'atk': self._atk,
-            'dr': self._dr,
-            'cd': self._cd,
-        }
 
     # pylint: disable=invalid-name
     def visit_Call(self, node: ast.Call) -> Any:
@@ -201,13 +249,6 @@ class RootEvaluator(BaseEvaluator):
                 return f(node.args[0], self._card)
             return f(ast.NameConstant(value=True), self._card)
         return super().visit_Call(node)
-
-    # pylint: disable=invalid-name
-    def visit_Name(self, node: ast.Name) -> Any:
-        value = self._locals.get(node.id)
-        if value:
-            return value()
-        return self._GLOBALS[node.id]
 
     def _ehp(self) -> float:
         ret: float = 1
