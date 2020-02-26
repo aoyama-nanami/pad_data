@@ -1,4 +1,4 @@
-import {LitElement, css, html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {LitElement, css, html} from '../util/external_lib.js';
 import {icon} from '../common.js';
 
 class IconCheckbox extends LitElement {

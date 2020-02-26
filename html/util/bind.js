@@ -1,6 +1,6 @@
 // https://glitch.com/edit/#!/fantasy-desk?path=bind.js:20:3
-import {directive, AttributePart} from 'https://unpkg.com/lit-html@^1.0.0/lit-html.js?module';
-import {LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {directive, AttributePart} from './external_lib.js';
+import {LitElement} from './external_lib.js';
 
 const bindMap = new WeakSet();
 

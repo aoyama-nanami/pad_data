@@ -1,4 +1,4 @@
-import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {html} from '../util/external_lib.js';
 import {FilterBase} from './base.js';
 import {bind} from '../util/bind.js';
 

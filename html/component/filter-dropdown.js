@@ -1,4 +1,4 @@
-import {css, html, LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {css, html, LitElement} from '../util/external_lib.js';
 
 import {Awakening} from '../util/awakening.js';
 

@@ -1,4 +1,4 @@
-import {html, LitElement} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {html, LitElement} from '../util/external_lib.js';
 import {bind} from '../util/bind.js';
 import {Type} from '../util/type.js';
 

@@ -1,4 +1,4 @@
-import {LitElement, html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {LitElement, html} from '../util/external_lib.js';
 
 export class FilterBase extends LitElement {
   triggerChange() {

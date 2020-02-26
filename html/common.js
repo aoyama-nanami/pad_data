@@ -1,4 +1,4 @@
-import {html} from 'https://unpkg.com/lit-element@2.1.0/lit-element.js?module';
+import {html} from './util/external_lib.js';
 import {Awakening, awakeningDamageMultiplier} from './util/awakening.js';
 
 export function statAtMaxLv(card, name) {
