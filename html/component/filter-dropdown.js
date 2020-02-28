@@ -7,6 +7,7 @@ import {FilterAwakening} from '../filters/awakening.js';
 import {FilterElement} from '../filters/element.js';
 import {FilterRarity} from '../filters/rarity.js';
 import {FilterSkillCd} from '../filters/skill-cd.js';
+import {FilterSBPlusHaste} from '../filters/sb-plus-haste.js';
 
 import {FilterAllOrbChange} from '../filters/all-orb-change.js';
 import {FilterBindRecovery} from '../filters/bind-recovery.js';
@@ -130,6 +131,10 @@ export const FILTERS = [
         canEdit: true,
       }
     },
+    {
+      desc: 'SB + 加速',
+      cls: FilterSBPlusHaste,
+    }
   ],
   [
     {
