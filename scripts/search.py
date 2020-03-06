@@ -4,9 +4,10 @@ import argparse
 import ast
 from contextlib import contextmanager
 from dataclasses import asdict
-import inspect
+from inspect import getmembers, getmodule, isclass
 import operator
-from typing import Any, Iterator, Mapping, NoReturn, Type
+from types import ModuleType
+from typing import Any, cast, Iterator, List, Mapping, NoReturn, Tuple
 
 import path_common # pylint: disable=import-error,unused-import
 
@@ -200,37 +201,45 @@ class BaseEvaluator(ast.NodeVisitor):
 
 
 class SkillEvaluator(BaseEvaluator):
-    def __init__(self, cls: Type[SkillEffectTag]):
+    def __init__(self, cls: type, card: Card):
         super().__init__(Orb.__members__)
         self._cls = cls
+        self._card = card
 
-    def __call__(self, expr: ast.AST, card: Card) -> bool:
-        effects = (card.skill.effects
-                   if self._cls.__module__ == as_effect.__name__
-                   else card.leader_skill.effects)
+    def __call__(self, *expr: ast.AST) -> bool:
+        assert len(expr) <= 1
+        effects = (self._card.skill.effects
+                   if getmodule(self._cls) == as_effect
+                   else self._card.leader_skill.effects)
         for effect in effects:
             if not isinstance(effect, self._cls):
                 continue
+            if len(expr) == 0:
+                return True
             with self._push_namespace(asdict(effect)):
-                if self.visit(expr):
+                if self.visit(expr[0]):
                     return True
         return False
 
+    def __bool__(self) -> bool:
+        return self()
+
+
+def get_skill_effects_from_module(module: ModuleType) -> List[Tuple[str, type]]:
+    return getmembers(module, lambda x: (isclass(x) and getmodule(x) == module
+                                         and issubclass(x, SkillEffectTag)))
+
+
 class RootEvaluator(BaseEvaluator):
     _SKILL_EFFECTS = {}
-    for name, cls in inspect.getmembers(as_effect, inspect.isclass):
-        if cls.__module__ != as_effect.__name__:
-            continue
-        _SKILL_EFFECTS[name] = SkillEvaluator(cls)
-    for name, cls in inspect.getmembers(ls_effect, inspect.isclass):
-        if cls.__module__ != ls_effect.__name__:
-            continue
+    for name, cls in get_skill_effects_from_module(as_effect):
+        _SKILL_EFFECTS[name] = cls
+    for name, cls in get_skill_effects_from_module(ls_effect):
         assert name not in _SKILL_EFFECTS
-        _SKILL_EFFECTS[name] = SkillEvaluator(cls)
+        _SKILL_EFFECTS[name] = cls
 
     def __init__(self, card: Card):
         super().__init__(
-                self._SKILL_EFFECTS,
                 LazyDict({
                     'inheritable': card.inheritable,
                     'rarity': card.rarity,
@@ -245,9 +254,7 @@ class RootEvaluator(BaseEvaluator):
     def visit_Call(self, node: ast.Call) -> Any:
         f = self.visit(node.func)
         if isinstance(f, SkillEvaluator):
-            if node.args:
-                return f(node.args[0], self._card)
-            return f(ast.NameConstant(value=True), self._card)
+            return f(*node.args)
         return super().visit_Call(node)
 
     def _ehp(self) -> float:
@@ -259,6 +266,16 @@ class RootEvaluator(BaseEvaluator):
                 continue
             ret *= e.effective_hp()
         return ret
+
+    # pylint: disable=invalid-name
+    def visit_Name(self, node: ast.Name) -> Any:
+        key = node.id
+
+        if (cls := self._SKILL_EFFECTS.get(key)) is not None:
+            cls = cast(type, cls)
+            return SkillEvaluator(cls, self._card)
+
+        return super().visit_Name(node)
 
     def _atk(self) -> float:
         return _atk(self._card)
