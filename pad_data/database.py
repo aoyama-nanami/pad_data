@@ -66,6 +66,7 @@ class Database:
             self._cards = self._parse_card_json(f)
 
         with open(os.path.join(project_root, skill_json), 'r') as f:
+            self._raw_skills = {}
             self._skills = self._parse_skill_json(f)
 
         with open(os.path.join(project_root, enemy_skill_json), 'r') as f:
@@ -137,6 +138,7 @@ class Database:
                 turn_max = int(raw[4])
                 turn_min = turn_max - levels + 1
             params = list(map(int, raw[6:]))
+            self._raw_skills[i] = (skill_type, params)
             try:
                 effect = [skill_parser.parse(skill_type, params)]
             except (RuntimeError, KeyError, AssertionError):
@@ -223,3 +225,12 @@ class Database:
         return list(filter(
             lambda c: c.card_id <= 10000 and c.released_status,
             self._cards.values()))
+
+    def print_raw_skills(self, skill_id: int) -> None:
+        skill_type, params = self._raw_skills[skill_id]
+        print(skill_type, params)
+
+        if skill_type in (skill_parser.ACTIVE_SKILL_SET,
+                          skill_parser.LEADER_SKILL_SET):
+            for x in params:
+                self.print_raw_skills(x)
