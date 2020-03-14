@@ -355,16 +355,16 @@ def hp_cond_139(elements: List[Orb], types: List[Type], spec: List[List[int]]
 
 # pylint: disable=too-many-arguments
 def hp_cond_183(elements: List[Orb], types: List[Type],
-                hp_above: int, atk_above: int, rcv_above: int,
-                hp_below: int, atk_below: int, rcv_below: int
+                hp_above: int, atk_above: int, dr_above: int,
+                hp_below: int, atk_below: int, dr_below: int
                 ) -> MultiEffect:
     items: List[SkillEffectTag] = []
     if hp_above:
         items.append(HpAbove(elements=elements, types=types, hp_above=hp_above,
-                             atk=atk_above, rcv=rcv_above))
+                             atk=atk_above, dr=dr_above))
     if hp_below:
         items.append(HpBelow(elements=elements, types=types, hp_below=hp_below,
-                             atk=atk_below, rcv=rcv_below))
+                             atk=atk_below, dr=dr_below))
     return MultiEffect(items)
 
 DSBParamType = Tuple[List[Orb], List[Type], int, int, int]

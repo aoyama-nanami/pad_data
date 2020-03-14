@@ -364,8 +364,8 @@ _LS_EFFECT_MAP = {
     182: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, atk=int, dr=int),
 
     183: Map(LS.hp_cond_183, elements=orb_list, types=type_list,
-             hp_above=int, atk_above=int, rcv_above=int,
-             hp_below=int, atk_below=int, rcv_below=int),
+             hp_above=int, atk_above=int, dr_above=int,
+             hp_below=int, atk_below=int, dr_below=int),
     185: Map(LS.ExtendedBoost, move_time_extend=int, elements=orb_list,
              types=type_list, hp=int, atk=int, rcv=int),
     186: Map(LS.Board7x6, elements=orb_list, types=type_list, hp=int, atk=int,
