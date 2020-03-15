@@ -4,6 +4,7 @@ import {Awakening} from '../util/awakening.js';
 
 import {FilterAssist} from '../filters/assist.js';
 import {FilterAwakening} from '../filters/awakening.js';
+import {FilterCost} from '../filters/cost.js';
 import {FilterElement} from '../filters/element.js';
 import {FilterRarity} from '../filters/rarity.js';
 import {FilterSkillCd} from '../filters/skill-cd.js';
@@ -103,6 +104,10 @@ export const FILTERS = [
     {
       desc: '稀有度',
       cls: FilterRarity,
+    },
+    {
+      desc: 'Cost',
+      cls: FilterCost,
     },
     {
       desc: '暗闇耐性',

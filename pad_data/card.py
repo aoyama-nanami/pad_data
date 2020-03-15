@@ -173,7 +173,7 @@ class Card:
         raise ValueError('level out of range')
 
     _FIELD_WHITELIST = frozenset([
-        'attr_id', 'awakenings', 'card_id', 'inheritable', 'limit_mult',
+        'attr_id', 'awakenings', 'card_id', 'cost', 'inheritable', 'limit_mult',
         'max_atk', 'max_hp', 'max_level', 'max_rcv', 'min_atk', 'min_hp',
         'min_rcv', 'name', 'rarity', 'sub_attr_id', 'super_awakenings', 'type',
     ])
