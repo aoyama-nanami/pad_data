@@ -94,6 +94,7 @@ class AtkEvalConfig extends LitElement {
     const multi = awakenings.has(Awakening.MULTI_BOOST);
     const elements = [1, 1, 1, 1, 1];
     const types = [];
+    const latentKillerTypes = new Set();
 
     const target = this.targetCard;
     if (target) {
@@ -120,18 +121,17 @@ class AtkEvalConfig extends LitElement {
           elements[3] *= 2;
           break;
       }
+
       if (this.latentKillerCount > 0) {
-        const latentTypes = new Set();
-        const latentBonusDamage = Math.pow(1.5, this.latentKillerCount);
         target.type.forEach((x) => {
           if (x >= 1 && x <= 8) {
-            LATENT.get(x).forEach((y) => latentTypes.add(y));
+            LATENT.get(x).forEach((y) => latentKillerTypes.add(y));
           } else if (x == 0 || x == 12 || x == 14 || x == 15) {
-            Object.keys(Type).forEach((k) => latentTypes.add(Type[k]));
+            Object.keys(Type).forEach((k) => latentKillerTypes.add(Type[k]));
           }
         });
-        types.push([latentTypes, latentBonusDamage]);
       }
+
       this.passiveResistIndexes.forEach((enabled, i) => {
         if (!enabled) {
           return;
@@ -153,6 +153,8 @@ class AtkEvalConfig extends LitElement {
       elements: elements,
       includeSubElemDamage: this.includeSubElemDamage,
       types: types,
+      latentKillerTypes: latentKillerTypes,
+      latentKillerCount: this.latentKillerCount,
       sortBy: this.sortBy,
     };
   }
@@ -296,7 +298,7 @@ class AtkEvalConfig extends LitElement {
           <div class="row">
             潛覺殺手:
             <input type="number" .value="${bind(this, 'latentKillerCount')}"
-                   min="0" max="3" step="1" id="latent-killer-count"
+                   min="0" max="4" step="1" id="latent-killer-count"
                    @focus="${(ev) => ev.target.select()}"
                    >
           </div>

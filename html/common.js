@@ -106,6 +106,16 @@ export function statEval(card, config) {
     }
   });
 
+  if (config.latentKillerCount) {
+    var latentKillerCount = config.latentKillerCount;
+    if (!card.extra_latent_slot) {
+      latentKillerCount = Math.min(latentKillerCount, 3);
+    }
+    if (card.type.some((x) => config.latentKillerTypes.has(x))) {
+      atk *= Math.pow(1.5, latentKillerCount);
+    }
+  }
+
   atk *= config.elements[card.attr_id];
   if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id) {
     atk *= 1.1;
