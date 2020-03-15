@@ -20,7 +20,7 @@ from pad_data.skill import SkillEffectTag
 from pad_data.util.lazy_dict import LazyDict
 
 
-def _atk(card: Card) -> int:
+def _atk(card: Card) -> float:
     ret: float = 1
     for e in card.leader_skill.effects:
         if not isinstance(e, ls_effect.BaseStatBoost):
@@ -35,7 +35,7 @@ def _atk(card: Card) -> int:
             ret *= (e.atk + e.max_step() * e.atk_step) / 100
         else:
             ret *= e.atk / 100
-    return int(ret)
+    return ret
 
 class BaseEvaluator(ast.NodeVisitor):
     _BUILTINS: Mapping[str, Any] = {
@@ -244,6 +244,7 @@ class RootEvaluator(BaseEvaluator):
                     'inheritable': card.inheritable,
                     'rarity': card.rarity,
                     'ehp': self._ehp,
+                    'hp': self._hp,
                     'atk': self._atk,
                     'dr': self._dr,
                     'cd': self._cd,
@@ -279,6 +280,17 @@ class RootEvaluator(BaseEvaluator):
 
     def _atk(self) -> float:
         return _atk(self._card)
+
+    def _hp(self) -> float:
+        ret: float = 1
+        for e in self._card.leader_skill.effects:
+            if not isinstance(e, ls_effect.BaseStatBoost):
+                continue
+            if e.hp == 0:
+                continue
+            ret *= e.hp / 100
+
+        return ret
 
     def _dr(self) -> float:
         ret: float = 1
