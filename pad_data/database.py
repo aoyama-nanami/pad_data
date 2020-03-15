@@ -1,7 +1,7 @@
 import json
 import os.path
 from typing import cast, Iterable, List, Mapping, MutableMapping, Optional
-from typing import TextIO
+from typing import TextIO, Tuple
 
 from pad_data import active_skill, enemy_skill, leader_skill
 from pad_data.card import Card
@@ -66,7 +66,7 @@ class Database:
             self._cards = self._parse_card_json(f)
 
         with open(os.path.join(project_root, skill_json), 'r') as f:
-            self._raw_skills = {}
+            self._raw_skills: MutableMapping[int, Tuple[int, List[int]]] = {}
             self._skills = self._parse_skill_json(f)
 
         with open(os.path.join(project_root, enemy_skill_json), 'r') as f:
