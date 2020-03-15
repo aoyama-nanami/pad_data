@@ -133,18 +133,16 @@ class Card:
         # 65: collab_id
 
         # Bitmap with some random flag values, not sure what they all do.
-        self.random_flags = int(raw[66])
-
-        self.inheritable = bool(self.random_flags & 1)
-        self.is_collab = bool(self.random_flags & 4)
+        self.flags = int(raw[66])
 
         self.furigana = str(raw[67])  # JP data only?
         self.limit_mult = int(raw[68])
 
         # 69: voice_id
         # 70: orb_skin_id
+        # 71: tag string
 
-        self.other_fields = raw[71:]
+        self.other_fields = raw[72:]
 
     def _stat_at_level(self, st: str, lv: Optional[int]) -> int:
         max_lv = self.max_level
@@ -173,10 +171,23 @@ class Card:
         raise ValueError('level out of range')
 
     _FIELD_WHITELIST = frozenset([
-        'attr_id', 'awakenings', 'card_id', 'cost', 'inheritable', 'limit_mult',
-        'max_atk', 'max_hp', 'max_level', 'max_rcv', 'min_atk', 'min_hp',
-        'min_rcv', 'name', 'rarity', 'sub_attr_id', 'super_awakenings', 'type',
+        'attr_id', 'awakenings', 'card_id', 'cost', 'extra_latent_slot',
+        'inheritable', 'limit_mult', 'max_atk', 'max_hp', 'max_level',
+        'max_rcv', 'min_atk', 'min_hp', 'min_rcv', 'name', 'rarity',
+        'sub_attr_id', 'super_awakenings', 'type',
     ])
+
+    @property
+    def inheritable(self) -> bool:
+        return bool(self.flags & 1)
+
+    @property
+    def is_collab(self) -> bool:
+        return bool(self.flags & 4)
+
+    @property
+    def extra_latent_slot(self) -> bool:
+        return bool(self.flags & 32)
 
     @property
     def merged_json(self) -> Mapping[str, Any]:
