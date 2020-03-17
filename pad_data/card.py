@@ -57,7 +57,7 @@ class Card:
         self.name = raw[1]
         self.attr_id = common.Orb(int(raw[2]))
         self.sub_attr_id = common.Orb(int(raw[3]))
-        # 4: is_ult
+        self.is_ult = int(raw[4])
         self.type = [common.Type(int(raw[5])),
                      common.Type(int(raw[6])),
                      common.Type.NO_TYPE]
@@ -102,7 +102,7 @@ class Card:
 
         # 40: ancestor_id
 
-        # 41~45: evo mat
+        self.evo_mat = list(map(int, raw[41:46]))
         # 46~50: un-evo mat
 
         # enemy AI releated things
@@ -188,6 +188,27 @@ class Card:
     @property
     def extra_latent_slot(self) -> bool:
         return bool(self.flags & 32)
+
+    @property
+    def evo_type(self) -> common.EvoType:
+        # guess the evolution type from card data
+        if self.evo_mat[0] == 0:
+            return common.EvoType.NO_EVO
+
+        if self.extra_latent_slot:
+            if self.evo_mat[0] == 5077: # イベントメダル【虹】の希石
+                return common.EvoType.SUPER_REINCARNATION
+            return common.EvoType.REINCARNATION
+
+        if self.evo_mat[0] == 3826: # ドットリット
+            return common.EvoType.PIXEL
+
+        if self.awakenings[0].count(common.Awakening.AWOKEN_ASSIST):
+            return common.EvoType.ASSIST
+
+        if self.is_ult:
+            return common.EvoType.ULTIMATE
+        return common.EvoType.NORMAL_EVO
 
     @property
     def merged_json(self) -> Mapping[str, Any]:

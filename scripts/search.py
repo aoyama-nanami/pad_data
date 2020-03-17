@@ -14,7 +14,7 @@ import path_common # pylint: disable=import-error,unused-import
 from pad_data import database
 from pad_data.active_skill import effect as as_effect
 from pad_data.card import Card
-from pad_data.common import Orb
+from pad_data.common import EvoType, Orb
 from pad_data.leader_skill import effect as ls_effect
 from pad_data.skill import SkillEffectTag
 from pad_data.util.lazy_dict import LazyDict
@@ -248,7 +248,9 @@ class RootEvaluator(BaseEvaluator):
                     'atk': self._atk,
                     'dr': self._dr,
                     'cd': self._cd,
-                }))
+                    'evo_type': lambda: card.evo_type,
+                }),
+                EvoType.__members__)
         self._card = card
 
     # pylint: disable=invalid-name

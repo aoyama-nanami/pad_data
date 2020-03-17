@@ -194,3 +194,14 @@ class Latent(enum.Enum):
     LATENT_ATTACK_KILLER = enum.auto()
     LATENT_PHYSICAL_KILLER = enum.auto()
     LATENT_HEALER_KILLER = enum.auto()
+
+@enum.unique
+class EvoType(enum.Enum):
+    NO_EVO = 0
+    NORMAL_EVO = 1
+    ULTIMATE = 2
+    REINCARNATION = 3
+    SUPER_REINCARNATION = 4
+    PIXEL = 5
+    ASSIST = 6
+
