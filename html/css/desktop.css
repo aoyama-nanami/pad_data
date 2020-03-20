@@ -21,7 +21,7 @@ body {
 }
 
 filter-result {
-  --grid-columns: 93px 270px 50px 80px 50px 270px 30px 30px 1fr;
+  --grid-columns: 93px 270px 50px 80px 60px 270px 30px 30px 1fr;
   --grid-rows: 29px 29px;
   --grid-areas:
       "elem name hp atk rcv aw turn inh sk"

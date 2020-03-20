@@ -23,7 +23,7 @@ body {
 }
 
 filter-result {
-  --grid-columns: 33px 30px 30px 270px 50px 80px 50px 120px auto 1fr;
+  --grid-columns: 33px 30px 30px 270px 50px 80px 60px 110px auto 1fr;
   --grid-rows: 30px 30px 60px;
   --grid-areas:
       "elem elem elem name hp  atk rcv  ."

@@ -113,7 +113,7 @@ class FilterResult extends LitElement {
 
         .grid-cell#inheritable {
           grid-area: inh;
-          text-align: middle;
+          vertical-align: middle;
         }
 
         .grid-cell#skill-desc {
