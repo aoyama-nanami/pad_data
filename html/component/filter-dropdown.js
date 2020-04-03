@@ -114,7 +114,7 @@ export const FILTERS = [
       cls: FilterAwakening,
       init: {
         awakenings: [
-          [Awakening.RESIST_DARK, 2], [Awakening.RESIST_DARK_PLUS, 5]],
+          [Awakening.RESIST_DARK, 1], [Awakening.RESIST_DARK_PLUS, 5]],
         canEdit: true,
       }
     },
