@@ -22,6 +22,8 @@ def _consume_all_args(func: Callable[[int], T], end: int
     return functools.partial(inner, func, end)
 
 def orb_list(bit_mask: int) -> List[Orb]:
+    if bit_mask == -1:
+       return list(Orb.__members__.values())
     return [Orb(i) for i in range(32) if (1 << i) & bit_mask]
 
 def type_list(bit_mask: int) -> List[Type]:

@@ -1,5 +1,6 @@
 import json
 import os.path
+import traceback
 from typing import cast, Iterable, List, Mapping, MutableMapping, Optional
 from typing import TextIO, Tuple
 
@@ -141,7 +142,8 @@ class Database:
             self._raw_skills[i] = (skill_type, params)
             try:
                 effect = [skill_parser.parse(skill_type, params)]
-            except (RuntimeError, KeyError, AssertionError):
+            except (RuntimeError, KeyError, AssertionError, ValueError):
+                traceback.print_exc()
                 skill_debug(skills, i, name, description, skill_type, params)
                 failed = True
             else:
