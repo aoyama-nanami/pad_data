@@ -72,6 +72,11 @@ class ExtraBuff:
     fixed_extra_attack: int = 0
     awoken_bind: int = 0
 
+@skill_effect
+@dataclass
+class MultiEffect:
+    items: List[SkillEffectTag]
+
 # conditions
 
 # add @final to prevent inhereint from this accidentally
@@ -259,21 +264,27 @@ class Board7x6(BaseStatBoost):
 
 @skill_effect
 @dataclass
-class OrbRemaining(NoSkyfallLS, SteppedStatBoost):
+class OrbRemaining(SteppedStatBoost):
     # パズル後の残りドロップ数がn個以下
     threshold: int = 0
 
-    atk_non_step: InitVar[int] = 0
-
-    # pylint: disable=arguments-differ
-    def __post_init__(self, atk_non_step: int) -> None: # type: ignore[override]
-        super().__post_init__()
-        if atk_non_step > 0:
-            assert self.atk == 0 and self.atk_step == 0
-            self.atk = atk_non_step
-
     def max_step(self) -> int:
-        return self.threshold
+        return self.threshold if self.atk_step else 1
+
+def leader_skill_177(elements: List[Orb], types: List[Type], hp: int,
+                     atk_passive: int, rcv: int, threshold: int, atk: int,
+                     atk_step: int) -> MultiEffect:
+    # threshold and atk should be both zero or both non-zero
+    assert not ((threshold == 0) ^ (atk == 0))
+
+    effect1 = NoSkyfallLS(elements=elements, types=types, hp=hp,
+                          atk=atk_passive, rcv=rcv)
+    if threshold == 0:
+        return MultiEffect(items=[effect1])
+
+    # TODO: figure out if elements/types apply to this as well
+    effect2 = OrbRemaining(threshold=threshold, atk=atk, atk_step=atk_step)
+    return MultiEffect(items=[effect1, effect2])
 
 @skill_effect
 @dataclass
@@ -311,11 +322,6 @@ class HealAbove(BaseStatBoost, ExtraBuff):
     threshold: int = 0
 
 # end condition
-
-@skill_effect
-@dataclass
-class MultiEffect:
-    items: List[SkillEffectTag]
 
 @skill_effect
 @dataclass

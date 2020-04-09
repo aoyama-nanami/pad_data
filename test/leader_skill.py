@@ -49,6 +49,7 @@ class TestSkillData(unittest.TestCase):
         # 初陽の蒼空神・ケプリ
         self.assert_skill_equal(
             4130,
+            LS.NoSkyfallLS(),
             LS.OrbRemaining(threshold=7, atk=400),
             LS.Rainbow(orbs=_FIVE_COLOR, color_min=4, atk=400))
 
@@ -236,6 +237,19 @@ class TestSkillData(unittest.TestCase):
             LS.EvoTeamStatBoost(hp=200, atk=200, rcv=200, evo_flag=2),
             LS.Rainbow(orbs=_SIX_COLOR, color_min=4, color_step=2,
                        atk=800, atk_step=150))
+
+        # アレキサンドリア・ミート
+        self.assert_skill_equal(
+            5309,
+            LS.NoSkyfallLS(),
+            LS.Combo(combo=6, atk=400),
+            LS.LShape(orbs=[Orb.FIRE, Orb.LIGHT], dr=25, atk=400))
+
+        # 輝命の魔女・ドーナ
+        self.assert_skill_equal(
+            6048,
+            LS.NoSkyfallLS(types=[Type.BALANCE], hp=200, atk=200),
+            LS.OrbRemaining(threshold=8, atk=800, atk_step=100))
 
 if __name__ == '__main__':
     unittest.main()

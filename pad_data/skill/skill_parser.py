@@ -357,8 +357,9 @@ _LS_EFFECT_MAP = {
              dr=int),
     175: Map(LS.CollaboTeamStatBoost, collabo_ids=[int] * 3, hp=int, atk=int,
              rcv=int),
-    177: Map(LS.OrbRemaining, elements=orb_list, types=type_list, hp=int,
-             atk_non_step=int, rcv=int, threshold=int, atk=int, atk_step=int),
+    # NoSkyfall + OrbRemaining
+    177: Map(LS.leader_skill_177, elements=orb_list, types=type_list, hp=int,
+             atk_passive=int, rcv=int, threshold=int, atk=int, atk_step=int),
     178: Map(LS.FixedMovementTime, seconds=int, elements=orb_list,
              types=type_list, hp=int, atk=int, rcv=int),
 
