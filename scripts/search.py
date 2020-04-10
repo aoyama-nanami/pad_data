@@ -22,19 +22,21 @@ from pad_data.util.lazy_dict import LazyDict
 
 def _atk(card: Card) -> float:
     ret: float = 1
+    hp_mult = [100]
     for e in card.leader_skill.effects:
         if not isinstance(e, ls_effect.BaseStatBoost):
-            continue
-        if isinstance(e, (ls_effect.HpAbove, ls_effect.HpBelow)):
             continue
         # some skill type does not fill in atk field
         if e.atk == 0:
             continue
 
-        if isinstance(e, ls_effect.SteppedStatBoost) and e.atk_step > 0:
+        if isinstance(e, (ls_effect.HpAbove, ls_effect.HpBelow)):
+            hp_mult.append(e.atk)
+        elif isinstance(e, ls_effect.SteppedStatBoost) and e.atk_step > 0:
             ret *= (e.atk + e.max_step() * e.atk_step) / 100
         else:
             ret *= e.atk / 100
+    ret *= max(hp_mult) / 100
     return ret
 
 class BaseEvaluator(ast.NodeVisitor):
