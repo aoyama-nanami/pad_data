@@ -203,7 +203,7 @@ class Card:
         if self.evo_mat[0] == 3826: # ドットリット
             return common.EvoType.PIXEL
 
-        if self.awakenings[0].count(common.Awakening.AWOKEN_ASSIST):
+        if self.awakenings.count(common.Awakening.AWOKEN_ASSIST):
             return common.EvoType.ASSIST
 
         if self.is_ult:
