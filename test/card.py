@@ -56,9 +56,9 @@ class TestCardData(unittest.TestCase):
 
         self.assertSequenceEqual(
             self._db.card(3764).awakenings,
-            [TWO_WAY, SKILL_BOOST, ENHANCED_WATER_ORB,
-             RESIST_SKILL_BIND, ENHANCED_WATER_ORB, ENHANCED_HEART_ORB,
-             BONUS_ATTACK, ENHANCED_COMBO, ENHANCED_COMBO])
+            [ENHANCED_WATER_ORB, ENHANCED_WATER_ORB, ENHANCED_HEART_ORB,
+             RESIST_SKILL_BIND, SKILL_BOOST_PLUS, BONUS_ATTACK,
+             ENHANCED_COMBO, ENHANCED_COMBO, ENHANCED_COMBO])
 
         self.assertSequenceEqual(
             self._db.card(4419).awakenings,

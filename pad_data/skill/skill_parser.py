@@ -393,6 +393,10 @@ _LS_EFFECT_MAP = {
              fixed_extra_attack=int),
     # ドット進化のみでチーム
     203: Map(LS.EvoTeamStatBoost, evo_flag=int, hp=int, atk=int, rcv=int),
+    # [2, 2, 0, 0, 0, 2, 2] -> 水の2コンボ以上で2コンボ加算
+    # TODO: need more use case
+    206: Map(LS.ElementCombo, combo_list=[orb_list] * 5, combo_min=int,
+             combo_increase=int),
 }
 
 _ES_EFFECT_MAP = {
