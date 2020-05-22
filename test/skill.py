@@ -44,7 +44,7 @@ class TestSkillData(unittest.TestCase):
                            hp_remain=50,
                            percentage=10000),
             effect.OrbChange(from_=[Orb.FIRE, Orb.DARK, Orb.JAMMER, Orb.POISON,
-                                    Orb.MORTAL_POISON],
+                                    Orb.MORTAL_POISON, Orb.BOMB],
                              to=[Orb.WOOD]))
 
         # ラモット
