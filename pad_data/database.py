@@ -50,7 +50,7 @@ def skill_debug(skills: Mapping[int, Skill], skill_id: int, name: str,
                 description = s.description
                 break
     print(f'Failed:')
-    print(f'{name=} {description=}')
+    print(f'{skill_id=} {name=} {description=}')
     print(f'{skill_type=}')
     print(f'{params=}')
     print('=' * 30)
@@ -112,12 +112,9 @@ class Database:
         494,   # type=2, params=[1, 50, 50000]
         2317,  # type=89, params=[100]
         8260,  # type=14, params=[]
-        8333,  # type=156, params=[]
-        8334,  # type=156, params=[]
-        8394,  # type=156, params=[]
-        8395,  # type=156, params=[]
         10178, # type=140, params=[]
         13267, # type=151, params=[0, 300, 50]
+        17336, # type=156, params=[2, 100, 0, 0, 0, 0, 63]
     ])
 
     def _parse_skill_json(self, f: TextIO) -> Mapping[int, Skill]:
