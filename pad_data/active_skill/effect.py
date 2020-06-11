@@ -156,6 +156,18 @@ class RandomOrbSpawn:
 
 @skill_effect
 @dataclass
+class RouletteSpawn:
+    duration: int
+    count: int
+
+    # TODO: 6153 レムゥ generate 1 roulette for 1 turn, so currently we can't
+    # distinguish `duration` and `count`
+    def __post_init__(self) -> None:
+        assert self.duration == self.count
+
+
+@skill_effect
+@dataclass
 class AllOrbChange:
     orbs: List[Orb]
 

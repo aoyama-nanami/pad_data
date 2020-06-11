@@ -66,10 +66,14 @@ class Map:
                 return x(next(g))
             return x
 
+        def is_unused(x: Any) -> bool:
+            return isinstance(x, Unused) or (
+                    isinstance(x, list) and len(x) > 0 and is_unused(x[0]))
+
         kwargs = {k: convert(v) for k, v in self._kwargs.items()}
         kwargs = {k: (kwargs[v.name] if isinstance(v, Ref) else v)
                   for k, v in kwargs.items()
-                  if not isinstance(v, Unused)}
+                  if not is_unused(v)}
 
         obj = self._cls(**kwargs)
 
@@ -184,6 +188,8 @@ _AS_EFFECT_MAP = {
     # 変身
     202: Map(AS.Transform, to=int),
     205: Map(AS.SkyfallLockedOrbs, orbs=orb_list, duration=int),
+    207: Map(AS.RouletteSpawn, duration=int,
+             unused=[Unused(100)] + [Unused(0)] * 5, count=int),
 }
 
 _LS_EFFECT_MAP = {
