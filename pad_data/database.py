@@ -74,6 +74,8 @@ class Database:
             enemy_skills = self._parse_enemy_skill_json(f)
 
         for c in self._cards.values():
+            if c.card_id >= 100000:
+                continue
             c.skill = self._process_skill(c.active_skill_id, True)
             c.leader_skill = self._process_skill(c.leader_skill_id, False)
 
