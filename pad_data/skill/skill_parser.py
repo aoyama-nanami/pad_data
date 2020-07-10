@@ -274,12 +274,13 @@ _LS_EFFECT_MAP = {
              percentage=int),
     104: Map(LS.by_stat_id(LS.Combo), combo=int, elements=orb_list,
              stat_id_list=[int, int], percentage=int),
+    # TODO: These types are WRONG. The hp/rcv debuff should affect whole team.
     # 総回復力が半減する、攻撃力がn倍
     105: Map(LS.StatBoost, rcv=int, atk=int),
     # 総HPが半減する、攻撃力がn倍
     106: Map(LS.StatBoost, hp=int, atk=int),
     # 総HPが減少するが
-    107: Map(LS.StatBoost, hp=int),
+    107: Map(LS.StatBoost, hp=int, elements=orb_list, atk=int),
     # 総HPが半減するが、xタイプの攻撃力がn倍。
     108: Map(LS.StatBoost, hp=int, elements=[], types=[Type], atk=int),
     109: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, atk=int),
