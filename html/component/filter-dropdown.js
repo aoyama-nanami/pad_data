@@ -37,14 +37,6 @@ export const FILTERS = [
       cls: FilterAssist,
     },
     {
-      desc: '無效貫通',
-      cls: FilterAwakening,
-      init: {
-        awakenings: [[Awakening.VOID_DAMAGE_PIERCER, 1]],
-        count: 1,
-      },
-    },
-    {
       desc: '主屬',
       cls: FilterElement,
       init: {main: true},
@@ -62,6 +54,35 @@ export const FILTERS = [
     {
       desc: 'Type',
       cls: FilterType,
+    },
+    {
+      desc: '技能 CD',
+      cls: FilterSkillCd,
+    },
+    {
+      desc: '稀有度',
+      cls: FilterRarity,
+    },
+    {
+      desc: 'Cost',
+      cls: FilterCost,
+    },
+    {
+      desc: 'SB + 加速',
+      cls: FilterSBPlusHaste,
+    }
+  ],
+  [
+    {
+      desc: '覺醒',
+    },
+    {
+      desc: '無效貫通',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.VOID_DAMAGE_PIERCER, 1]],
+        count: 1,
+      },
     },
     {
       desc: '操作時間延長',
@@ -98,18 +119,6 @@ export const FILTERS = [
       },
     },
     {
-      desc: '技能 CD',
-      cls: FilterSkillCd,
-    },
-    {
-      desc: '稀有度',
-      cls: FilterRarity,
-    },
-    {
-      desc: 'Cost',
-      cls: FilterCost,
-    },
-    {
       desc: '暗闇耐性',
       cls: FilterAwakening,
       init: {
@@ -137,9 +146,45 @@ export const FILTERS = [
       }
     },
     {
-      desc: 'SB + 加速',
-      cls: FilterSBPlusHaste,
-    }
+      desc: '火減傷',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.REDUCE_FIRE_DMG, 1]],
+        canEdit: true,
+      },
+    },
+    {
+      desc: '水減傷',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.REDUCE_WATER_DMG, 1]],
+        canEdit: true,
+      },
+    },
+    {
+      desc: '木減傷',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.REDUCE_WOOD_DMG, 1]],
+        canEdit: true,
+      },
+    },
+    {
+      desc: '光減傷',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.REDUCE_LIGHT_DMG, 1]],
+        canEdit: true,
+      },
+    },
+    {
+      desc: '暗減傷',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.REDUCE_DARK_DMG, 1]],
+        canEdit: true,
+      },
+    },
   ],
   [
     {
@@ -327,6 +372,9 @@ class FilterDropdown extends LitElement {
           </ul>
           <ul>
             ${FILTERS[1].map((x, i) => this.listItem(x, i))}
+          </ul>
+          <ul>
+            ${FILTERS[2].map((x, i) => this.listItem(x, i))}
           </ul>
         </div>
       </div>
