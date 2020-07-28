@@ -2,7 +2,7 @@ body {
   font-family:'メイリオ',Meiryo,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',sans-serif;
   background-color: black;
   color: #DDD;
-  min-height: 100vh;
+  min-height: calc(100vh - 30px);
   line-height: 1.5;
 }
 
@@ -93,7 +93,7 @@ a {
 }
 
 #main {
-  min-height: 100vh;
+  min-height: calc(100vh - 30px);
 }
 
 .icon24x24 {
