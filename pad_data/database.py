@@ -56,10 +56,9 @@ def skill_debug(skills: Mapping[int, Skill], skill_id: int, name: str,
     print('=' * 30)
 
 class Database:
-    def __init__(self, card_json: str='data/raw/jp/download_card_data.json',
-                 skill_json: str='data/raw/jp/download_skill_data.json',
-                 enemy_skill_json: str
-                    ='data/raw/jp/download_enemy_skill_data.json'
+    def __init__(self, card_json: str='data/download_card_data.json',
+                 skill_json: str='data/download_skill_data.json',
+                 enemy_skill_json: str='data/download_enemy_skill_data.json'
                  ) -> None:
         project_root = os.path.join(os.path.dirname(__file__), '..')
 
