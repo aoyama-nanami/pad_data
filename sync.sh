@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -ex
 
-data/downloader/downloader.py
+# hidden submodule
+downloader/downloader.py
 
 scripts/dump_merged_json.py
 

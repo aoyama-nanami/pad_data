@@ -1,0 +1,3 @@
+[submodule "downloader"]
+	path = downloader
+	url = git@github.com:p9n/pad_downloader.git
