@@ -1,6 +1,8 @@
+PYTHONDIRS=pad_data test scripts downloader/*.py
+
 .PHONY: lint
 lint:
-	pylint pad_data test scripts
+	pylint $(PYTHONDIRS)
 
 .PHONY: test
 test:
@@ -10,4 +12,4 @@ test:
 
 .PHONY: mypy
 mypy:
-	MYPYPATH=./stub mypy pad_data test scripts
+	MYPYPATH=./stub mypy $(PYTHONDIRS)
