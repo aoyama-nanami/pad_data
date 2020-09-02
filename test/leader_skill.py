@@ -218,7 +218,7 @@ class TestSkillData(unittest.TestCase):
         self.assert_skill_equal(
             5525,
             LS.StatBoost(elements=[Orb.WATER], hp=200),
-            LS.Combo(combo=4, combo_max=10, atk=800, atk_step=200),
+            LS.Combo(combo=4, combo_max=10, atk=1000, atk_step=200),
             LS.HealAbove(threshold=100000, dr=35))
 
         # 超新龍・トラゴン
