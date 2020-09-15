@@ -20,7 +20,7 @@ class EvalResult {
   }
 }
 
-export function statEval(card, config) {
+export function statEval(card, allowed_super_awakenings, config) {
   const result = new EvalResult();
   let hp = statAtMaxLv(card, 'hp') + 990;
   let atk = statAtMaxLv(card, 'atk') + 495;
@@ -63,8 +63,9 @@ export function statEval(card, config) {
   if (config.multi) {
     atk *= Math.max(atk80, atk50);
   } else {
-    const idx = card.super_awakenings.indexOf(Awakening.ENHANCED_HEART_ORB);
-    if (config.sortBy == 'rcv' && idx >= 0) {
+    const idx = allowed_super_awakenings.find(
+        (i) => card.super_awakenings[i] == Awakening.ENHANCED_HEART_ORB);
+    if (config.sortBy == 'rcv' && idx !== undefined) {
       /*
        * If super awakenings contains heart+ and we are sorting by rcv,
        * pick heart+.
@@ -76,21 +77,23 @@ export function statEval(card, config) {
       /*
        * Otherwise, pick the highest damage option.
        */
-      let [vMax, iMax] = card.super_awakenings.map(a => {
+      let [vMax, iMax] = allowed_super_awakenings.map((i) => {
+        let a = card.super_awakenings[i];
+
         if (config.awakenings.has(a)) {
           let m = awakeningDamageMultiplier(a);
           switch (a) {
             case Awakening.EIGHTY_HP_ENHANCED:
-              return m * atk80;
+              return [m * atk80, i];
             case Awakening.FIFTY_HP_ENHANCED:
-              return m * atk50;
+              return [m * atk50, i];
             default:
-              return m * Math.max(atk80, atk50);
+              return [m * Math.max(atk80, atk50), i];
           }
         }
-        return Math.max(atk80, atk50);
-      }).reduce(([vMax, iMax], vCur, iCur) => {
-        if (vCur > vMax)
+        return [Math.max(atk80, atk50), i]
+      }).reduce(([vMax, iMax], [vCur, iCur]) => {
+        if (vCur > vMax || vCur == vMax && iMax < 0)
           return [vCur, iCur];
         return [vMax, iMax];
       }, [Math.max(atk80, atk50), -1]);

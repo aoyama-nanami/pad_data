@@ -37,16 +37,11 @@ export class FilterAwakening extends FilterBase {
     `;
   }
 
-  get multi() {
-    const e = document.querySelector('atk-eval-config');
-    return e.awakenings[Awakening.MULTI_BOOST];
-  }
-
-  apply(c) {
+  apply(c, i) {
     let val = 0;
     val += c.awakenings.reduce((x, a) => x + this.countAwakening(a), 0);
-    if (!this.multi) {
-      val += c.super_awakenings.reduce((x, a) => x + this.countAwakening(a), 0);
+    if (typeof i == 'number') {
+      val += this.countAwakening(c.super_awakenings[i]);
     }
     return val >= this.count;
   }

@@ -43,8 +43,9 @@ class Database {
     const filter = document.querySelector('card-filter').filterFunc();
     const cmp = this.compareFunction_(config.sortBy);
     const a = this.data
-        .filter(filter)
-        .map((c) => [c, statEval(c, config)])
+        .map(filter)
+        .filter(x => x) // filter out undefined
+        .map((c) => [c[0], statEval(c[0], c[1], config)])
         .sort(cmp);
 
     const filterResult = document.querySelector('filter-result');
