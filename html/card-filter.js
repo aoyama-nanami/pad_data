@@ -63,26 +63,25 @@ class CardFilter extends LitElement {
     const is_multi = document.querySelector('atk-eval-config')
         .awakenings[Awakening.MULTI_BOOST];
 
-    if (is_multi) {
-      return (card) => {
+    return (card) => {
+      if (card.super_awakenings.length == 0 || is_multi) {
         if (enabled_filters.every((e) => e.apply(card))) {
           return [card, []]
-        }
-      };
-    } else {
-      return (card) => {
-        let allowed_index = []
-        for (let i = 0; i < card.super_awakenings.length; i++) {
-          if (enabled_filters.every((e) => e.apply(card, i))) {
-            allowed_index.push(i)
-          }
-        }
-        if (allowed_index.length) {
-          return [card, allowed_index]
+        } else {
+          return;
         }
       }
+
+      let allowed_index = []
+      for (let i = 0; i < card.super_awakenings.length; i++) {
+        if (enabled_filters.every((e) => e.apply(card, i))) {
+          allowed_index.push(i)
+        }
+      }
+      if (allowed_index.length) {
+        return [card, allowed_index]
+      }
     }
-    return (card) => enabled_filters.every((e) => e.apply(card));
   }
 
   createFilter(id, args, i, enabled) {
