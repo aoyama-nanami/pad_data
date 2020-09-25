@@ -404,6 +404,7 @@ _LS_EFFECT_MAP = {
     # TODO: need more use case
     206: Map(LS.ElementCombo, combo_list=[orb_list] * 5, combo_min=int,
              combo_increase=int),
+    209: Map(LS.HeartCross, combo_increase=int),
 }
 
 _ES_EFFECT_MAP = {

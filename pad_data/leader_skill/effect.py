@@ -84,7 +84,9 @@ class MultiEffect:
 @skill_effect
 @dataclass
 class StatBoost(BaseStatBoost):
-    pass
+    def calculate_atk(self, combos: List[CCombo], trigger: bool=False,
+                      hp: int=100) -> Optional[int]:
+        return self.atk
 
 @final
 @skill_effect
@@ -214,7 +216,7 @@ class ConnectedOrbsAll(BaseStatBoost, ExtraBuff):
 
 @skill_effect
 @dataclass
-class HeartCross(BaseStatBoost):
+class HeartCross(BaseStatBoost, ExtraBuff):
     pass
 
 @skill_effect
