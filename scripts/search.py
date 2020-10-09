@@ -4,7 +4,7 @@ import argparse
 import ast
 from contextlib import contextmanager
 from dataclasses import asdict
-from inspect import getmembers, getmodule, isclass
+from inspect import getmembers, getmodule, isclass, ismethod
 import operator
 from types import ModuleType
 from typing import Any, cast, Iterator, List, Mapping, NoReturn, Tuple
@@ -218,7 +218,9 @@ class SkillEvaluator(BaseEvaluator):
                 continue
             if len(expr) == 0:
                 return True
-            with self._push_namespace(asdict(effect)):
+            with self._push_namespace(asdict(effect)), \
+                 self._push_namespace(dict(getmembers(
+                     effect, predicate=ismethod))):
                 if self.visit(expr[0]):
                     return True
         return False
