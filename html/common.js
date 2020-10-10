@@ -119,9 +119,13 @@ export function statEval(card, allowed_super_awakenings, config) {
     }
   }
 
-  atk *= config.elements[card.attr_id];
-  if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id) {
-    atk *= 1.1;
+  if (card.attr_id != 6) {
+    atk *= config.elements[card.attr_id];
+    if (config.includeSubElemDamage && card.attr_id == card.sub_attr_id) {
+      atk *= 1.1;
+    }
+  } else {
+    atk *= config.elements[card.sub_attr_id];
   }
 
   result.hp = Math.round(hp);
