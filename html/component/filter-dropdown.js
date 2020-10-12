@@ -119,6 +119,14 @@ export const FILTERS = [
       },
     },
     {
+      desc: '封印耐性',
+      cls: FilterAwakening,
+      init: {
+        awakenings: [[Awakening.RESIST_SKILL_BIND, 1]],
+        canEdit: true,
+      },
+    },
+    {
       desc: '暗闇耐性',
       cls: FilterAwakening,
       init: {
