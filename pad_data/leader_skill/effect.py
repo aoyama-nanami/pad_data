@@ -349,6 +349,11 @@ class CrossAtkBoost(BaseStatBoost):
                 atk = atk * self.atk_table[c.orb] // 100
         return atk if atk != 100 else None
 
+@skill_effect
+@dataclass
+class CrossComboIncrease(ExtraBuff):
+    orbs: List[Orb] = field(default_factory=list)
+
 def hp_cond_139(elements: List[Orb], types: List[Type], spec: List[List[int]]
                 ) -> MultiEffect:
     # tuple[0]: hp condition

@@ -299,6 +299,11 @@ class MoveTimeExtend(BaseBuff):
 
 @skill_effect
 @dataclass
+class SkillBind(BaseBuff):
+    pass
+
+@skill_effect
+@dataclass
 class Gravity:
     percentage: int
 

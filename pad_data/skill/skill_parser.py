@@ -190,6 +190,7 @@ _AS_EFFECT_MAP = {
     205: Map(AS.SkyfallLockedOrbs, orbs=orb_list, duration=int),
     207: Map(AS.RouletteSpawn, duration=int,
              unused=[Unused(100)] + [Unused(0)] * 5, count=int),
+    214: Map(AS.SkillBind, duration=int),
 }
 
 _LS_EFFECT_MAP = {
@@ -332,7 +333,7 @@ _LS_EFFECT_MAP = {
     # 回復の4個消し
     149: Map(LS.ConnectedOrbs, orbs=[Orb.HEART], size=4, rcv=int),
     150: Map(LS.EnhancedOrbs5, unused=Unused(0), atk=int),
-    151: Map(LS.HeartCross, atk=int, unused=Unused(0), dr=int),
+    151: Map(LS.HeartCross, atk=int, rcv=int, dr=int),
     155: Map(LS.MultiplayerGame, elements=orb_list, types=type_list, hp=int,
              atk=int, rcv=int),
     # 5個十字消し1個につき攻撃力がn倍
@@ -396,8 +397,8 @@ _LS_EFFECT_MAP = {
     200: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, fixed_extra_attack=int),
     # [1, 1, 1, 0, 3, 1000000] -> 火の3コンボ以上で固定100万ダメージ
     # TODO: need more use case
-    201: Map(LS.ElementCombo, combo_list=[orb_list] * 3, _=Unused(0), combo_min=int,
-             fixed_extra_attack=int),
+    201: Map(LS.ElementCombo, combo_list=[orb_list] * 3, _=Unused(0),
+             combo_min=int, fixed_extra_attack=int),
     # ドット進化のみでチーム
     203: Map(LS.EvoTeamStatBoost, evo_flag=int, hp=int, atk=int, rcv=int),
     # [2, 2, 0, 0, 0, 2, 2] -> 水の2コンボ以上で2コンボ加算
@@ -405,6 +406,9 @@ _LS_EFFECT_MAP = {
     206: Map(LS.ElementCombo, combo_list=[orb_list] * 5, combo_min=int,
              combo_increase=int),
     209: Map(LS.HeartCross, combo_increase=int),
+    # 十字消し1個につき nコンボ加算
+    210: Map(LS.CrossComboIncrease, orbs=orb_list, _=Unused(0),
+             combo_increase=int),
 }
 
 _ES_EFFECT_MAP = {
