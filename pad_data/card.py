@@ -245,11 +245,16 @@ class Card:
     def __repr__(self) -> str:
         return str(self.__dict__)
 
+    def color_code(self) -> str:
+        if self.attr_id == common.Orb.JAMMER:
+            return self.sub_attr_id.color_code()
+        return self.attr_id.color_code()
+
     def dump(self, atk_eval: Callable[['Card'], int]=atk_at_level,
              rcv_eval: Callable[['Card'], int]=rcv_at_level,
              print_active_skill: bool=True, print_leader_skill: bool=False
              ) -> None:
-        print(self.attr_id.color_code(),
+        print(self.color_code(),
               self.name,
               common.Orb.NO_ORB.color_code(),
               ' ' * (50 - wcwidth.wcswidth(self.name)),

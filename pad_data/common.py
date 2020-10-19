@@ -136,7 +136,8 @@ class Orb(enum.IntEnum):
             Orb.WATER: '1;36',
             Orb.WOOD: '1;32',
             Orb.LIGHT: '1;33',
-            Orb.DARK: '1;35'
+            Orb.DARK: '1;35',
+            Orb.JAMMER: '1:30',
         }
 
         return f'\x1b[{color_map[self]}m'

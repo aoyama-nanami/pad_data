@@ -32,34 +32,44 @@ class Team:
 # BEGIN CONFIG
 
 TEAM = [
-    Team(card_id=4016, lv=110, super_awakening=ENHANCED_COMBO,
+    # L & F
+    Team(card_id=6399, lv=99),
+    Team(card_id=6399, lv=99),
+    # teams
+    Team(card_id=6409, lv=110, super_awakening=ENHANCED_COMBO,
          latent=[LATENT_MACHINE_KILLER] * 3),
-    Team(card_id=5792, lv=110, super_awakening=L_ATTACK,
-         latent=[LATENT_MACHINE_KILLER] * 3),
-    Team(card_id=2568, lv=110),
-    Team(card_id=5634, lv=101),
-    Team(card_id=3945, lv=110),
-    Team(card_id=5631, lv=99, latent=[LATENT_MACHINE_KILLER] * 3),
+    Team(card_id=6406, lv=108, latent=[LATENT_MACHINE_KILLER] * 1),
+    Team(card_id=6109, lv=110, super_awakening=L_ATTACK,
+         latent=[LATENT_DEMON_KILLER] * 3),
+    Team(card_id=5940, lv=109, latent=[LATENT_MACHINE_KILLER] * 3),
 ]
 ASSIST = [
+    Team(card_id=6239, lv=1, atk_plus=0),
     None,
-    Team(card_id=5813, lv=1, atk_plus=0),
     None,
     None,
     None,
     None,
 ]
 COMBOS = [
-    Combo(FIRE, 5, Shape.L),
+    Combo(FIRE),
     Combo(WATER),
-    Combo(WOOD),
-    Combo(LIGHT),
+    Combo(WOOD, size=3),
+    Combo(WOOD, size=3),
+    Combo(LIGHT, size=4),
     Combo(DARK),
+
+    Combo(HEART),
+    Combo(HEART),
+    Combo(HEART),
+    Combo(HEART),
+    Combo(HEART),
     Combo(HEART),
 ]
 TRIGGER = False
 HP = 100
-ENEMY_ID = 1091
+ENEMY_ID = 6081
+DAMAGE_BUFF_MULT = 7.3
 
 # END CONFIG
 
@@ -77,7 +87,7 @@ def member_spec(base: Team, assist: Optional[Team]) -> MemberSpec:
     card = DB.card(base.card_id)
     atk = card.atk_at_level(base.lv) + base.atk_plus * 5
     assert base.awakening_count == 9
-    awakenings = card.awakenings
+    awakenings = card.awakenings[:]
     if base.super_awakening is not None:
         assert base.super_awakening in card.super_awakenings
         awakenings.append(base.super_awakening)
@@ -172,6 +182,8 @@ def main() -> None:
             if c.orb == m.sub_element:
                 if m.element == m.sub_element:
                     sub_dmg += math.ceil(dmg / 10)
+                elif m.element == Orb.JAMMER:
+                    sub_dmg += dmg
                 else:
                     sub_dmg += math.ceil(dmg / 3)
 
@@ -202,10 +214,10 @@ def main() -> None:
         main_dmg = round(main_dmg * decimal.Decimal(ls_mult))
         sub_dmg = round(sub_dmg * decimal.Decimal(ls_mult))
 
-        if enemy:
-            main_dmg *= element_mult(m.element, enemy.attr_id)
-            sub_dmg *= element_mult(m.sub_element, enemy.attr_id)
+        main_dmg *= decimal.Decimal(DAMAGE_BUFF_MULT)
+        sub_dmg *= decimal.Decimal(DAMAGE_BUFF_MULT)
 
+        if enemy:
             for t in enemy.type:
                 if t == NO_TYPE:
                     continue
@@ -218,13 +230,31 @@ def main() -> None:
                     main_dmg *= decimal.Decimal(1.5) ** m.latent.count(l)
                     sub_dmg *= decimal.Decimal(1.5) ** m.latent.count(l)
 
+            # min() before calculate element multiplier so damage will cap
+            # at 1B
+            main_dmg = min(main_dmg, 2 ** 31 - 1)
+            sub_dmg = min(sub_dmg, 2 ** 31 - 1)
+
+            main_dmg *= element_mult(m.element, enemy.attr_id)
+            sub_dmg *= element_mult(m.sub_element, enemy.attr_id)
+
+        main_dmg = min(main_dmg, 2 ** 31 - 1)
+        sub_dmg = min(sub_dmg, 2 ** 31 - 1)
+
         total_dmg += int(main_dmg + sub_dmg)
         print(m.name, ' ' * (50 - wcwidth.wcswidth(m.name)),
               m.element.color_code(), f'{int(main_dmg):>13,d}',
               m.sub_element.color_code(), f'{int(sub_dmg):>13,d}',
               NO_ORB.color_code())
     print('')
-    print(' ' * 60, f'Total: {int(total_dmg):>13,d}')
+    if enemy:
+        print(enemy.attr_id.color_code(), enemy.name, NO_ORB.color_code(),
+              ' ' * (60 - wcwidth.wcswidth(enemy.name)),
+              f'Total: {int(total_dmg):>14,d}',
+              sep='')
+
+    else:
+        print(' ' * 60, f'Total: {int(total_dmg):>13,d}')
 
 if __name__ == '__main__':
     main()
