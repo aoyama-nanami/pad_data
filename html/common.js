@@ -24,7 +24,19 @@ export function statEval(card, allowed_super_awakenings, config) {
   const result = new EvalResult();
   let hp = statAtMaxLv(card, 'hp') + 990;
   let atk = statAtMaxLv(card, 'atk') + 495;
-  let rcv = statAtMaxLv(card, 'rcv') * (config.sortBy == 'rcv' ? 1.9 : 1) + 297;
+  let rcv = statAtMaxLv(card, 'rcv') + 297;
+
+  let has_skill_voice = card.awakenings.indexOf(Awakening.SKILL_VOICE) != -1;
+  if (has_skill_voice) {
+    hp += Math.round(statAtMaxLv(card, 'hp') * 0.1);
+    atk += Math.round(statAtMaxLv(card, 'atk') * 0.1);
+    rcv += Math.round(statAtMaxLv(card, 'rcv') * 0.1);
+  }
+
+  if (config.sortBy == 'rcv') {
+    let latent_slot = card.extra_latent_slot ? 4 : 3;
+    rcv += Math.round(statAtMaxLv(card, 'rcv') * 0.3 * latent_slot);
+  }
 
   card.awakenings.forEach((a) => {
     if (a == Awakening.ENHANCED_HP) {
