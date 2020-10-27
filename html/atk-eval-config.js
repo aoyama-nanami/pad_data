@@ -37,6 +37,7 @@ class AtkEvalConfig extends LitElement {
       targetAttr: {type: Number},
       passiveResistIndexes: {type: Array},
       sortBy: {type: String},
+      showLeaderSkill: {type: Boolean},
     };
   }
 
@@ -77,6 +78,7 @@ class AtkEvalConfig extends LitElement {
     this.includeSubElemDamage = true;
     this.passiveResistIndexes = [];
     this.sortBy = 'atk';
+    this.showLeaderSkill = false;
   }
 
   firstUpdated(changedProperties) {
@@ -313,6 +315,10 @@ class AtkEvalConfig extends LitElement {
         <div class="row">
           ${toggleCheckbox('主副屬相同時加算副屬傷害',
                            bind(this, 'includeSubElemDamage'), false)}
+        </div>
+        <div class="row">
+          ${toggleCheckbox('顯示隊長技',
+                           bind(this, 'showLeaderSkill'), false)}
         </div>
         <div class="row">
           排序方式:
