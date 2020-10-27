@@ -320,6 +320,7 @@ class AtkEvalConfig extends LitElement {
           ${radio('攻擊', 'sort-by', 'atk', bindRadio(this, 'sortBy'))}
           ${radio('回復', 'sort-by', 'rcv', bindRadio(this, 'sortBy'))}
           ${radio('最小CD', 'sort-by', 'cd', bindRadio(this, 'sortBy'))}
+          ${radio('自動回復', 'sort-by', 'extraheal', bindRadio(this, 'sortBy'))}
         </div>
       </div>
     `;

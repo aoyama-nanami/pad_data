@@ -34,6 +34,8 @@ class Database {
           }
           return row1[0].skill.turn_min - row2[0].skill.turn_min;
         };
+      case 'extraheal':
+        return (row1, row2) => row2[1]['rcv'] - row1[1]['rcv'];
     }
   }
 

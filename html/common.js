@@ -36,6 +36,19 @@ export function statEval(card, allowed_super_awakenings, config) {
   if (config.sortBy == 'rcv') {
     let latent_slot = card.extra_latent_slot ? 4 : 3;
     rcv += Math.round(statAtMaxLv(card, 'rcv') * 0.3 * latent_slot);
+  } else if (config.sortBy == 'extraheal') {
+    let latent_slot = card.extra_latent_slot ? 4 : 3;
+    rcv += Math.round(statAtMaxLv(card, 'rcv') * 0.3 * latent_slot);
+
+    let ls = card.leader_skill.effects.find(([type, effect]) => {
+      return type == 'ExtraHeal';
+    });
+    if (!ls) {
+      rcv = 0;
+    } else {
+      let effect = ls[1];
+      rcv *= effect.rcv / 100;
+    }
   }
 
   card.awakenings.forEach((a) => {
