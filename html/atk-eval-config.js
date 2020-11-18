@@ -263,6 +263,12 @@ class AtkEvalConfig extends LitElement {
   }
 
   updated(changed) {
+    document.querySelector('filter-result').showLeaderSkill =
+      this.showLeaderSkill;
+
+    if (changed.size == 1 && changed.has('showLeaderSkill')) {
+      return;
+    }
     database.sort();
   }
 

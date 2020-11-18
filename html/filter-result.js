@@ -8,6 +8,7 @@ class FilterResult extends LitElement {
     return {
       data: {type: Array},
       page: {type: Number},
+      showLeaderSkill: {type: Boolean},
     };
   }
 
@@ -149,13 +150,12 @@ class FilterResult extends LitElement {
       const page = this.page;
       const begin = (page - 1) * RESULTS_PER_PAGE;
       const data = this.data.slice(begin, begin + RESULTS_PER_PAGE);
-      const showLeaderSkill = document.querySelector('atk-eval-config').showLeaderSkill;
       return html`
         <link rel="stylesheet" type="text/css" href="css/base.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
               rel="stylesheet">
         ${this._paginationSection()}
-        ${data.map((x) => this._renderRow(x, showLeaderSkill))}
+        ${data.map((x) => this._renderRow(x))}
         ${this._paginationSection()}
       `;
     }
@@ -181,7 +181,7 @@ class FilterResult extends LitElement {
       </div>`
   }
 
-  _renderRow(row, showLeaderSkill) {
+  _renderRow(row) {
     const [card, result] = row;
     return html`
       <a href="http://pad.skyozora.com/pets/${card.card_id}" target="_blank" class="result-row">
@@ -216,7 +216,7 @@ class FilterResult extends LitElement {
             </div>
           </div>
           <div class="grid-cell" id="skill-desc">
-            <pre>${showLeaderSkill ? card.leader_skill.description : card.skill.description}</pre>
+            <pre>${this.showLeaderSkill ? card.leader_skill.description : card.skill.description}</pre>
           </div>
         </div>
       </a>
