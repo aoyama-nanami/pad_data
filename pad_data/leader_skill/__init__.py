@@ -31,26 +31,26 @@ def post_process(effects: List[SkillEffectTag]) -> List[SkillEffectTag]:
     else:
         out += cross
 
-
     if len(heart_cross) >= 2:
-        merged = heart_cross[0]
+        merged_hc = heart_cross[0]
         for e in heart_cross[1:]:
             for field in dataclasses.fields(e):
                 if field.name == 'dr':
                     if e.dr != 0:
-                        assert merge.dr == 0
-                        merged.dr = e.dr
-                        merged.dr_elements = e.dr_elements
+                        assert merged_hc.dr == 0
+                        merged_hc.dr = e.dr
+                        merged_hc.dr_elements = e.dr_elements
                 elif field.name == 'dr_elements':
                     pass
                 elif field.type == int:
                     v = getattr(e, field.name)
                     if v != 0:
-                        assert getattr(merged, field.name) == 0
-                        setattr(merged, field.name, v)
+                        assert getattr(merged_hc, field.name) == 0
+                        setattr(merged_hc, field.name, v)
                 else:
-                    assert getattr(merged, field.name) == getattr(e, field.name)
-        out.append(merged)
+                    assert (getattr(merged_hc, field.name) ==
+                            getattr(e, field.name))
+        out.append(merged_hc)
     else:
         out += heart_cross
 
