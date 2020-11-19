@@ -1,7 +1,7 @@
 import json
 import os.path
 import traceback
-from typing import cast, Iterable, List, Mapping, MutableMapping, Optional
+from typing import Any, Iterable, List, Mapping, MutableMapping, Optional
 from typing import TextIO, Tuple
 
 from pad_data import active_skill, enemy_skill, leader_skill
@@ -37,7 +37,8 @@ def parse_csv(raw: str) -> Iterable[List[str]]:
             i += 1
 
 def skill_debug(skills: Mapping[int, Skill], skill_id: int, name: str,
-                description: str, skill_type: int, params: List[int]) -> None:
+                description: str, skill_type: int, params: List[int],
+                extra_items: Mapping[str, Any]) -> None:
     # find the skill set containing this skill_id:
     for s in skills.values():
         if not s.effects:
@@ -53,6 +54,8 @@ def skill_debug(skills: Mapping[int, Skill], skill_id: int, name: str,
     print(f'{skill_id=} {name=} {description=}')
     print(f'{skill_type=}')
     print(f'{params=}')
+    if extra_items:
+        print(f'{extra_items=}')
     print('=' * 30)
 
 class Database:
@@ -106,7 +109,8 @@ class Database:
 
     def _parse_card_json(self, f: TextIO) -> Mapping[int, Card]:
         obj = json.load(f)
-        self._check_file_version('card json', obj['v'], 1800)
+        # version downgraded from 1800 to 1600 in ver 18.60?
+        self._check_file_version('card json', obj['v'], 1600)
         return dict((c[0], Card(c)) for c in obj['card'])
 
     KNOWN_BAD_SKILLS = frozenset([
@@ -120,29 +124,29 @@ class Database:
 
     def _parse_skill_json(self, f: TextIO) -> Mapping[int, Skill]:
         obj = json.load(f)
-        self._check_file_version('skill json', obj['v'], 1220)
         skills: MutableMapping[int, Skill] = {}
         failed = False
         for i, raw in enumerate(obj['skill']):
             if i in self.KNOWN_BAD_SKILLS:
                 continue
-            raw = cast(List[str], raw)
-            name = raw[0]
-            description = raw[1]
-            skill_type = int(raw[2])
-            levels = int(raw[3])
-            turn_max: Optional[int] = None
-            turn_min: Optional[int] = None
-            if levels:
-                turn_max = int(raw[4])
-                turn_min = turn_max - levels + 1
-            params = list(map(int, raw[6:]))
+            name = raw.pop('name')
+            description = raw.pop('help')
+            skill_type = raw.pop('sktp')
+            levels = raw.pop('lcap')
+            turn_max = raw.pop('ctbs')
+            turn_min = turn_max - levels + 1
+            params = [raw.pop(f'skp{x}', 0) for x in range(1, 10)]
+            while params and params[-1] == 0:
+                params.pop()
             self._raw_skills[i] = (skill_type, params)
             try:
+                assert raw.pop('ctel') in (0, -1)
+                assert not raw # assert no unknown keys
                 effect = [skill_parser.parse(skill_type, params)]
             except (RuntimeError, KeyError, AssertionError, ValueError):
                 traceback.print_exc()
-                skill_debug(skills, i, name, description, skill_type, params)
+                skill_debug(skills, i, name, description, skill_type, params,
+                            raw)
                 failed = True
             else:
                 skills[i] = Skill(name, description, effect, turn_max, turn_min)
