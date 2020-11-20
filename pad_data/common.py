@@ -99,6 +99,10 @@ class Awakening(enum.IntEnum):
             return 3
         return _AWAKENING_DAMAGE_MAP.get(self, 1)
 
+    @property
+    def short_name(self) -> str:
+        return _AWAKENING_SHORT_NAMES[self]
+
 _AWAKENING_DAMAGE_MAP = {
     Awakening.TWO_WAY: 1.5,
     Awakening.MULTI_BOOST: 1.5,
@@ -114,6 +118,95 @@ _AWAKENING_DAMAGE_MAP = {
     Awakening.VOID_DAMAGE_PIERCER: 2.5,
 
     Awakening.ENHANCED_10_COMBO: 5}
+
+_AWAKENING_SHORT_NAMES = {
+    Awakening.ENHANCED_HP : 'HP+',
+    Awakening.ENHANCED_ATK : 'ATK+',
+    Awakening.ENHANCED_RCV : 'RCV+',
+
+    Awakening.REDUCE_FIRE_DMG : '火-',
+    Awakening.REDUCE_WATER_DMG : '水-',
+    Awakening.REDUCE_WOOD_DMG : '木-',
+    Awakening.REDUCE_LIGHT_DMG : '光-',
+    Awakening.REDUCE_DARK_DMG : '闇-',
+
+    Awakening.AUTO_RECOVER : '自回',
+    Awakening.RESIST_BIND : 'BIND',
+    Awakening.RESIST_DARK : '暗闇',
+    Awakening.RESIST_JAMMERS : '邪魔',
+    Awakening.RESIST_POISON : '毒',
+
+    Awakening.ENHANCED_FIRE_ORB : '火+',
+    Awakening.ENHANCED_WATER_ORB : '水+',
+    Awakening.ENHANCED_WOOD_ORB : '木+',
+    Awakening.ENHANCED_LIGHT_ORB : '光+',
+    Awakening.ENHANCED_DARK_ORB : '闇+',
+
+    Awakening.EXTEND_TIME : '指',
+    Awakening.RECOVER_BIND : '心列',
+    Awakening.SKILL_BOOST : 'SB',
+
+    Awakening.ENHANCED_FIRE_ATTR : '火列',
+    Awakening.ENHANCED_WATER_ATTR : '水列',
+    Awakening.ENHANCED_WOOD_ATTR : '木列',
+    Awakening.ENHANCED_LIGHT_ATTR : '光列',
+    Awakening.ENHANCED_DARK_ATTR : '闇列',
+
+    Awakening.TWO_WAY : 'U',
+    Awakening.RESIST_SKILL_BIND : 'Sx',
+    Awakening.ENHANCED_HEART_ORB : '心+',
+    Awakening.MULTI_BOOST : 'multi',
+
+    Awakening.DRAGON_KILLER : '龍殺',
+    Awakening.GOD_KILLER : '神殺',
+    Awakening.DEMON_KILLER : '悪魔殺',
+    Awakening.MACHINE_KILLER : '機殺',
+    Awakening.BALANCE_KILLER : '平衡殺',
+    Awakening.ATTACK_KILLER : '攻殺',
+    Awakening.PHYSICAL_KILLER : '體殺',
+    Awakening.HEALER_KILLER : '回殺',
+
+    Awakening.EVOLVE_MATERIAL_KILLER : '進化殺',
+    Awakening.AWAKEN_MATERIAL_KILLER : '覺醒殺',
+    Awakening.ENHANCE_MATERIAL_KILLER : '強化殺',
+    Awakening.VENDOR_MATERIAL_KILLER : '賣卻殺',
+
+    Awakening.ENHANCED_COMBO : '7C',
+    Awakening.GUARD_BREAK : '破防',
+    Awakening.BONUS_ATTACK : '追打',
+    Awakening.ENHANCED_TEAM_HP : 'TeamHP',
+    Awakening.ENHANCED_TEAM_RCV : 'TeamRCV',
+    Awakening.VOID_DAMAGE_PIERCER : '貫',
+    Awakening.AWOKEN_ASSIST : 'E',
+    Awakening.SUPER_BONUS_ATTACK : '超追打',
+    Awakening.SKILL_CHARGE : '加速',
+    Awakening.RESIST_BIND_PLUS : 'BIND+',
+    Awakening.EXTEND_TIME_PLUS : '指+',
+    Awakening.RESIST_CLOUD : '雲',
+    Awakening.RESIST_IMMOBILITY : '封',
+
+    Awakening.SKILL_BOOST_PLUS : 'SB+',
+    Awakening.EIGHTY_HP_ENHANCED : '80',
+    Awakening.FIFTY_HP_ENHANCED : '50',
+
+    Awakening.L_SHIELD : 'L軽減',
+    Awakening.L_ATTACK : 'L',
+    Awakening.ENHANCED_10_COMBO : '10C',
+    Awakening.COMBO_DROP : '枝豆',
+    Awakening.SKILL_VOICE : '声',
+    Awakening.DUNGEON_BONUS : '$',
+
+    Awakening.REDUCE_HP : 'HP-',
+    Awakening.REDUCE_ATK : 'ATK-',
+    Awakening.REDUCE_RCV : 'RCV-',
+
+    Awakening.RESIST_DARK_PLUS : '暗闇+',
+    Awakening.RESIST_JAMMERS_PLUS : '邪魔+',
+    Awakening.RESIST_POISON_PLUS : '毒+',
+
+    Awakening.JAMMERS_ORBS_BLESSING : '邪魔加護',
+    Awakening.POISON_ORBS_BLESSING : '毒加護',
+}
 
 @enum.unique
 class Orb(enum.IntEnum):

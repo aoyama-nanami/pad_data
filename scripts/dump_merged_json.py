@@ -7,6 +7,7 @@ from typing import TypeVar
 import path_common # pylint: disable=import-error,unused-import
 
 from pad_data import database
+from pad_data.common import Awakening
 
 T = TypeVar('T')
 
@@ -81,6 +82,13 @@ def diff_one(new: Optional[JSON], old: Optional[JSON], indent_level: int
                 diff_one(v_new, v_old, indent_level + 1)
                 print_old(f'{indent}}}', v_old)
                 print_new(f'{indent}}}', v_new)
+            elif k in ('awakenings', 'super_awakenings'):
+                if v_old is not None:
+                    awakenings = [Awakening(x).short_name for x in v_old]
+                    print_old(f'{indent}"{k}": {awakenings}', True)
+                if v_new is not None:
+                    awakenings = [Awakening(x).short_name for x in v_new]
+                    print_new(f'{indent}"{k}": {awakenings}', True)
             else:
                 print_old(f'{indent}"{k}": {maybe_remove_newline(v_old)}',
                           v_old)
