@@ -188,6 +188,7 @@ _AS_EFFECT_MAP = {
     # 変身
     202: Map(AS.Transform, to=int),
     205: Map(AS.SkyfallLockedOrbs, orbs=orb_list, duration=int),
+    # RouletteSpawn: second parameter may be speed?
     207: Map(AS.RouletteSpawn, duration=int,
              unused=[Unused(100)] + [Unused(0)] * 5, count=int),
     214: Map(AS.SkillBind, duration=int),
