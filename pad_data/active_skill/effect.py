@@ -18,6 +18,11 @@ class RandomSkill:
 
 @skill_effect
 @dataclass
+class MultiEffect:
+    items: List[SkillEffectTag]
+
+@skill_effect
+@dataclass
 class Nuke:
     element: Orb
     target: Target
@@ -133,14 +138,9 @@ class OrbChange:
     from_: List[Orb]
     to: List[Orb]
 
-@skill_effect
-@dataclass
-class DoubleOrbChange:
-    # from1 -> to1, from2 -> to2
-    from1: Orb
-    to1: Orb
-    from2: Orb
-    to2: Orb
+def double_orb_change(from1: Orb, to1: Orb, from2: Orb, to2: Orb
+                      ) -> MultiEffect:
+    return MultiEffect([OrbChange([from1], [to1]), OrbChange([from2], [to2])])
 
 @skill_effect
 @dataclass
@@ -154,12 +154,17 @@ class RandomOrbSpawn:
     orb: List[Orb]
     exclude: List[Orb]
 
+def double_random_orb_spawn(count1: int, orb1: List[Orb], exclude1: List[Orb],
+                            count2: int, orb2: List[Orb], exclude2: List[Orb]
+                            ) -> MultiEffect:
+    return MultiEffect([RandomOrbSpawn(count1, orb1, exclude1),
+                        RandomOrbSpawn(count2, orb2, exclude2)])
+
 @skill_effect
 @dataclass
 class RouletteSpawn:
     duration: int
     count: int
-
 
 @skill_effect
 @dataclass

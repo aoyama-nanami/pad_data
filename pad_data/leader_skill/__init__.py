@@ -10,7 +10,7 @@ def post_process(effects: List[SkillEffectTag]) -> List[SkillEffectTag]:
     cross: List[effect.CrossAtkBoost] = []
     heart_cross: List[effect.HeartCross] = []
     for e in effects:
-        if isinstance(e, effect.MultiEffect):
+        if isinstance(e, effect.MultiEffectLS):
             out += e.items
         elif isinstance(e, effect.CrossAtkBoost):
             cross.append(e)

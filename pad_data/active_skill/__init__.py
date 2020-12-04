@@ -18,11 +18,6 @@ def post_process(effects: List[SkillEffectTag]) -> None:
             effects[i:j] = [merged_effect]
             break
 
-    # DoubleOrbChange -> OrbChange * 2
     for i, e in enumerate(effects):
-        if isinstance(e, effect.DoubleOrbChange):
-            effects[i:i + 1] = [
-                effect.OrbChange([e.from1], [e.to1]),
-                effect.OrbChange([e.from2], [e.to2]),
-            ]
-            break
+        if isinstance(e, effect.MultiEffect):
+            effects[i:i + 1] = e.items

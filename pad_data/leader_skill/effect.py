@@ -74,7 +74,7 @@ class ExtraBuff:
 
 @skill_effect
 @dataclass
-class MultiEffect:
+class MultiEffectLS:
     items: List[SkillEffectTag]
 
 # conditions
@@ -275,18 +275,18 @@ class OrbRemaining(SteppedStatBoost):
 
 def leader_skill_177(elements: List[Orb], types: List[Type], hp: int,
                      atk_passive: int, rcv: int, threshold: int, atk: int,
-                     atk_step: int) -> MultiEffect:
+                     atk_step: int) -> MultiEffectLS:
     # threshold and atk should be both zero or both non-zero
     assert not ((threshold == 0) ^ (atk == 0))
 
     effect1 = NoSkyfallLS(elements=elements, types=types, hp=hp,
                           atk=atk_passive, rcv=rcv)
     if threshold == 0:
-        return MultiEffect(items=[effect1])
+        return MultiEffectLS(items=[effect1])
 
     # TODO: figure out if elements/types apply to this as well
     effect2 = OrbRemaining(threshold=threshold, atk=atk, atk_step=atk_step)
-    return MultiEffect(items=[effect1, effect2])
+    return MultiEffectLS(items=[effect1, effect2])
 
 @skill_effect
 @dataclass
@@ -355,7 +355,7 @@ class CrossComboIncrease(ExtraBuff):
     orbs: List[Orb] = field(default_factory=list)
 
 def hp_cond_139(elements: List[Orb], types: List[Type], spec: List[List[int]]
-                ) -> MultiEffect:
+                ) -> MultiEffectLS:
     # tuple[0]: hp condition
     #      [1]: 0=above, 1=below
     #      [2]: atk
@@ -364,13 +364,13 @@ def hp_cond_139(elements: List[Orb], types: List[Type], spec: List[List[int]]
             return HpAbove(elements=elements, types=types, hp_above=s[0],
                            atk=s[2])
         return HpBelow(elements=elements, types=types, hp_below=s[0], atk=s[2])
-    return MultiEffect([conv(s) for s in spec if s[0]])
+    return MultiEffectLS([conv(s) for s in spec if s[0]])
 
 # pylint: disable=too-many-arguments
 def hp_cond_183(elements: List[Orb], types: List[Type],
                 hp_above: int, atk_above: int, dr_above: int,
                 hp_below: int, atk_below: int, dr_below: int
-                ) -> MultiEffect:
+                ) -> MultiEffectLS:
     items: List[SkillEffectTag] = []
     if hp_above:
         items.append(HpAbove(elements=elements, types=types, hp_above=hp_above,
@@ -378,14 +378,14 @@ def hp_cond_183(elements: List[Orb], types: List[Type],
     if hp_below:
         items.append(HpBelow(elements=elements, types=types, hp_below=hp_below,
                              atk=atk_below, dr=dr_below))
-    return MultiEffect(items)
+    return MultiEffectLS(items)
 
 DSBParamType = Tuple[List[Orb], List[Type], int, int, int]
 
 def double_stat_boost(params_0: DSBParamType, params_1: DSBParamType
-                      ) -> MultiEffect:
+                      ) -> MultiEffectLS:
     # param = [elements, types, hp, atk, rcv]
-    return MultiEffect([
+    return MultiEffectLS([
         StatBoost(elements=p[0], types=p[1], hp=p[2], atk=p[3], rcv=p[4])
         for p in [params_0, params_1]
     ])

@@ -103,7 +103,7 @@ _AS_EFFECT_MAP = {
     10: Map(AS.OrbRefresh),
     18: Map(AS.DelayEnemyAttack, duration=int, unused=int),
     19: Map(AS.DefenseReduction, duration=int, percentage=int),
-    20: Map(AS.DoubleOrbChange, from1=Orb, to1=Orb, from2=Orb, to2=Orb),
+    20: Map(AS.double_orb_change, from1=Orb, to1=Orb, from2=Orb, to2=Orb),
     21: Map(AS.ElementDamageReduction, duration=int, element=Orb,
             percentage=int),
     35: Map(AS.AtkNuke, element=Orb.NO_ORB, percentage=int, leech=int,
@@ -191,6 +191,9 @@ _AS_EFFECT_MAP = {
     # RouletteSpawn: second parameter may be speed?
     207: Map(AS.RouletteSpawn, duration=int,
              unused=[Unused(100)] + [Unused(0)] * 5, count=int),
+    208: Map(AS.double_random_orb_spawn,
+             count1=int, orb1=orb_list, exclude1=orb_list,
+             count2=int, orb2=orb_list, exclude2=orb_list),
     214: Map(AS.SkillBind, duration=int),
 }
 
