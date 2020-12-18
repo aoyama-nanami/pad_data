@@ -90,6 +90,13 @@ class Awakening(enum.IntEnum):
     JAMMERS_ORBS_BLESSING = 71
     POISON_ORBS_BLESSING = 72
 
+    # TODO: rename after en version implemented these
+    FIRE_COMBO_ENHANCED = 73
+    WATER_COMBO_ENHANCED = 74
+    WOOD_COMBO_ENHANCED = 75
+    LIGHT_COMBO_ENHANCED = 76
+    DARK_COMBO_ENHANCED = 77
+
     @property
     def damage_multiplier(self) -> float:
         # pylint: disable=no-member
@@ -206,6 +213,12 @@ _AWAKENING_SHORT_NAMES = {
 
     Awakening.JAMMERS_ORBS_BLESSING : '邪魔加護',
     Awakening.POISON_ORBS_BLESSING : '毒加護',
+
+    Awakening.FIRE_COMBO_ENHANCED: '火c',
+    Awakening.WATER_COMBO_ENHANCED: '水c',
+    Awakening.WOOD_COMBO_ENHANCED: '木c',
+    Awakening.LIGHT_COMBO_ENHANCED: '光c',
+    Awakening.DARK_COMBO_ENHANCED: '闇c',
 }
 
 @enum.unique
