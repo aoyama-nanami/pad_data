@@ -363,7 +363,11 @@ _LS_EFFECT_MAP = {
     167: Map(LS.ConnectedOrbs, orbs=orb_list, size=int, atk=int, rcv=int,
              atk_step=int, rcv_step=int, size_max=int),
     169: Map(LS.Combo, combo=int, atk=int, dr=int),
-    170: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, dr=int),
+    # TODO: two unknown args added in 18.7?
+    # 6850 ベレッカ:
+    # 3色以上同時攻撃でダメージを軽減、攻撃力が3倍 -> [31, 3, 300, 25, 0, 1]
+    170: Map(LS.Rainbow, orbs=orb_list, color_min=int, atk=int, dr=int,
+             unused0=Unused(0), unused1=Unused(0, 1)),
     # see id 124
     171: Map(LS.ElementCombo, combo_list=[orb_list] * 4, combo_min=int, atk=int,
              dr=int),
