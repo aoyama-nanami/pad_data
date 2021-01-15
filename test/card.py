@@ -102,9 +102,9 @@ class TestCardData(unittest.TestCase):
 
         self.assertSequenceEqual(
             self._db.card(4799).awakenings,
-            [RESIST_BIND_PLUS, SKILL_BOOST, SKILL_BOOST, FIFTY_HP_ENHANCED,
-             FIFTY_HP_ENHANCED, FIFTY_HP_ENHANCED, BONUS_ATTACK,
-             EXTEND_TIME_PLUS, SKILL_VOICE])
+            [RESIST_BIND_PLUS, SKILL_BOOST_PLUS, FIFTY_HP_ENHANCED,
+             FIFTY_HP_ENHANCED, FIFTY_HP_ENHANCED, FIFTY_HP_ENHANCED,
+             BONUS_ATTACK, EXTEND_TIME_PLUS, SKILL_VOICE])
 
     def test_type(self) -> None:
         self.assertSequenceEqual(self._db.card(4831).type,
