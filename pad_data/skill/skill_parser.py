@@ -170,7 +170,8 @@ _AS_EFFECT_MAP = {
     168: Map(AS.DamageBuffByAwakening, duration=int, awakenings=[int, int, int],
              unused1=Unused(0), unused2=Unused(0), unused3=Unused(0),
              percentage=int),
-    172: Map(AS.Unlock),
+    # TODO: Note: skill 20354 has unused = 1?
+    172: Map(AS.Unlock, unused=Unused(0, 1)),
     173: Map(AS.IgnoreAbsorb, duration=int, element=bool,
              unused=Unused(0), damage=bool),
     176: Map(AS.BoardChange, rows=[int, int, int, int, int], orb=Orb),
